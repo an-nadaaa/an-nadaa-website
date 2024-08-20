@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxt/icon",
     "@nuxtjs/i18n",
-    "shadcn/nuxt",
+    // "shadcn/nuxt",
   ],
   postcss: {
     plugins: {
