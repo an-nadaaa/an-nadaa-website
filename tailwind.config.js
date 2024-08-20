@@ -9,7 +9,13 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "2rem",
+        lg: "4rem",
+        xl: "5rem",
+        "2xl": "6rem",
+      },
       screens: {
         "2xl": "1400px",
       },
@@ -19,6 +25,7 @@ module.exports = {
         primary: ["Satoshi", "sans-serif"],
       },
       colors: {
+        "dark-blue": "hsl(var(--dark-blue))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
