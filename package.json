@@ -18,6 +18,7 @@
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.428.0",
     "nuxt": "^3.12.4",
+    "plyr": "^3.7.8",
     "radix-vue": "^1.9.4",
     "shadcn-nuxt": "^0.10.4",
     "tailwind-merge": "^2.5.2",

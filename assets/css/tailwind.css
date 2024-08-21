@@ -134,7 +134,7 @@
 @layer base {
   * {
     @apply font-primary text-base;
-    outline: green dotted 1px;
+    /* outline: green dotted 1px; */
   }
 
   h1 {

@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h1>HELLO WORLD</h1>
-  </div>
+  <HomeHeroSection></HomeHeroSection>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { cn } from "@/lib/utils"
+</script>
 <style></style>
