@@ -1,8 +1,8 @@
 <template>
   <HomeHeroSection />
   <HomeLogoCloudSection />
-  <!-- <HomeFeaturedCampaignsSection />
-  <HomeAboutUsSection />
+  <HomeFeaturedCampaignsSection />
+  <!-- <HomeAboutUsSection />
   <HomeOurImpactSection />
   <HomeTestimonialsSection />
   <HomeFAQSection /> -->
