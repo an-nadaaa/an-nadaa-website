@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@egjs/flicking-plugins": "^4.7.1",
+    "@egjs/vue3-flicking": "^4.11.4",
     "@nuxt/icon": "^1.4.5",
     "@nuxtjs/i18n": "^8.5.0",
     "@pinia/nuxt": "^0.5.3",
