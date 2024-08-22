@@ -43,13 +43,6 @@ export default defineNuxtConfig({
         name: "Bahasa Malayu",
       },
       // we use the NG postfix because sw is ignored in git ignore for being a convention for service workers
-      {
-        code: "sw",
-        iso: "sw",
-        file: "translations/sw-NG.js",
-        dir: "ltr",
-        name: "Swahili",
-      },
     ],
     defaultLocale: "en",
     defaultDirection: "ltr",

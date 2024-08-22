@@ -1,9 +1,9 @@
 <template>
   <div class="bg-dark-blue py-12">
-    <div class="container grid grid-cols-1 sm:grid-cols-2 sm:gap-10 text-white">
+    <div class="container grid grid-cols-1 md:grid-cols-2 md:gap-12 text-white">
       <div class="h-full lg:pt-8">
         <div class="space-y-3 sm:space-y-6">
-          <h1 class="text-2xl xl:text-6xl">
+          <h1 class="text-3xl lg:text-4xl xl:text-6xl">
             Support Nigerian communities through education and welfare projects
           </h1>
           <p class="font-light">
@@ -11,7 +11,7 @@
             deliver projects that bring huge positive impact to the community
           </p>
           <div
-            class="grid space-y-2 sm:space-y-0 grid-cols-1 sm:flex sm:space-x-4"
+            class="grid space-y-2 sm:w-fit sm:space-y-0 grid-cols-1 sm:flex sm:space-x-4"
           >
             <Button class="font-light w-full text-sm">Donate now</Button>
             <Button
@@ -20,7 +20,6 @@
               <Icon class="ml-2" name="lucide:circle-play" />
             </Button>
           </div>
-
           <p
             class="text-md sm:text-xs text-center sm:text-left font-extralight"
           >
@@ -29,7 +28,7 @@
         </div>
       </div>
       <div class="mt-5 sm:mt-0">
-        <AspectRatio class="overflow-hidden rounded-2xl" :ratio="1 / 1.05">
+        <AspectRatio class="overflow-hidden rounded-2xl" :ratio="1 / 1.1">
           <video
             id="player"
             playsinline
@@ -46,9 +45,6 @@
       </div>
     </div>
   </div>
-  <h1>
-    {{ plyr }}
-  </h1>
 </template>
 <script setup lang="ts">
 import Plyr from "plyr"

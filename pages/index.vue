@@ -1,7 +1,11 @@
 <template>
-  <HomeHeroSection></HomeHeroSection>
+  <HomeHeroSection />
+  <HomeLogoCloudSection />
+  <!-- <HomeFeaturedCampaignsSection />
+  <HomeAboutUsSection />
+  <HomeOurImpactSection />
+  <HomeTestimonialsSection />
+  <HomeFAQSection /> -->
 </template>
-<script setup lang="ts">
-import { cn } from "@/lib/utils"
-</script>
+<script setup lang="ts"></script>
 <style></style>
