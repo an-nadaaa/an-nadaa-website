@@ -2,8 +2,7 @@
   <div>
     <Header />
     <slot />
-    <!-- <GlobalFooter /> -->
-    <!-- <MobileBar class="sm:hidden" /> -->
+    <Footer />
   </div>
 </template>
 
