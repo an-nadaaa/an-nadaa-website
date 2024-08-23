@@ -23,7 +23,6 @@
         <NuxtLink class="hover:text-gray-200" :href="localePath('/contact')"
           >Contact</NuxtLink
         >
-
       </div>
       <div class="hidden sm:flex items-center space-x-8">
         <NuxtLink
@@ -46,4 +45,3 @@ import logo from "~/assets/media/img/logos/annadaa-white.svg"
 
 const localePath = useLocalePath()
 </script>
-<style lang=""></style>

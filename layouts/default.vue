@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <Header />
-    <slot />
-    <!-- <GlobalFooter /> -->
-    <!-- <MobileBar class="sm:hidden" /> -->
-  </div>
+  <Header />
+  <slot />
+  <!-- <GlobalFooter /> -->
+  <!-- <MobileBar class="sm:hidden" /> -->
 </template>
 
 <style></style>
