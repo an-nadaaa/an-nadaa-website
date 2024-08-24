@@ -65,6 +65,10 @@
 
 @layer base {
   :root {
+    --orange-accent: 35 100% 58%;
+
+    --dark-gray: 220 9% 46%;
+    --light-blue: 194 100% 97%;
     --dark-blue: 203 67% 15%;
 
     --background: 0 0% 100%;
@@ -134,7 +138,7 @@
 @layer base {
   * {
     @apply font-primary text-base;
-    outline: green dotted 1px;
+    /* outline: green dotted 1px; */
   }
 
   h1 {
@@ -163,5 +167,9 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  .container {
+    @apply px-4 sm:px-6 md:px-6 lg:px-20;
   }
 }
