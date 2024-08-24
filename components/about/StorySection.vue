@@ -22,149 +22,107 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 items-center pt-28 pb-44">
-        <div class="pr-20">
-          <h6 class="text-xs font-medium text-orange-accent">
-            FOUNDER (NIGERIA) & DEPUTY CHAIRMAN (MALAYSIA)
-          </h6>
-          <h1 class="font-medium my-4">Meet Sheikh Ibrahim Nuhu</h1>
-          <p class="text-dark-gray font-light">
-            Dr. Ibrahim Nuhu Tahir is the founder of An-Nadaa Educational
-            Foundation. He personally supervises and monitors all the activities
-            of the foundation to ensure that they are in line with the rules of
-            Allah, objectives of the organization and maximise the benefit for
-            the community. All this while also ensuring the rights of the
-            donors, partners and beneficiaries are not violated in any way.
-          </p>
-        </div>
-        <div class="pl-20">
-          <AspectRatio :ratio="4 / 3">
+      <div class="grid grid-cols-1 sm:pt-28 sm:pb-44">
+        <div v-for="(section, index) in sections" :key="index" class="">
+          <div
+            class="mt-8 sm:mt-0 grid sm:grid-cols-2 items-center gap-x-8 lg:gap-x-16"
+          >
+            <div
+              :class="`${
+                index % 2 == 0 ? 'sm:order-1' : 'sm:order-2'
+              } mb-4 sm:mb-0`"
+            >
+              <h6
+                v-if="section.subtitle"
+                class="text-xs font-medium text-orange-accent"
+              >
+                {{ section.subtitle }}
+              </h6>
+              <h1 class="font-medium my-4">{{ section.title }}</h1>
+              <p class="text-dark-gray font-light">{{ section.content }}</p>
+            </div>
+            <div :class="`${index % 2 == 0 ? 'sm:order-2' : 'sm:order-1'}`">
+              <div
+                class="aspect-square md:aspect-3/4 lg:aspect-square xl:aspect-4/3 overflow-hidden"
+              >
+                <img
+                  :src="section.image"
+                  :alt="section.title"
+                  class="object-cover w-full h-full rounded-2xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            v-if="index % 2 == 0 && index != sections.length - 1"
+            class="w-full hidden sm:block"
+          >
             <img
-              src="~/assets/media/img/sheikh-ibrahim.png"
-              alt="Sheikh Ibrahim Nuhu"
-              class="object-cover w-full h-full rounded-2xl"
+              class="w-1/2 mx-auto"
+              src="~/assets/media/img/dottedline.svg"
             />
-          </AspectRatio>
-        </div>
-
-        <div class="col-span-2">
-          <img class="w-1/2 mx-auto" src="~/assets/media/img/dottedline.svg" />
-        </div>
-
-        <div class="pr-16">
-          <AspectRatio :ratio="4 / 3">
+          </div>
+          <div
+            v-else
+            v-if="index != sections.length - 1"
+            class="w-full hidden sm:block"
+          >
             <img
-              src="~/assets/media/img/darkbnw.png"
-              alt="Sheikh Ibrahim Nuhu"
-              class="object-cover w-full h-full rounded-2xl"
+              class="w-1/2 mx-auto"
+              src="~/assets/media/img/dottedlinereversed.svg"
             />
-          </AspectRatio>
-        </div>
-        <div class="pl-8">
-          <h1 class="font-medium my-4">Early Years</h1>
-          <p class="text-dark-gray font-light">
-            Dr. Ibrahim Nuhu Tahir was born and raised in Nigeria. Sheikh
-            started his Islamic education from a young age in the classical way
-            with his father Dr. Nuhu Tahir (may Allah preserve him) and other
-            scholars in that region. Sheikh Ibrahim enjoys being around children
-            which is why he started off as a primary School headmaster at
-            Raudatul Qur’an School in Zaria city of Nigeria.
-          </p>
-        </div>
-
-        <div class="col-span-2">
-          <img
-            class="w-1/2 mx-auto"
-            src="~/assets/media/img/dottedlinereversed.svg"
-          />
-        </div>
-
-        <div class="pr-12">
-          <h1 class="font-medium my-4">Medina Education</h1>
-          <p class="text-dark-gray font-light">
-            He was then accepted into the International Islamic University,
-            Madinah. He graduated from the Dept of Shariah at the top of his
-            class with his Bachelors in Shariah and Islamic Studies. He then
-            followed that up with a Postgraduate Diploma (first class of
-            honours) in Islamic Law and Islamic Political Science. Sheikh
-            Ibrahim benefited greatly from his stay in this blessed city
-            learning a lot from the knowledge and tarbiya of the scholars. This
-            is where the idea of An-Nadaa was first developed.
-          </p>
-        </div>
-        <div class="pl-12">
-          <AspectRatio :ratio="4 / 3">
-            <img
-              src="~/assets/media/img/medina.png"
-              alt="Medina"
-              class="object-cover w-full h-full rounded-2xl"
-            />
-          </AspectRatio>
-        </div>
-
-        <div class="col-span-2">
-          <img class="w-1/2 mx-auto" src="~/assets/media/img/dottedline.svg" />
-        </div>
-
-        <div class="pr-16">
-          <AspectRatio :ratio="4 / 3">
-            <img
-              src="~/assets/media/img/malaysia.png"
-              alt="Malaysia"
-              class="object-cover w-full h-full rounded-2xl"
-            />
-          </AspectRatio>
-        </div>
-        <div class="pl-8">
-          <h1 class="font-medium my-4">Malaysia</h1>
-          <p class="text-dark-gray font-light">
-            He then went on to complete his masters and PhD from Islamic
-            International University of Malaysia. While he was doing his PhD he
-            was also a teacher and the head of Islamic department in the
-            International Islamic School Malaysia. After completing his PhD
-            sheikh was invited to join the department of Economics and
-            Management Sciences where he is now an associate professor. He is
-            also a research fellow at the Center for Islamic Economics.
-          </p>
-        </div>
-
-        <div class="col-span-2">
-          <img
-            class="w-1/2 mx-auto"
-            src="~/assets/media/img/dottedlinereversed.svg"
-          />
-        </div>
-
-        <div class="pr-12">
-          <h1 class="font-medium my-4">Youth Empowerment</h1>
-          <p class="text-dark-gray font-light">
-            Sheikh Ibrahim allots a lot of his free time, and many times
-            sacrifices his own family time, to engage with youth and spread the
-            knowledge and the tarbiyyah of the deen. He conducts classes in
-            Fiqh, Seerah, Akhlaaq, Tafseer, Faraid, essential knowledge for new
-            muslims. Sheikh Ibrahim also holds advisory roles with many
-            organisations and student bodies. With his deep knowledge coupled
-            with extreme humility, Sheikh Ibrahim has significantly
-            single-handedly developed Islam in the lives of hundreds if not
-            thousands of Muslim youth.
-          </p>
-        </div>
-        <div class="pl-12">
-          <AspectRatio :ratio="4 / 3">
-            <img
-              src="~/assets/media/img/youth.png"
-              alt="Youth"
-              class="object-cover w-full h-full rounded-2xl"
-            />
-          </AspectRatio>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script setup lang="ts"></script>
-<style>
-* {
-  /* @apply outline-dotted  outline-green-400; */
+<script setup lang="ts">
+import sheikhIbrahim from "@/assets/media/img/sheikh-ibrahim.png"
+import bnw from "@/assets/media/img/darkbnw.png"
+import medina from "@/assets/media/img/medina.png"
+import malaysia from "@/assets/media/img/malaysia.png"
+import youth from "@/assets/media/img/youth.png"
+
+type Section = {
+  subtitle?: string
+  title: string
+  content: string
+  image: any
 }
-</style>
+
+const sections: Section[] = [
+  {
+    subtitle: "FOUNDER (NIGERIA) & DEPUTY CHAIRMAN (MALAYSIA)",
+    title: "Meet Sheikh Ibrahim Nuhu",
+    content:
+      "Dr. Ibrahim Nuhu Tahir is the founder of An-Nadaa Educational Foundation. He personally supervises and monitors all the activities of the foundation to ensure that they are in line with the rules of Allah, objectives of the organization and maximise the benefit for the community. All this while also ensuring the rights of the donors, partners and beneficiaries are not violated in any way.",
+    image: sheikhIbrahim,
+  },
+  {
+    title: "Early Years",
+    content:
+      "Dr. Ibrahim Nuhu Tahir was born and raised in Nigeria. Sheikh started his Islamic education from a young age in the classical way with his father Dr. Nuhu Tahir (may Allah preserve him) and other scholars in that region. Sheikh Ibrahim enjoys being around children which is why he started off as a primary School headmaster at Raudatul Qur’an School in Zaria city of Nigeria.",
+    image: bnw,
+  },
+  {
+    title: "Medina Education",
+    content:
+      "He was then accepted into the International Islamic University, Madinah. He graduated from the Dept of Shariah at the top of his class with his Bachelors in Shariah and Islamic Studies. He then followed that up with a Postgraduate Diploma (first class of honours) in Islamic Law and Islamic Political Science. Sheikh Ibrahim benefited greatly from his stay in this blessed city learning a lot from the knowledge and tarbiya of the scholars. This is where the idea of An-Nadaa was first developed.",
+    image: medina,
+  },
+  {
+    title: "Malaysia",
+    content:
+      "He then went on to complete his masters and PhD from Islamic International University of Malaysia. While he was doing his PhD he was also a teacher and the head of Islamic department in the International Islamic School Malaysia. After completing his PhD sheikh was invited to join the department of Economics and Management Sciences where he is now an associate professor. He is also a research fellow at the Center for Islamic Economics.",
+    image: malaysia,
+  },
+  {
+    title: "Youth Empowerment",
+    content:
+      "Sheikh Ibrahim allots a lot of his free time, and many times sacrifices his own family time, to engage with youth and spread the knowledge and the tarbiyyah of the deen. He conducts classes in Fiqh, Seerah, Akhlaaq, Tafseer, Faraid, essential knowledge for new muslims. Sheikh Ibrahim also holds advisory roles with many organisations and student bodies. With his deep knowledge coupled with extreme humility, Sheikh Ibrahim has significantly single-handedly developed Islam in the lives of hundreds if not thousands of Muslim youth.",
+    image: youth,
+  },
+]
+</script>

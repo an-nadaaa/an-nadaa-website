@@ -14,6 +14,13 @@ module.exports = {
       },
     },
     extend: {
+      aspectRatio: {
+        "2/3": "2 / 3",
+
+        "3/2": "3 / 2",
+        "3/4": "3 / 4",
+        "4/3": "4 / 3",
+      },
       fontFamily: {
         primary: ["Satoshi", "sans-serif"],
       },
