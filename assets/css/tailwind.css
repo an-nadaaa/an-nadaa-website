@@ -65,7 +65,9 @@
 
 @layer base {
   :root {
-    --background: 37 53% 65%;
+    --dark-blue: 203 67% 15%;
+
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
     --muted: 210 40% 96.1%;
@@ -80,8 +82,8 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 193 75% 54%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -131,8 +133,34 @@
 
 @layer base {
   * {
-    @apply font-primary;
+    @apply font-primary text-base;
+    outline: green dotted 1px;
   }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+
+  h5 {
+    @apply text-lg font-bold;
+  }
+
+  h6 {
+    @apply text-base font-bold;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
