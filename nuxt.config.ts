@@ -5,14 +5,8 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "shadcn-nuxt",
-    "@pinia/nuxt",
-    "@nuxt/icon",
-    "@nuxtjs/i18n",
-    // "shadcn/nuxt",
-  ],
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@pinia/nuxt", "@nuxt/icon", // "shadcn/nuxt",
+  "@nuxtjs/i18n", "@nuxt/content"],
   postcss: {
     plugins: {
       tailwindcss: {},
