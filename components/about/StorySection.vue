@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:pt-28 sm:pb-44">
+      <div class="grid grid-cols-1 sm:pt-28 sm:pb-20">
         <div v-for="(section, index) in sections" :key="index" class="">
           <div
             class="mt-8 sm:mt-0 grid sm:grid-cols-2 items-center gap-x-8 lg:gap-x-16"
