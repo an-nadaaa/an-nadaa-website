@@ -18,14 +18,14 @@
         </div>
         <div class="sm:pr-8">
           <img class="h-18" src="~/assets/media/img/book-icon.svg" />
-          <h3 class="font-normal mt-4">Amanah</h3>
+          <h3 class="font-normal mt-4">Tarbiyah</h3>
           <p class="text-dark-gray font-light">
             Amanah (Trustworthiness) in every step of what we do
           </p>
         </div>
         <div class="sm:pr-8">
           <img class="h-18" src="~/assets/media/img/amanah-icon.svg" />
-          <h3 class="font-normal mt-4">Amanah</h3>
+          <h3 class="font-normal mt-4">Community</h3>
           <p class="text-dark-gray font-light">
             Amanah (Trustworthiness) in every step of what we do
           </p>
