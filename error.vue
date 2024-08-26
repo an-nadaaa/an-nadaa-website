@@ -14,11 +14,25 @@
         </p>
 
         <div class="grid grid-cols-2 sm:w-fit mt-8 gap-2 sm:gap-0">
-          <Button class="sm:w-fit" :variant="'white'">
+          <Button
+            @click="
+              () => {
+                try {
+                  router.back()
+                } catch {
+                  router.push('/')
+                }
+              }
+            "
+            class="sm:w-fit"
+            :variant="'white'"
+          >
             <Icon name="lucide:arrow-left" class="mr-2" />
             Go back</Button
           >
-          <Button class="sm:w-fit" :variant="'default'"> Take me home</Button>
+          <NuxtLink :to="localePath('/')">
+            <Button class="sm:w-fit" :variant="'default'"> Take me home</Button>
+          </NuxtLink>
         </div>
       </div>
       <div>
@@ -43,6 +57,9 @@
 
 <script setup lang="ts">
 import type { NuxtError } from "#app"
+
+const localePath = useLocalePath()
+const router = useRouter()
 
 const props = defineProps({
   error: Object as () => NuxtError,
