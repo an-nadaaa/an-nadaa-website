@@ -4,9 +4,7 @@
       class="grid sm:grid-cols-2 py-16 pb-8 container gap-y-12 md:gap-x-16 lg:gap-x-32 items-center"
     >
       <div>
-        <h4 class="text-primary text-lg font-normal">
-          {{ error?.statusCode }} ERROR
-        </h4>
+        <h4 class="text-primary text-lg font-normal">404 ERROR</h4>
         <h1 class="font-medium my-2">Page not found</h1>
         <p class="text-dark-gray font-light">
           Sorry, the page you are looking for doesn't exist or has been moved.
