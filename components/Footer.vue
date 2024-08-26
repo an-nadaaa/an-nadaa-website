@@ -63,25 +63,15 @@
         <div
           class="col-span-1 space-y-8 lg:space-y-0 lg:col-span-3 grid grid-cols-1 lg:grid-cols-3"
         >
-          <div class="flex flex-col space-y-3">
-            <p class="text-gray-300">Quick links</p>
-            <NuxtLink> Causes </NuxtLink>
-            <NuxtLink> Learn </NuxtLink>
-            <NuxtLink> Donate </NuxtLink>
-            <NuxtLink> FAQs </NuxtLink>
-          </div>
-          <div class="flex flex-col space-y-3">
-            <p class="text-gray-300">Causes</p>
-            <NuxtLink> Build a Mosque </NuxtLink>
-            <NuxtLink> Build a well </NuxtLink>
-            <NuxtLink> Help the widows </NuxtLink>
-            <NuxtLink> Help the orphans </NuxtLink>
-          </div>
-          <div class="flex flex-col space-y-3">
-            <p class="text-gray-300">Organisation</p>
-            <NuxtLink> About us </NuxtLink>
-            <NuxtLink> Contact </NuxtLink>
-            <NuxtLink> Terms and Privacy </NuxtLink>
+          <div v-for="(group, index) in groups" class="flex flex-col space-y-3">
+            <p class="text-gray-300">{{ group.type }}</p>
+            <NuxtLink
+              v-for="(link, index) in group.links"
+              :key="index"
+              :to="localePath(link.path)"
+            >
+              {{ link.title }}
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -99,8 +89,37 @@ import img3 from "~/assets/media/img/3.png"
 import img4 from "~/assets/media/img/4.png"
 import logo from "~/assets/media/img/logos/annadaa-white.svg"
 
+const localePath = useLocalePath()
 const plugins = [new Pagination({ type: "bullet" })]
 const images = [img1, img2, img3, img4]
+const groups = [
+  {
+    type: "Causes",
+    links: [
+      { title: "Build a Mosque", path: "/build-a-mosque" },
+      { title: "Build a well", path: "/build-a-well" },
+      { title: "Help the widows", path: "/help-widows" },
+      { title: "Help the orphans", path: "/help-orphans" },
+    ],
+  },
+  {
+    type: "Organisation",
+    links: [
+      { title: "About us", path: "/about" },
+      { title: "Contact", path: "/contact-us" },
+      { title: "Terms and Privacy", path: "/privacy" },
+    ],
+  },
+  {
+    type: "Quick links",
+    links: [
+      { title: "Causes", path: "/causes" },
+      { title: "Learn", path: "/learn" },
+      { title: "Donate", path: "/donate" },
+      { title: "FAQs", path: "/faq" },
+    ],
+  },
+]
 </script>
 <style>
 .flicking-pagination-bullet {
