@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@pinia/nuxt", "@nuxt/icon", // "shadcn/nuxt",
-  "@nuxtjs/i18n", "@nuxt/content"],
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@pinia/nuxt", // "shadcn/nuxt",
+  "@nuxt/icon", "@nuxtjs/i18n", "@nuxt/content", "@nuxt/image"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -17,21 +17,21 @@ export default defineNuxtConfig({
     locales: [
       {
         code: "en",
-        iso: "en-US",
+        language: "en-US",
         file: "translations/en.js",
         dir: "ltr",
         name: "English",
       },
       {
         code: "ar",
-        iso: "ar-SA",
+        language: "ar-SA",
         file: "translations/ar.js",
         dir: "rtl",
         name: "العربية",
       },
       {
         code: "ms",
-        iso: "ms-MY",
+        language: "ms-MY",
         file: "translations/ms.js",
         dir: "ltr",
         name: "Bahasa Malayu",
