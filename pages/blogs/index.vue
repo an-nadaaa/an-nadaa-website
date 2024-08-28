@@ -33,6 +33,14 @@
           </NuxtLink>
         </div>
       </div>
+
+      <div class="w-full">
+        <Button
+          :variant="'white'"
+          class="mt-4 w-full sm:w-80 relative left-1/2 -translate-x-1/2"
+          >Load more</Button
+        >
+      </div>
     </div>
   </div>
 </template>
