@@ -5,12 +5,24 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@pinia/nuxt", // "shadcn/nuxt",
-  "@nuxt/icon", "@nuxtjs/i18n", "@nuxt/content", "@nuxt/image"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "shadcn-nuxt",
+    "@pinia/nuxt", // "shadcn/nuxt",
+    "@nuxt/icon",
+    "@nuxtjs/i18n",
+    "@nuxt/content",
+    "@nuxt/image",
+  ],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
+    },
+  },
+  content: {
+    markdown: {
+      anchorLinks: false,
     },
   },
   i18n: {

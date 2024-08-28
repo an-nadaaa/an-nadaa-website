@@ -14,6 +14,13 @@ module.exports = {
       },
     },
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "200ch", // add required value here
+          },
+        },
+      },
       aspectRatio: {
         "2/3": "2 / 3",
 
@@ -95,5 +102,5 @@ module.exports = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, require("@tailwindcss/typography")],
 }
