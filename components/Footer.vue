@@ -82,7 +82,7 @@
 import Flicking from "@egjs/vue3-flicking"
 import "@egjs/vue3-flicking/dist/flicking.css"
 import "@egjs/flicking-plugins/dist/flicking-plugins.css"
-import { Pagination } from "@egjs/flicking-plugins"
+import { Pagination, AutoPlay } from "@egjs/flicking-plugins"
 import img1 from "~/assets/media/img/1.png"
 import img2 from "~/assets/media/img/2.png"
 import img3 from "~/assets/media/img/3.png"
@@ -90,7 +90,10 @@ import img4 from "~/assets/media/img/4.png"
 import logo from "~/assets/media/img/logos/annadaa-white.svg"
 
 const localePath = useLocalePath()
-const plugins = [new Pagination({ type: "bullet" })]
+const plugins = [
+  new Pagination({ type: "bullet" }),
+  new AutoPlay({ duration: 1000 }),
+]
 const images = [img1, img2, img3, img4]
 const groups = [
   {

@@ -2,7 +2,7 @@
   <div class="my-4 relative">
     <flicking
       class="hidden sm:block py-16"
-      :options="{ circular: false, align: { camera: '2%', panel: '0%' } }"
+      :options="{ circular: true, align: { camera: '2%', panel: '0%' } }"
       :plugins="plugins"
     >
       <TestimonialCard
