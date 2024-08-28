@@ -29,11 +29,15 @@
       v-html="body"
     ></div> -->
 
-      <div class="mt-4 w-full flex justify-between">
+      <div
+        class="mt-4 w-full flex flex-col gap-y-3 sm:flex-row justify-between"
+      >
         <p class="text-dark-gray">Share this post</p>
 
         <div class="flex gap-x-2">
-          <Button :variant="'white'">Copy link</Button>
+          <Button :variant="'white'">
+            <Icon name="lucide:copy" class="mr-2" /> Copy link</Button
+          >
           <Button class="text-dark-gray p-1" :variant="'white'">
             <Icon name="bxl:twitter" class="w-6" />
           </Button>
