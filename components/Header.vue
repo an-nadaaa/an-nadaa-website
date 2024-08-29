@@ -11,7 +11,7 @@
         <NuxtLink class="hover:text-gray-200" :href="localePath('/about')"
           >About</NuxtLink
         >
-        <NuxtLink class="hover:text-gray-200" :href="localePath('/contact')"
+        <NuxtLink class="hover:text-gray-200" :href="localePath('/causes')"
           >Causes</NuxtLink
         >
         <NuxtLink class="hover:text-gray-200" :href="localePath('/learn')"
