@@ -3,7 +3,7 @@
     <div
       class="container grid items-center gap-y-8 sm:grid-cols-2 sm:gap-x-8 lg:gap-x-36"
     >
-      <div class="sm:py-24">
+      <div class="sm:py-12 lg:py-24">
         <h1 class="text-5xl font-bold">Causes</h1>
         <blockquote
           class="pl-2 border-l-2 italic border-l-primary space-y-3 mt-6"

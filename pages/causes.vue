@@ -1,6 +1,7 @@
 <template>
   <div>
     <CausesHeroSection />
+    <CausesLayoutSection />
   </div>
 </template>
 

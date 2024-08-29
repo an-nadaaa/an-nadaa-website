@@ -1,6 +1,6 @@
 <template>
   <div
-    class="campaign-card px-4 py-1 bg-white shadow-md rounded-lg transition transform"
+    class="campaign-card px-4 py-1 pt-4 bg-white shadow-md rounded-lg transition transform"
   >
     <AspectRatio :ratio="3 / 2">
       <img :src="image" alt="" class="w-full h-full object-cover rounded-lg" />
@@ -17,7 +17,7 @@
       </div>
 
       <h3 class="text-lg font-normal mt-2">{{ title }}</h3>
-      <div class="flex w-[90%] max-w-[400px] items-center space-x-3">
+      <div class="flex w-full max-w-[350px] items-center space-x-3">
         <Progress
           :model-value="Math.round((amountRaised / goalAmount) * 100)"
           class="h-[5px]"
