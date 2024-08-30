@@ -27,6 +27,7 @@ module.exports = {
         "3/2": "3 / 2",
         "3/4": "3 / 4",
         "4/3": "4 / 3",
+        "16/9": "16 / 9",
       },
       fontFamily: {
         primary: ["Satoshi", "sans-serif"],
