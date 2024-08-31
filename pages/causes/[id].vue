@@ -27,7 +27,7 @@
 
         <div
           :class="`relative overflow-hidden pb-24 ${
-            isExpanded ? '' : 'h-[300px]'
+            isExpanded ? '' : 'h-[200px]'
           }`"
         >
           <ContentRenderer
@@ -83,11 +83,49 @@
       <div class="basis-[40%] p-4 shadow-md h-fit rounded-xl">
         <h3 class="text-xl font-normal">
           <strong class="text-xl font-semibold">
-            ${{ cause.raisedAmount }}
+            ${{ formatCurrency(cause.raisedAmount) }}
           </strong>
-          of ${{ cause.goalAmount }} raised
+          of ${{ formatCurrency(cause.goalAmount) }} raised
         </h3>
-        <Tag class="mt-2" text="20 days left" :variant="'purple'" />
+        <Tag class="my-2" text="20 days left" :variant="'purple'" />
+        <p class="text-dark-gray font-thin">
+          Your donation will make a difference no matter how little
+        </p>
+        <Toggle
+          class="mt-2 mb-4"
+          :states="['Monthly', 'One-time']"
+          v-model="toggleIndex"
+        />
+        <div class="relative">
+          <Input class="w-full" :placeholder="'Enter amount'"></Input>
+          <div class="absolute top-0 right-0">
+            <Select class="">
+              <SelectTrigger class="border-l-0 rounded-l-none">
+                <SelectValue placeholder="$" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="usd"> $ </SelectItem>
+                  <SelectItem value="myr"> RM </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <Button class="w-full">Make donation</Button>
+          <Button variant="white" class="w-full mt-2"
+            >Donate to An-Nadaa bank account</Button
+          >
+        </div>
+
+        <p
+          class="flex font-light justify-center items-center mt-4 hover:cursor-pointer hover:underline"
+        >
+          <Icon name="lucide:share-2" class="mr-2"></Icon> Share with family and
+          friends
+        </p>
       </div>
     </div>
     <div class="w-full py-16">
@@ -107,11 +145,30 @@
 <script setup lang="ts">
 import Tag from "~/components/global/Tag.vue"
 import BankDetails from "~/components/global/BankDetails.vue"
+import Toggle from "~/components/global/Toggle.vue"
+import { Input } from "~/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
+const toggleIndex = ref(0)
 const { locale } = useI18n()
 const { data: cause } = await useAsyncData("cause", () =>
   queryContent("causes", locale.value).findOne()
 )
+
+function formatCurrency(amount: number) {
+  return amount.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}
 
 const isExpanded = ref(false)
 </script>
