@@ -34,7 +34,10 @@
 
     <div class="mt-4">
       <Button class="w-full">Make donation</Button>
-      <Button variant="white" class="w-full mt-2"
+      <Button
+        @click="() => scrollToElement()"
+        variant="white"
+        class="w-full mt-2"
         >Donate to An-Nadaa bank account</Button
       >
     </div>
@@ -53,6 +56,6 @@ import { formatCurrency } from "~/lib/utils"
 import Input from "../ui/input/Input.vue"
 
 const currencySelector = ref("usd")
-const props = defineProps(["cause"])
+const props = defineProps(["cause", "scrollToElement"])
 const toggleIndex = defineModel()
 </script>

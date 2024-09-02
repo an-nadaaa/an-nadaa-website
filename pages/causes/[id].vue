@@ -32,7 +32,7 @@
           @hide="onHide"
         />
 
-        <div class="relative">
+        <div :class="`relative ${images.length > 0 ? '' : 'hidden'}`">
           <flicking
             ref="flickingElement"
             class="py-4"
@@ -81,6 +81,7 @@
           class="sm:hidden mt-8"
           v-model="toggleIndex"
           :cause="cause"
+          :scrollToElement="scrollToElement"
         />
 
         <div
@@ -125,7 +126,6 @@
             @click="
               () => {
                 isExpanded = !isExpanded
-                console.log(isExpanded)
               }
             "
             class="absolute bottom-0 right-0"
@@ -140,10 +140,14 @@
         </div>
       </div>
       <div class="hidden sm:block basis-[40%]">
-        <DonateCard :cause="cause" />
+        <DonateCard
+          :cause="cause"
+          v-model="toggleIndex"
+          :scrollToElement="scrollToElement"
+        />
       </div>
     </div>
-    <div class="w-full py-16">
+    <div ref="bankInfo" class="w-full py-16">
       <h2 class="font-medium">Direct transfers</h2>
       <p class="text-dark-gray font-normal mt-2">
         When doing a direct transfer we need our donors to send us an email
@@ -172,6 +176,7 @@ import Flicking from "@egjs/vue3-flicking"
 
 const selectedCurrency = ref("usd")
 
+const bankInfo = ref()
 const currentIndex = ref(0)
 const toggleIndex = ref(0)
 const { locale } = useI18n()
@@ -181,11 +186,16 @@ const { data: cause } = await useAsyncData("cause", () =>
 const images = [img1, img2, img3, img4, img5, img6]
 const flickingElement = ref(null)
 const lightboxVisible = ref(false)
+
 const onHide = () => {
   lightboxVisible.value = false
 }
 
 const isExpanded = ref(false)
+
+function scrollToElement() {
+  bankInfo.value?.scrollIntoView({ behavior: "smooth" })
+}
 </script>
 
 <style></style>
