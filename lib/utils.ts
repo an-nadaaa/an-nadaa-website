@@ -32,3 +32,10 @@ export function formatDate(dateStr: string): string {
   // Return the formatted date string
   return `${month} ${day}, ${year}`
 }
+
+export function formatCurrency(amount: number) {
+  return amount.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}

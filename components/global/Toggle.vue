@@ -5,7 +5,7 @@
     >
       <div
         :class="`absolute bg-white z-0 ml-1 mt-1 shadow-md rounded-md transition-all left-[${Math.round(
-          (toggleIndex / states.length) * 100
+          (currentIndex / states.length) * 100
         )}%]`"
         :style="{
           height: 'calc(100% - 8px)',
@@ -20,7 +20,7 @@
       >
         <p
           :class="`text-center font-normal ${
-            toggleIndex === index ? 'text-foreground' : 'text-gray-400'
+            currentIndex === index ? 'text-foreground' : 'text-gray-400'
           }`"
         >
           {{ state }}
@@ -40,6 +40,11 @@ const props = defineProps({
 
 // const toggleIndex = toRef(props, "toggleIndex")
 const toggleIndex = defineModel()
+const currentIndex = computed(() => {
+  if (toggleIndex.value) return toggleIndex.value
+
+  return 0
+})
 
 function toggle(index: number) {
   // console.log(index)

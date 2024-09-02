@@ -13,7 +13,7 @@
     </h1>
     <div class="mt-8 grid gap-x-4 lg:flex">
       <div :class="`basis-[60%]`">
-        <div class="aspect-16/9 overflow-hidden rounded-3xl">
+        <div class="aspect-16/9 overflow-hidden rounded-2xl">
           <iframe
             class="w-full h-full"
             src="https://www.youtube.com/embed/02FKz_9VeeM?si=dDgojZO9UtqUfeF8"
@@ -24,6 +24,64 @@
             allowfullscreen
           ></iframe>
         </div>
+
+        <VueEasyLightbox
+          :visible="lightboxVisible"
+          :imgs="images"
+          :index="currentIndex"
+          @hide="onHide"
+        />
+
+        <div class="relative">
+          <flicking
+            ref="flickingElement"
+            class="py-4"
+            :options="{ circular: true, align: { camera: '0%', panel: '0%' } }"
+            :plugins="plugins"
+          >
+            <div
+              v-for="(image, index) in images"
+              :key="index"
+              @click="
+                () => {
+                  currentIndex = index
+                  lightboxVisible = true
+                }
+              "
+              class="mr-2 aspect-4/3 overflow-hidden rounded-lg hover:cursor-pointer"
+            >
+              <img :src="image" class="h-full w-24 md:w-36 object-cover" />
+            </div>
+          </flicking>
+
+          <div class="absolute w-full flex justify-between top-1/2">
+            <div
+              @click="() => flickingElement?.prev()"
+              class="hover:cursor-pointer shadow-md -translate-y-1/2 -translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
+            >
+              <Icon
+                name="lucide:arrow-left"
+                class="h-full w-full text-primary relative -translate-x-[0px]"
+              ></Icon>
+            </div>
+
+            <div
+              @click="() => flickingElement?.next()"
+              class="right-0 hover:cursor-pointer shadow-md -translate-y-1/2 translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
+            >
+              <Icon
+                name="lucide:arrow-right"
+                class="h-full w-full text-primary relative -translate-x-[0px]"
+              ></Icon>
+            </div>
+          </div>
+        </div>
+
+        <DonateCard
+          class="sm:hidden mt-8"
+          v-model="toggleIndex"
+          :cause="cause"
+        />
 
         <div
           :class="`relative overflow-hidden pb-24 ${
@@ -67,6 +125,7 @@
             @click="
               () => {
                 isExpanded = !isExpanded
+                console.log(isExpanded)
               }
             "
             class="absolute bottom-0 right-0"
@@ -80,52 +139,8 @@
           </Button>
         </div>
       </div>
-      <div class="basis-[40%] p-4 shadow-md h-fit rounded-xl">
-        <h3 class="text-xl font-normal">
-          <strong class="text-xl font-semibold">
-            ${{ formatCurrency(cause.raisedAmount) }}
-          </strong>
-          of ${{ formatCurrency(cause.goalAmount) }} raised
-        </h3>
-        <Tag class="my-2" text="20 days left" :variant="'purple'" />
-        <p class="text-dark-gray font-thin">
-          Your donation will make a difference no matter how little
-        </p>
-        <Toggle
-          class="mt-2 mb-4"
-          :states="['Monthly', 'One-time']"
-          v-model="toggleIndex"
-        />
-        <div class="relative">
-          <Input class="w-full" :placeholder="'Enter amount'"></Input>
-          <div class="absolute top-0 right-0">
-            <Select class="">
-              <SelectTrigger class="border-l-0 rounded-l-none">
-                <SelectValue placeholder="$" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="usd"> $ </SelectItem>
-                  <SelectItem value="myr"> RM </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div class="mt-4">
-          <Button class="w-full">Make donation</Button>
-          <Button variant="white" class="w-full mt-2"
-            >Donate to An-Nadaa bank account</Button
-          >
-        </div>
-
-        <p
-          class="flex font-light justify-center items-center mt-4 hover:cursor-pointer hover:underline"
-        >
-          <Icon name="lucide:share-2" class="mr-2"></Icon> Share with family and
-          friends
-        </p>
+      <div class="hidden sm:block basis-[40%]">
+        <DonateCard :cause="cause" />
       </div>
     </div>
     <div class="w-full py-16">
@@ -143,32 +158,34 @@
   </div>
 </template>
 <script setup lang="ts">
-import Tag from "~/components/global/Tag.vue"
 import BankDetails from "~/components/global/BankDetails.vue"
-import Toggle from "~/components/global/Toggle.vue"
-import { Input } from "~/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import DonateCard from "~/components/cause/DonateCard.vue"
+import "@egjs/flicking-plugins/dist/flicking-plugins.css"
+import VueEasyLightbox from "vue-easy-lightbox"
+import img1 from "assets/media/img/1.png"
+import img2 from "assets/media/img/2.png"
+import img3 from "assets/media/img/3.png"
+import img4 from "assets/media/img/4.png"
+import img5 from "assets/media/img/5.png"
+import img6 from "assets/media/img/6.png"
+import Flicking from "@egjs/vue3-flicking"
 
+const selectedCurrency = ref("usd")
+
+const currentIndex = ref(0)
 const toggleIndex = ref(0)
 const { locale } = useI18n()
 const { data: cause } = await useAsyncData("cause", () =>
   queryContent("causes", locale.value).findOne()
 )
-
-function formatCurrency(amount: number) {
-  return amount.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+const images = [img1, img2, img3, img4, img5, img6]
+const flickingElement = ref(null)
+const lightboxVisible = ref(false)
+const onHide = () => {
+  lightboxVisible.value = false
 }
 
 const isExpanded = ref(false)
 </script>
+
+<style></style>

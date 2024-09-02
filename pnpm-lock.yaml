@@ -71,6 +71,9 @@ dependencies:
   vue:
     specifier: latest
     version: 3.4.38(typescript@5.5.4)
+  vue-easy-lightbox:
+    specifier: ^1.19.0
+    version: 1.19.0(vue@3.4.38)
 
 devDependencies:
   '@iconify-json/bxl':
@@ -8583,6 +8586,15 @@ packages:
 
   /vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
+    dev: false
+
+  /vue-easy-lightbox@1.19.0(vue@3.4.38):
+    resolution: {integrity: sha512-YxLXgjEn91UF3DuK1y8u3Pyx2sJ7a/MnBpkyrBSQkvU1glzEJASyAZ7N+5yDpmxBQDVMwCsL2VmxWGIiFrWCgA==}
+    engines: {node: '>=14.18.3'}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.4.38(typescript@5.5.4)
     dev: false
 
   /vue-i18n@9.14.0(vue@3.4.38):
