@@ -1,5 +1,5 @@
 <template>
-  <div class="width-full p-4 shadow-md h-fit rounded-xl">
+  <div class="p-4 shadow-md width-full h-fit rounded-xl">
     <h3 class="text-xl font-normal">
       <strong class="text-xl font-semibold">
         ${{ formatCurrency(cause.raisedAmount) }}
@@ -7,7 +7,7 @@
       of ${{ formatCurrency(cause.goalAmount) }} raised
     </h3>
     <Tag class="my-2" text="20 days left" :variant="'purple'" />
-    <p class="text-dark-gray font-thin">
+    <p class="font-thin text-dark-gray">
       Your donation will make a difference no matter how little
     </p>
     <Toggle
@@ -43,7 +43,7 @@
     </div>
 
     <p
-      class="flex font-light justify-center items-center mt-4 hover:cursor-pointer hover:underline"
+      class="flex items-center justify-center mt-4 font-light hover:cursor-pointer hover:underline"
     >
       <Icon name="lucide:share-2" class="mr-2"></Icon> Share with family and
       friends
@@ -52,10 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import { formatCurrency } from "~/lib/utils"
-import Input from "../ui/input/Input.vue"
+import Input from "../ui/input/Input.vue";
 
-const currencySelector = ref("usd")
-const props = defineProps(["cause", "scrollToElement"])
-const toggleIndex = defineModel()
+const { formatCurrency } = useMoneyFormat();
+
+const currencySelector = ref("usd");
+defineProps(["cause", "scrollToElement"]);
+const toggleIndex = defineModel();
 </script>
