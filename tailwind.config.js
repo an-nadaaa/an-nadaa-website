@@ -14,12 +14,20 @@ module.exports = {
       },
     },
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "200ch", // add required value here
+          },
+        },
+      },
       aspectRatio: {
         "2/3": "2 / 3",
 
         "3/2": "3 / 2",
         "3/4": "3 / 4",
         "4/3": "4 / 3",
+        "16/9": "16 / 9",
       },
       fontFamily: {
         primary: ["Satoshi", "sans-serif"],
@@ -95,5 +103,5 @@ module.exports = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, require("@tailwindcss/typography")],
 }
