@@ -9,16 +9,34 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
       screens: {
         "2xl": "1400px",
       },
     },
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "200ch", // add required value here
+          },
+        },
+      },
+      aspectRatio: {
+        "2/3": "2 / 3",
+
+        "3/2": "3 / 2",
+        "3/4": "3 / 4",
+        "4/3": "4 / 3",
+        "16/9": "16 / 9",
+      },
       fontFamily: {
         primary: ["Satoshi", "sans-serif"],
       },
       colors: {
+        "dark-gray": "hsl(var(--dark-gray))",
+        "light-blue": "hsl(var(--light-blue))",
+        "orange-accent": "hsl(var(--orange-accent))",
+        "dark-blue": "hsl(var(--dark-blue))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -85,5 +103,5 @@ module.exports = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, require("@tailwindcss/typography")],
 }

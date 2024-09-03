@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <h1>HELLO WORLD</h1>
-  </div>
+  <HomeHeroSection />
+  <HomeLogoCloudSection />
+  <HomeFeaturedCampaignsSection />
+  <HomeAboutUsSection />
+  <HomeOurImpactSection />
+  <HomeTestimonialsSection />
+  <HomeFAQSection />
 </template>
 <script setup lang="ts"></script>
 <style></style>
