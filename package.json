@@ -17,7 +17,9 @@
     "@nuxt/image": "^1.7.1",
     "@nuxtjs/i18n": "^8.5.0",
     "@pinia/nuxt": "^0.5.3",
+    "@vee-validate/zod": "^4.13.2",
     "@vueuse/core": "^11.0.1",
+    "base-vue-phone-input": "^0.1.13",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
@@ -31,8 +33,10 @@
     "shadcn-nuxt": "^0.10.4",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "vee-validate": "^4.13.2",
     "vue": "latest",
-    "vue-easy-lightbox": "^1.19.0"
+    "vue-easy-lightbox": "^1.19.0",
+    "zod": "^3.23.8"
   },
   "packageManager": "pnpm@8.15.4+sha512.0bd3a9be9eb0e9a692676deec00a303ba218ba279d99241475616b398dbaeedd11146f92c2843458f557b1d127e09d4c171e105bdcd6b61002b39685a8016b9e",
   "devDependencies": {
