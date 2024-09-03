@@ -2,32 +2,32 @@
   <div class="relative">
     <img
       src="assets/media/img/Line.svg"
-      class="absolute top-0 right-0 h-60 hidden sm:block -z-0"
+      class="absolute top-0 right-0 hidden h-60 sm:block -z-0"
     />
 
     <div class="container py-12">
       <h1 class="font-medium">An-Nadaa Blog</h1>
-      <p class="text-dark-gray mt-4 w-[600px] max-w-full">
+      <p class="max-w-2xl mt-4 text-dark-gray">
         We're delving into the heart of An-Nadaa's mission – a mission that
         encompasses projects, outreach, donations, and our profound contribution
         to society. Our journey is a testament to the power of collective action
         and the potential for positive change.
       </p>
-      <div class="mt-8 grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-8">
+      <div class="grid mt-8 sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-8">
         <div class="group" v-for="(blog, index) in blogs" :key="index">
           <NuxtLink :to="`/blogs/${blog.id}`">
             <div class="overflow-hidden h-80">
               <img
                 :src="blog.image"
-                class="w-full h-full object-cover rounded-xl"
+                class="object-cover w-full h-full rounded-xl"
               />
             </div>
             <div class="mt-1 group-hover:underline">
-              <h2 class="font-normal text-2xl text-foreground">
+              <h2 class="text-2xl font-normal text-foreground">
                 {{ blog.title }}
               </h2>
               <p class="text-sm text-dark-gray">
-                {{ formatDate(blog.createdAt) }}
+                {{ formateDayMonthYear(blog.createdAt) }}
               </p>
             </div>
           </NuxtLink>
@@ -37,7 +37,7 @@
       <div class="w-full">
         <Button
           :variant="'white'"
-          class="mt-4 w-full sm:w-80 relative left-1/2 -translate-x-1/2"
+          class="relative w-full mt-4 -translate-x-1/2 sm:w-80 left-1/2"
           >Load more</Button
         >
       </div>
@@ -45,20 +45,21 @@
   </div>
 </template>
 <script setup lang="ts">
-import img1 from "~/assets/media/img/1.png"
-import img2 from "~/assets/media/img/2.png"
-import img3 from "~/assets/media/img/3.png"
-import { formatDate } from "~/lib/utils"
+import img1 from "~/assets/media/img/1.png";
+import img2 from "~/assets/media/img/2.png";
+import img3 from "~/assets/media/img/3.png";
+
+const { formateDayMonthYear } = useDateFormatter();
 
 type Blog = {
-  title: string
-  description: string
-  image: string
-  createdAt: string
-  id: string
-}
+  title: string;
+  description: string;
+  image: string;
+  createdAt: string;
+  id: string;
+};
 
-const blogs = ref<Blog[]>([])
+const blogs = ref<Blog[]>([]);
 
 blogs.value = [
   {
@@ -149,5 +150,5 @@ blogs.value = [
     createdAt: "2021-09-15",
     id: "5",
   },
-]
+];
 </script>

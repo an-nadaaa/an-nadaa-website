@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
+    "@vueuse/nuxt",
     "shadcn-nuxt",
     "@pinia/nuxt", // "shadcn/nuxt",
     "@nuxt/icon",
@@ -55,4 +56,4 @@ export default defineNuxtConfig({
     lazy: true,
     strategy: "prefix_except_default",
   },
-})
+});
