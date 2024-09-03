@@ -1,25 +1,25 @@
 <template>
   <div class="relative w-full pt-12">
     <img
-      class="absolute top-0 right-0 h-60 hidden sm:block -z-0"
+      class="absolute top-0 right-0 hidden h-60 sm:block -z-0"
       src="assets/media/img/Line.svg"
     />
     <div class="container mb-16">
       <h1 class="text-4xl text-left">Frequently Asked Questions</h1>
       <p
-        class="text-dark-gray text-base sm:text-sm font-light mt-4 w-[500px] max-w-full"
+        class="w-full max-w-md mt-4 text-base font-light text-dark-gray sm:text-sm"
       >
         These are the most frequently questions we get asked. If you can't find
         what you're looking for, you can always Contact us with your enquiry.
       </p>
       <div
-        class="mt-6 grid gap-x-4 gap-y-8 sm:gap-y-16 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+        class="grid grid-cols-1 mt-6 gap-x-4 gap-y-8 sm:gap-y-16 md:grid-cols-2 lg:grid-cols-3"
       >
         <div v-for="faq in faqs" :key="faq.question" class="">
-          <h2 class="text-lg sm:text-base font-normal text-foreground">
+          <h2 class="text-lg font-normal sm:text-base text-foreground">
             {{ faq.question }}
           </h2>
-          <p class="text-base sm:text-sm font-light text-dark-gray mt-2">
+          <p class="mt-2 text-base font-light sm:text-sm text-dark-gray">
             {{ faq.answer }}
           </p>
         </div>
@@ -29,10 +29,10 @@
 </template>
 <script setup lang="ts">
 type FAQ = {
-  question: string
-  answer: string
-}
-const faqs = ref<FAQ[]>([])
+  question: string;
+  answer: string;
+};
+const faqs = ref<FAQ[]>([]);
 
 faqs.value = [
   {
@@ -74,6 +74,6 @@ faqs.value = [
     answer:
       "An-Nadaa is registered in Nigeria and Malaysia as a non profit organization.",
   },
-]
+];
 </script>
 <style></style>
