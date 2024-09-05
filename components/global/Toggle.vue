@@ -5,7 +5,7 @@
     >
       <div
         :class="`absolute bg-white z-0 ml-1 mt-1 shadow-md rounded-md transition-all left-[${Math.round(
-          (currentIndex / states.length) * 100
+          (currentIndex.value / states.length) * 100
         )}%]`"
         :style="{
           height: 'calc(100% - 8px)',
@@ -16,11 +16,11 @@
         v-for="(state, index) in states"
         @click="() => toggle(index)"
         :key="index"
-        class="p-1 z-10 hover:cursor-pointer"
+        class="z-10 p-1 hover:cursor-pointer"
       >
         <p
           :class="`text-center font-normal ${
-            currentIndex === index ? 'text-foreground' : 'text-gray-400'
+            currentIndex.value === index ? 'text-foreground' : 'text-gray-400'
           }`"
         >
           {{ state }}
@@ -40,8 +40,8 @@ const props = defineProps({
 
 // const toggleIndex = toRef(props, "toggleIndex")
 const toggleIndex = defineModel()
-const currentIndex = computed(() => {
-  if (toggleIndex.value) return toggleIndex.value
+const currentIndex = computed((): number => {
+  if (toggleIndex.value) return toggleIndex.value as number
 
   return 0
 })

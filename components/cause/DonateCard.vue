@@ -52,11 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import Input from "../ui/input/Input.vue";
+import Input from "../ui/input/Input.vue"
 
-const { formatCurrency } = useMoneyFormat();
+const { formatCurrency } = useMoneyFormat()
 
-const currencySelector = ref("usd");
-defineProps(["cause", "scrollToElement"]);
-const toggleIndex = defineModel();
+const currencySelector = ref("usd")
+defineProps(["cause", "scrollToElement"])
+const toggleIndex = defineModel()
 </script>
