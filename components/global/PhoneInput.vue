@@ -1,9 +1,9 @@
 <template>
   <div class="flex">
-    <Popover :open="popoverOpen">
+    <Popover :open="toValue(popoverOpen)">
       <PopoverTrigger>
         <div
-          @click="popoverOpen = !popoverOpen"
+          @click="() => handlePopoverTrigger()"
           class="flex items-center h-full px-2 border border-r-0 border-gray-200 rounded-md rounded-r-none"
         >
           {{ selectedCode }}
@@ -11,7 +11,7 @@
         </div>
       </PopoverTrigger>
       <PopoverContent
-        ><Command>
+        ><Command ref="popover">
           <CommandInput placeholder="Search country or code" />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
@@ -20,12 +20,7 @@
               :key="index"
               :value="country.code"
               class="flex justify-between"
-              @click="
-                () => {
-                  selectedCode = country.code
-                  popoverOpen = false
-                }
-              "
+              @click="() => handleCommandClick(country)"
             >
               {{ country.name }}
               <p class="text-sm font-light text-dark-gray">
@@ -61,6 +56,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command"
+import { onClickOutside } from "@vueuse/core"
 
 defineProps({
   placeholder: {
@@ -72,4 +68,20 @@ defineProps({
 
 const selectedCode = ref("+60")
 const popoverOpen = ref(false)
+const popover = ref()
+
+onClickOutside(popover as any, (event) => {
+  if (popoverOpen.value) {
+    popoverOpen.value = false
+  }
+})
+
+function handleCommandClick(country: { name: string; code: string }) {
+  selectedCode.value = country.code
+  popoverOpen.value = false
+}
+
+function handlePopoverTrigger() {
+  popoverOpen.value = !popoverOpen.value
+}
 </script>
