@@ -1,7 +1,7 @@
 <template>
   <div class="container py-8">
     <h1 class="">Get in touch to start collaboration/projects with An-Nadaa</h1>
-    <div class="mt-8 grid sm:grid-cols-2 gap-x-8 gap-y-8 sm:gap-y-20">
+    <div class="grid mt-8 sm:grid-cols-2 gap-x-8 gap-y-8 sm:gap-y-20">
       <Card class="p-6 space-y-3 text-foreground">
         <h3 class="font-medium">Emails</h3>
         <p class="font-light text-dark-gray">
@@ -53,11 +53,11 @@
       </Card>
       <div>
         <h1>Send us a message</h1>
-        <p class="font-light text-dark-gray mt-4">
+        <p class="mt-4 font-light text-dark-gray">
           We will get back to you as soon as we can.
         </p>
       </div>
-      <Card class="p-6"> </Card>
+      <Card class="p-6"> <ContactForm /> </Card>
     </div>
   </div>
 </template>
