@@ -14,6 +14,7 @@
         </p>
       </div>
       <DonateCard
+        class="z-10"
         :scroll-to-element="scrollToElement"
         :projects="projects"
         v-model:project-selected="projectSelected"
