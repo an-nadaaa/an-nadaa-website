@@ -38,12 +38,7 @@
           </div>
           <div class="space-y-2">
             <Label for="phone">Phone Number</Label>
-            <Input
-              id="phone"
-              v-model="phone"
-              type="tel"
-              placeholder="Enter your phone Number"
-            />
+            <PhoneInput />
           </div>
           <div class="space-y-2">
             <Label for="cardNumber">Card Number</Label>

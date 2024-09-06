@@ -54,7 +54,19 @@
       </div>
 
       <div class="mt-4">
-        <Button class="w-full">Make donation</Button>
+        <Button
+          @click="
+            () => {
+              if (onClick) {
+                onClick()
+              }
+            }
+          "
+          class="w-full"
+          >{{
+            route.fullPath.includes("checkout") ? "Confirm" : "Make donation"
+          }}</Button
+        >
         <Button
           v-if="!!scrollToElement"
           @click="
@@ -77,6 +89,7 @@
 const projectSelected: Ref = defineModel("projectSelected")
 const currencySelector: Ref = defineModel("currencySelector")
 const amount: Ref = defineModel("amount")
+const route = useRoute()
 
 defineProps({
   projects: {
@@ -84,6 +97,10 @@ defineProps({
     required: true,
   },
   scrollToElement: {
+    type: Function,
+    required: false,
+  },
+  onClick: {
     type: Function,
     required: false,
   },

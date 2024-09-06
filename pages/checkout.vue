@@ -8,6 +8,7 @@
         v-if="isEditing"
         class="shadow-lg outline-1"
         :projects="projects"
+        :on-click="onConfirm"
         v-model:currency-selector="currencySelector"
         v-model:project-selected="projectSelected"
         v-model:amount="amount"
@@ -68,4 +69,8 @@ const projects = ref([
     description: "Support the education fund of An-Nadaa",
   },
 ])
+
+function onConfirm() {
+  isEditing.value = false
+}
 </script>

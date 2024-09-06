@@ -47,14 +47,10 @@ import {
 import { ChevronDown } from "lucide-vue-next"
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command"
 import { onClickOutside } from "@vueuse/core"
 
