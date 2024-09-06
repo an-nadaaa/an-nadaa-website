@@ -184,7 +184,7 @@ const { data: cause } = await useAsyncData("cause", () =>
   queryContent("causes", locale.value).findOne()
 )
 const images = [img1, img2, img3, img4, img5, img6]
-const flickingElement = ref(null)
+const flickingElement = ref<any>(null)
 const lightboxVisible = ref(false)
 
 const onHide = () => {

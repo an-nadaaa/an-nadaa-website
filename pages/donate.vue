@@ -13,64 +13,12 @@
           to the community.
         </p>
       </div>
-      <div class="z-10 p-8 px-4 bg-white rounded-xl sm:px-8">
-        <h3 class="font-normal">Make your donation</h3>
-        <p class="font-light text-dark-gray">
-          Your donation makes a difference no matter how little
-        </p>
-        <Tabs default-value="monthly" class="mt-2">
-          <TabsList class="w-full">
-            <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
-            <TabsTrigger value="one-time" class="w-full">
-              One-time
-            </TabsTrigger>
-          </TabsList>
-          <!-- <TabsContent value="monthly">
-            Make changes to your account here.
-          </TabsContent>
-          <TabsContent value="one-time">
-            Change your password here.
-          </TabsContent> -->
-        </Tabs>
-        <p class="mt-4 text-sm">Project Supported</p>
-        <Select v-model="value">
-          <SelectTrigger class="mt-2">
-            <SelectValue placeholder="General donation" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem
-              :value="project.id"
-              v-for="(project, index) in projects"
-              :key="index"
-            >
-              {{ project.name }}
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <div class="relative mt-2">
-          <Input class="w-full" :placeholder="'Enter amount'"></Input>
-          <div class="absolute top-0 right-0">
-            <Select v-model="currencySelector" class="">
-              <SelectTrigger class="border-l-0 rounded-l-none">
-                <SelectValue placeholder="$" />
-              </SelectTrigger>
-              <SelectContent class="">
-                <SelectGroup class="">
-                  <SelectItem value="usd"> $ </SelectItem>
-                  <SelectItem value="myr"> RM </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div class="mt-4">
-          <Button class="w-full">Make donation</Button>
-          <Button @click="scrollToElement" variant="white" class="w-full mt-2"
-            >Donate to An-Nadaa bank account</Button
-          >
-        </div>
-      </div>
+      <DonateCard
+        :scroll-to-element="scrollToElement"
+        :projects="projects"
+        v-model:project-selected="projectSelected"
+        v-model:currency-selector="currencySelector"
+      />
     </div>
   </div>
 
@@ -83,6 +31,8 @@
     </p>
     <BankDetails class="mt-8" />
   </div>
+
+  <h1>{{ projectSelected }}</h1>
 
   <HomeFAQSection />
 </template>
@@ -99,6 +49,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import BankDetails from "~/components/global/BankDetails.vue"
+import type { ModelRef } from "vue"
+import DonateCard from "~/components/global/DonateCard.vue"
 
 const projects = ref([
   {
@@ -112,7 +64,7 @@ const projects = ref([
     description: "Support the education fund of An-Nadaa",
   },
 ])
-const value = ref("general")
+const projectSelected = ref("general")
 const currencySelector = ref("usd")
 const bankInfo = ref()
 
