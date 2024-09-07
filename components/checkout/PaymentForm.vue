@@ -78,6 +78,7 @@ const phone = ref("")
 const cardNumber = ref("")
 const expiryDate = ref("")
 const cvc = ref("")
+const router = useRouter()
 
 const handleSubmit = () => {
   // Handle form submission logic here
@@ -90,5 +91,7 @@ const handleSubmit = () => {
     expiryDate: expiryDate.value,
     cvc: cvc.value,
   })
+
+  router.push("/checkout/status")
 }
 </script>
