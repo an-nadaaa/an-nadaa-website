@@ -1,5 +1,5 @@
 <template>
-  <div class="container grid py-20 gap-x-8 gap-y-8 sm:grid-cols-2">
+  <div class="container grid py-4 sm:py-20 gap-x-8 gap-y-8 sm:grid-cols-2">
     <div class="order-2 sm:order-1">
       <CheckoutPaymentForm class="shadow-lg" />
     </div>
