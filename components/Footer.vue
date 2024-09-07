@@ -1,15 +1,15 @@
 <template>
   <div class="w-full bg-light-blue">
-    <div class="container py-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div class="bg-dark-blue p-8 rounded-2xl">
-        <h1 class="text-white text-4xl xl:text-6xl font-normal">
+    <div class="container grid grid-cols-1 gap-4 py-8 sm:grid-cols-2">
+      <div class="p-8 bg-dark-blue rounded-2xl">
+        <h1 class="text-4xl font-normal text-white xl:text-6xl">
           Donate for the
         </h1>
-        <h1 class="text-white text-4xl xl:text-6xl font-normal">
+        <h1 class="text-4xl font-normal text-white xl:text-6xl">
           sake of Allah
         </h1>
 
-        <p class="text-white font-light text-xs mt-2">
+        <p class="mt-2 text-xs font-light text-white">
           Your donation will go to where it is needed the most.
         </p>
         <Button class="px-8 mt-8">Donate</Button>
@@ -28,7 +28,7 @@
             >
               <img
                 :src="image"
-                class="w-full h-full object-cover rounded-2xl"
+                class="object-cover w-full h-full rounded-2xl"
               />
             </div>
             <template #viewport>
@@ -38,12 +38,12 @@
         </AspectRatio>
       </div>
     </div>
-    <div class="bg-dark-blue text-white px-6 sm:px-0">
+    <div class="px-6 text-white bg-dark-blue sm:px-0">
       <div
-        class="container space-y-8 sm:space-y-0 py-8 grid grid-cols-1 sm:grid-cols-2 lg:gap-x-8 lg:grid-cols-4"
+        class="container grid grid-cols-1 py-8 space-y-8 sm:space-y-0 sm:grid-cols-2 lg:gap-x-8 lg:grid-cols-4"
       >
-        <div class="col-span-1 flex flex-col space-y-8">
-          <img class="w-36 text-xs font-thin" :src="logo" />
+        <div class="flex flex-col col-span-1 space-y-8">
+          <img class="text-xs font-thin w-36" :src="logo" />
           <p>
             contact@an-nadaa.com <br />
             +234 806 781 4149 <br />
@@ -61,7 +61,7 @@
           </p>
         </div>
         <div
-          class="col-span-1 space-y-8 lg:space-y-0 lg:col-span-3 grid grid-cols-1 lg:grid-cols-3"
+          class="grid grid-cols-1 col-span-1 space-y-8 lg:space-y-0 lg:col-span-3 lg:grid-cols-3"
         >
           <div v-for="(group, index) in groups" class="flex flex-col space-y-3">
             <p class="text-gray-300">{{ group.type }}</p>
@@ -117,7 +117,6 @@ const groups = [
     type: "Quick links",
     links: [
       { title: "Causes", path: "/causes" },
-      { title: "Learn", path: "/learn" },
       { title: "Donate", path: "/donate" },
       { title: "FAQs", path: "/faq" },
     ],
