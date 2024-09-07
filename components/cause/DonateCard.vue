@@ -33,7 +33,9 @@
     </div>
 
     <div class="mt-4">
-      <Button class="w-full">Make donation</Button>
+      <NuxtLink :to="'/checkout'" class="w-full">
+        <Button class="w-full">Make donation</Button>
+      </NuxtLink>
       <Button
         @click="() => scrollToElement()"
         variant="white"

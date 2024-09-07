@@ -1,10 +1,10 @@
 <template>
-  <section class="featured-campaigns my-16">
+  <section class="my-16 featured-campaigns">
     <div class="container">
       <div class="flex justify-between mb-4">
         <div>
-          <h1 class="text-orange-accent text-sm">OUTREACH AND CAMPAIGNS</h1>
-          <h1 class="text-3xl font-semibold my-3">
+          <h1 class="text-sm text-orange-accent">OUTREACH AND CAMPAIGNS</h1>
+          <h1 class="my-3 text-3xl font-semibold">
             We help build sustainable Islamic communities
           </h1>
           <p class="text-gray-500">
@@ -16,7 +16,7 @@
       </div>
 
       <!-- Campaign Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-6 gap-6">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
         <CampaignCard
           v-for="(campaign, index) in campaigns.slice(0, 5)"
           :class="`${
@@ -32,10 +32,12 @@
           :status="campaign.status"
           :funded="campaign.funded"
           :tags="campaign.tags"
+          class="hover:cursor-pointer hover:shadow-xl"
+          @click="() => router.push(`/causes/${campaign.id}`)"
         />
       </div>
 
-      <Button class="sm:hidden mt-6 w-full" :variant="'white'">View all</Button>
+      <Button class="w-full mt-6 sm:hidden" :variant="'white'">View all</Button>
     </div>
   </section>
 </template>
@@ -43,6 +45,7 @@
 <script setup lang="ts">
 import CampaignCard from "~/components/home/CampaignCardSection.vue"
 
+const router = useRouter()
 const campaigns = [
   {
     id: 1,

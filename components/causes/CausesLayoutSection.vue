@@ -59,10 +59,10 @@
         </Select>
       </div>
       <div>
-        <p class="text-primary underline pt-2 sm:pt-8 ml-4">Reset filter</p>
+        <p class="pt-2 ml-4 underline text-primary sm:pt-8">Reset filter</p>
       </div>
     </div>
-    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
       <HomeCampaignCardSection
         v-for="(campaign, index) in campaigns"
         :key="campaign.id"
@@ -74,6 +74,8 @@
         :status="campaign.status"
         :funded="campaign.funded"
         :tags="campaign.tags"
+        class="hover:cursor-pointer hover:shadow-xl"
+        @click="() => router.push(`/causes/${campaign.id}`)"
       />
     </div>
   </div>
@@ -90,6 +92,7 @@ import {
   SelectValue,
 } from "~/components/ui/select"
 
+const router = useRouter()
 const categories = ["All", "Education", "Food"]
 const states = ["All", "Ongoing", "Funded"]
 const locations = ["All", "Nigeria", "Malaysia"]
