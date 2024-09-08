@@ -1,12 +1,12 @@
 <template>
   <div class="bg-light-blue">
     <div class="container py-12 space-y-6">
-      <h6 class="text-center font-normal">Trusted by</h6>
+      <h6 class="font-normal text-center">Trusted by</h6>
       <div
-        class="[&>*]:mx-auto w-full grid grid-cols-2 space-y-12 mt-4 lg:flex lg:justify-between lg:items-center"
+        class="[&>*]:mx-auto w-full grid grid-cols-2 space-y-12 mt-4 md:grid-cols-3 xl:flex lg:justify-between lg:items-center"
       >
         <img
-          class="mt-12 h-8 sm:h-12"
+          class="h-8 mt-12 sm:h-12"
           src="~/assets/media/img/logos/charityright.svg"
           alt="Tuple"
         />
