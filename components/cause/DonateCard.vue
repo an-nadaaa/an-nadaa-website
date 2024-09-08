@@ -10,7 +10,7 @@
     <p class="font-thin text-dark-gray">
       Your donation will make a difference no matter how little
     </p>
-    <Tabs v-model="toggleIndex" default-value="monthly" class="w-[400px]">
+    <Tabs v-model="toggleIndex" default-value="monthly">
       <TabsList class="w-full">
         <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
         <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
