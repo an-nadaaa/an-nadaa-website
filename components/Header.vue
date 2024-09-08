@@ -27,7 +27,7 @@
                 </div>
               </NuxtLink>
             </HoverCardTrigger>
-            <HoverCardContent class="w-72">
+            <HoverCardContent class="hidden w-72 lg:block">
               <div class="grid gap-y-4">
                 <div
                   class="grid grid-cols-6 align-middle"
