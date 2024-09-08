@@ -69,6 +69,7 @@
               v-for="(link, index) in group.links"
               :key="index"
               :to="localePath(link.path)"
+              class="hover:text-gray-300"
             >
               {{ link.title }}
             </NuxtLink>
