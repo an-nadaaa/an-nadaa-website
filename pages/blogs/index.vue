@@ -13,8 +13,12 @@
         to society. Our journey is a testament to the power of collective action
         and the potential for positive change.
       </p>
-      <div class="grid mt-8 sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-8">
-        <div class="group" v-for="(blog, index) in blogs" :key="index">
+      <div class="grid gap-4 mt-8 sm:grid-cols-2 xl:grid-cols-3">
+        <div
+          class="p-4 transition-all rounded-lg group hover:shadow-lg"
+          v-for="(blog, index) in blogs"
+          :key="index"
+        >
           <NuxtLink :to="`/blogs/${blog.id}`">
             <div class="overflow-hidden h-80">
               <img
@@ -45,21 +49,21 @@
   </div>
 </template>
 <script setup lang="ts">
-import img1 from "~/assets/media/img/1.png";
-import img2 from "~/assets/media/img/2.png";
-import img3 from "~/assets/media/img/3.png";
+import img1 from "~/assets/media/img/1.png"
+import img2 from "~/assets/media/img/2.png"
+import img3 from "~/assets/media/img/3.png"
 
-const { formateDayMonthYear } = useDateFormatter();
+const { formateDayMonthYear } = useDateFormatter()
 
 type Blog = {
-  title: string;
-  description: string;
-  image: string;
-  createdAt: string;
-  id: string;
-};
+  title: string
+  description: string
+  image: string
+  createdAt: string
+  id: string
+}
 
-const blogs = ref<Blog[]>([]);
+const blogs = ref<Blog[]>([])
 
 blogs.value = [
   {
@@ -150,5 +154,5 @@ blogs.value = [
     createdAt: "2021-09-15",
     id: "5",
   },
-];
+]
 </script>

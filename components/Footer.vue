@@ -120,6 +120,7 @@ const groups = [
       { title: "Causes", path: "/causes" },
       { title: "Donate", path: "/donate" },
       { title: "FAQs", path: "/faq" },
+      { title: "Blogs", path: "/blogs" },
     ],
   },
 ]
