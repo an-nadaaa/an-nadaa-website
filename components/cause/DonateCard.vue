@@ -2,20 +2,21 @@
   <div class="p-4 shadow-md width-full h-fit rounded-xl">
     <h3 class="text-xl font-normal">
       <strong class="text-xl font-semibold">
-        ${{ formatCurrency(cause.raisedAmount) }}
+        {{ formatCurrency(cause.raisedAmount) }}
       </strong>
-      of ${{ formatCurrency(cause.goalAmount) }} raised
+      of {{ formatCurrency(cause.goalAmount) }} raised
     </h3>
     <Tag class="my-2" text="20 days left" :variant="'purple'" />
     <p class="font-thin text-dark-gray">
       Your donation will make a difference no matter how little
     </p>
-    <Toggle
-      class="mt-2 mb-4"
-      :states="['Monthly', 'One-time']"
-      v-model="toggleIndex"
-    />
-    <div class="relative">
+    <Tabs v-model="toggleIndex" default-value="monthly" class="w-[400px]">
+      <TabsList class="w-full">
+        <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
+        <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
+      </TabsList>
+    </Tabs>
+    <div class="relative mt-4">
       <Input class="w-full" :placeholder="'Enter amount'"></Input>
       <div class="absolute top-0 right-0">
         <Select v-model="currencySelector" class="">
@@ -54,11 +55,12 @@
 </template>
 
 <script setup lang="ts">
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Input from "../ui/input/Input.vue"
 
 const { formatCurrency } = useMoneyFormat()
 
 const currencySelector = ref("usd")
 defineProps(["cause", "scrollToElement"])
-const toggleIndex = defineModel()
+const toggleIndex: Ref = defineModel("toggleIndex")
 </script>

@@ -8,12 +8,12 @@
         >
       </NuxtLink>
     </div>
-    <h1 class="font-medium mt-4">
+    <h1 class="mt-4 font-medium">
       {{ cause?.title }}
     </h1>
-    <div class="mt-8 grid gap-x-4 lg:flex">
+    <div class="grid mt-8 gap-x-4 lg:flex">
       <div :class="`basis-[60%]`">
-        <div class="aspect-16/9 overflow-hidden rounded-2xl">
+        <div class="overflow-hidden aspect-16/9 rounded-2xl">
           <iframe
             class="w-full h-full"
             src="https://www.youtube.com/embed/02FKz_9VeeM?si=dDgojZO9UtqUfeF8"
@@ -48,13 +48,13 @@
                   lightboxVisible = true
                 }
               "
-              class="mr-2 aspect-4/3 overflow-hidden rounded-lg hover:cursor-pointer"
+              class="mr-2 overflow-hidden rounded-lg aspect-4/3 hover:cursor-pointer"
             >
-              <img :src="image" class="h-full w-24 md:w-36 object-cover" />
+              <img :src="image" class="object-cover w-24 h-full md:w-36" />
             </div>
           </flicking>
 
-          <div class="absolute w-full flex justify-between top-1/2">
+          <div class="absolute flex justify-between w-full top-1/2">
             <div
               @click="() => flickingElement?.prev()"
               class="hover:cursor-pointer shadow-md -translate-y-1/2 -translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
@@ -78,7 +78,7 @@
         </div>
 
         <DonateCard
-          class="sm:hidden mt-8"
+          class="mt-8 sm:hidden"
           v-model="toggleIndex"
           :cause="cause"
           :scrollToElement="scrollToElement"
@@ -90,16 +90,16 @@
           }`"
         >
           <ContentRenderer
-            class="mb-12 prose-a:text-dark-gray prose-a:font-light prose prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
+            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
             :value="cause"
           />
 
           <div
-            class="p-6 py-8 rounded-xl w-full"
+            class="w-full p-6 py-8 rounded-xl"
             :style="{ border: '1px solid #e1e1e1' }"
           >
             <h4 class="font-normal">Important Note</h4>
-            <p class="text-dark-gray font-light">
+            <p class="font-light text-dark-gray">
               As you have trusted An-Nadaa to perform udhiya for you and to
               fulfill this responsibility with full Amaana (trust), we require
               some information. As one may know, the udhiya is valid only if
@@ -149,11 +149,11 @@
     </div>
     <div ref="bankInfo" class="w-full py-16">
       <h2 class="font-medium">Direct transfers</h2>
-      <p class="text-dark-gray font-normal mt-2">
+      <p class="mt-2 font-normal text-dark-gray">
         When doing a direct transfer we need our donors to send us an email
         detailing the purpose of the donation and a proof of transfer especially
         if it's for Zakat purpose.
-        <NuxtLink class="text-primary underline" :to="localePath('/contact')">
+        <NuxtLink class="underline text-primary" :to="localePath('/contact')">
           Contact information can be found here
         </NuxtLink>
       </p>
