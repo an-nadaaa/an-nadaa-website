@@ -63,20 +63,24 @@
       </div>
     </div>
     <div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
-      <HomeCampaignCardSection
+      <NuxtLink
         v-for="(campaign, index) in campaigns"
-        :key="campaign.id"
-        :title="campaign.title"
-        :categoryTags="campaign.categoryTags"
-        :image="campaign.image"
-        :amountRaised="campaign.amountRaised"
-        :goalAmount="campaign.goalAmount"
-        :status="campaign.status"
-        :funded="campaign.funded"
-        :tags="campaign.tags"
-        class="hover:cursor-pointer hover:shadow-xl"
-        @click="() => router.push(`/causes/${campaign.id}`)"
-      />
+        :id="index"
+        :to="'/causes/' + campaign.id"
+      >
+        <HomeCampaignCardSection
+          :key="campaign.id"
+          :title="campaign.title"
+          :categoryTags="campaign.categoryTags"
+          :image="campaign.image"
+          :amountRaised="campaign.amountRaised"
+          :goalAmount="campaign.goalAmount"
+          :status="campaign.status"
+          :funded="campaign.funded"
+          :tags="campaign.tags"
+          class="hover:cursor-pointer hover:shadow-xl"
+        />
+      </NuxtLink>
     </div>
   </div>
 </template>

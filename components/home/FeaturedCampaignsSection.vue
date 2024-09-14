@@ -12,32 +12,43 @@
             people.
           </p>
         </div>
-        <Button class="hidden sm:block" :variant="'white'">View all</Button>
+
+        <NuxtLink to="/causes">
+          <Button class="hidden sm:block" :variant="'white'">View all</Button>
+        </NuxtLink>
       </div>
 
       <!-- Campaign Cards -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
-        <CampaignCard
+        <NuxtLink
           v-for="(campaign, index) in campaigns.slice(0, 5)"
+          :id="index"
+          :to="'/causes/' + campaign.id"
           :class="`${
             index === 0 || index === 1 ? 'sm:col-span-3' : 'sm:col-span-2'
           }
           ${index > 2 ? 'hidden' : ''} sm:block col-span-1`"
-          :key="campaign.id"
-          :title="campaign.title"
-          :categoryTags="campaign.categoryTags"
-          :image="campaign.image"
-          :amountRaised="campaign.amountRaised"
-          :goalAmount="campaign.goalAmount"
-          :status="campaign.status"
-          :funded="campaign.funded"
-          :tags="campaign.tags"
-          class="hover:cursor-pointer hover:shadow-xl"
-          @click="() => router.push(`/causes/${campaign.id}`)"
-        />
+        >
+          <CampaignCard
+            :key="campaign.id"
+            :title="campaign.title"
+            :categoryTags="campaign.categoryTags"
+            :image="campaign.image"
+            :amountRaised="campaign.amountRaised"
+            :goalAmount="campaign.goalAmount"
+            :status="campaign.status"
+            :funded="campaign.funded"
+            :tags="campaign.tags"
+            class="hover:cursor-pointer hover:shadow-xl"
+          />
+        </NuxtLink>
       </div>
 
-      <Button class="w-full mt-6 sm:hidden" :variant="'white'">View all</Button>
+      <NuxtLink to="/causes">
+        <Button class="w-full mt-6 sm:hidden" :variant="'white'"
+          >View all</Button
+        >
+      </NuxtLink>
     </div>
   </section>
 </template>
