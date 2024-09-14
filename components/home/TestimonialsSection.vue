@@ -1,7 +1,7 @@
 <template>
-  <div class="my-4 relative">
+  <div class="relative my-4">
     <flicking
-      class="hidden sm:block py-16"
+      class="hidden py-16 sm:block"
       :options="{ circular: true, align: { camera: '2%', panel: '0%' } }"
       :plugins="plugins"
     >
@@ -15,13 +15,18 @@
       </template>
     </flicking>
     <div class="container">
-      <div class="sm:hidden grid grid-cols-1 gap-y-4">
+      <div class="grid grid-cols-1 sm:hidden gap-y-4">
         <TestimonialCard
           class=""
           v-for="(testimonial, index) in testimonials.slice(0, 4)"
           :key="index"
           :testimonial="testimonial"
         ></TestimonialCard>
+        <div class="px-14">
+          <Button :variant="'white'" class="w-full py-8 text-xl"
+            >View all</Button
+          >
+        </div>
       </div>
     </div>
   </div>
