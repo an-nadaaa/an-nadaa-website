@@ -176,6 +176,7 @@ import Flicking from "@egjs/vue3-flicking"
 
 const selectedCurrency = ref("usd")
 
+const localePath = useLocalePath()
 const bankInfo = ref()
 const currentIndex = ref(0)
 const toggleIndex = ref(0)
