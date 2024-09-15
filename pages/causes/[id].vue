@@ -37,7 +37,6 @@
             ref="flickingElement"
             class="py-4"
             :options="{ circular: true, align: { camera: '0%', panel: '0%' } }"
-            :plugins="plugins"
           >
             <div
               v-for="(image, index) in images"
@@ -185,7 +184,7 @@ const { data: cause } = await useAsyncData("cause", () =>
   queryContent("causes", locale.value).findOne()
 )
 const images = [img1, img2, img3, img4, img5, img6]
-const flickingElement = ref(null)
+const flickingElement = ref<any>(null)
 const lightboxVisible = ref(false)
 
 const onHide = () => {
