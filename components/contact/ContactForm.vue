@@ -1,6 +1,10 @@
 <template>
   <div>
-    <form class="space-y-2" @submit="onSubmit">
+    <form
+      class="space-y-2"
+      method="POST"
+      :action="`https://formsubmit.co/${email}`"
+    >
       <div class="grid grid-cols-2 gap-x-4">
         <FormField v-slot="{ componentField }" name="firstName">
           <FormItem>
