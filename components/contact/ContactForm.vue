@@ -59,7 +59,7 @@
         <FormItem>
           <FormLabel>Phone Number</FormLabel>
           <FormControl>
-            <PhoneInput></PhoneInput>
+            <PhoneInput v-bind="componentField"></PhoneInput>
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -82,11 +82,9 @@ import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
 import * as z from "zod"
 import { Textarea } from "@/components/ui/textarea"
-import { useFocus } from "@vueuse/core"
 
-const open = ref(false)
+const email = "b9a6d9877fa1aca555140617b2ec027b"
 const phoneInput = ref(null)
-const { focused } = useFocus(toValue(phoneInput))
 
 const formSchema = toTypedSchema(
   z.object({
@@ -101,7 +99,7 @@ const formSchema = toTypedSchema(
       .optional(),
     email: z.string().email("Please enter a valid email"),
     company: z.string().optional(),
-    phoneNumber: z.string().optional(),
+    phoneNumber: z.number().optional(),
     message: z.string().min(1, {
       message: "Message must be at least 1 character long",
     }),
@@ -112,8 +110,8 @@ const form = useForm({
   validationSchema: formSchema,
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log("Form submitted!", values)
+const onSubmit = form.handleSubmit(async (values) => {
+  console.log(values)
 })
 </script>
 

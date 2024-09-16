@@ -33,7 +33,11 @@
         </Command>
       </PopoverContent>
     </Popover>
-    <Input class="border-l-0 rounded-l-none" :placeholder="placeholder" />
+    <Input
+      class="border-l-0 rounded-l-none"
+      type="number"
+      :placeholder="placeholder"
+    />
   </div>
 </template>
 
