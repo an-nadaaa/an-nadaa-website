@@ -26,12 +26,17 @@
       <div class="absolute top-0 right-0">
         <Select v-model="currencySelector" class="">
           <SelectTrigger class="border-l-0 rounded-l-none">
-            <SelectValue placeholder="$" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent class="">
             <SelectGroup class="">
-              <SelectItem value="usd"> $ </SelectItem>
-              <SelectItem value="myr"> RM </SelectItem>
+              <SelectItem
+                v-for="(currency, index) in Object.values(currencies as Record<string,any>)"
+                :key="index"
+                :value="currency.code"
+              >
+                {{ currency.symbol }}</SelectItem
+              >
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -63,6 +68,8 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Input from "../ui/input/Input.vue"
 
+const { currencies, defaultCurrency } = useAppConfig()
+
 const route = useRoute()
 const urlParams = computed(() => {
   return new URLSearchParams({
@@ -74,7 +81,11 @@ const urlParams = computed(() => {
 })
 const { formatCurrency } = useMoneyFormat()
 const amount = ref()
-const currencySelector = ref("usd")
+const currencySelector = ref((defaultCurrency as any).code)
 defineProps(["cause", "scrollToElement"])
 const toggleIndex: Ref = defineModel("toggleIndex")
+
+onBeforeMount(() => {
+  toggleIndex.value = "monthly"
+})
 </script>
