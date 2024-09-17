@@ -18,14 +18,14 @@
               </TabsContent> -->
       </Tabs>
       <p class="mt-4 text-sm">Project Supported</p>
-      <Select v-model="projectSelected">
+      <Select v-model="causeSelected">
         <SelectTrigger class="mt-2">
           <SelectValue placeholder="General donation" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem
             :value="project.id"
-            v-for="(project, index) in projects"
+            v-for="(project, index) in causes"
             :key="index"
           >
             {{ project.name }}
@@ -37,6 +37,7 @@
           v-model="amount"
           class="w-full"
           :placeholder="'Enter amount'"
+          type="number"
         ></Input>
         <div class="absolute top-0 right-0">
           <Select v-model="currencySelector" class="">
@@ -86,13 +87,13 @@
 </template>
 
 <script setup lang="ts">
-const projectSelected: Ref = defineModel("projectSelected")
+const causeSelected: Ref = defineModel("causeSelected")
 const currencySelector: Ref = defineModel("currencySelector")
 const amount: Ref = defineModel("amount")
 const route = useRoute()
 
 defineProps({
-  projects: {
+  causes: {
     type: Array<any>,
     required: true,
   },

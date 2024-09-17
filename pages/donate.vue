@@ -16,8 +16,8 @@
       <DonateCard
         class="z-10"
         :scroll-to-element="scrollToElement"
-        :projects="projects"
-        v-model:project-selected="projectSelected"
+        :causes="causes"
+        v-model:cause-selected="causeSelected"
         v-model:currency-selector="currencySelector"
       />
     </div>
@@ -33,7 +33,7 @@
     <BankDetails class="mt-8" />
   </div>
 
-  <h1>{{ projectSelected }}</h1>
+  <h1>{{ causeSelected }}</h1>
 
   <HomeFAQSection />
 </template>
@@ -53,7 +53,7 @@ import BankDetails from "~/components/global/BankDetails.vue"
 import type { ModelRef } from "vue"
 import DonateCard from "~/components/global/DonateCard.vue"
 
-const projects = ref([
+const causes = ref([
   {
     name: "General donation",
     id: "general",
@@ -65,7 +65,7 @@ const projects = ref([
     description: "Support the education fund of An-Nadaa",
   },
 ])
-const projectSelected = ref("general")
+const causeSelected = ref("general")
 const currencySelector = ref("usd")
 const bankInfo = ref()
 

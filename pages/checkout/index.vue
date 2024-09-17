@@ -7,10 +7,10 @@
       <DonateCard
         v-if="isEditing"
         class="shadow-lg outline-1"
-        :projects="projects"
+        :causes="causes"
         :on-click="onConfirm"
         v-model:currency-selector="currencySelector"
-        v-model:project-selected="projectSelected"
+        v-model:cause-selected="causeSelected"
         v-model:amount="amount"
       />
       <Card v-else class="pt-4">
@@ -32,15 +32,13 @@
           <h4 class="text-base font-medium">Donation</h4>
           <p class="text-sm font-light text-dark-gray">
             {{
-              projectSelected === "general"
-                ? "General Donation"
-                : projectSelected
+              causeSelected === "general" ? "General Donation" : causeSelected
             }}
           </p>
 
           <h4 class="mt-6 text-3xl font-normal">
             {{ amount }} {{ currencySelector.toUpperCase() }}
-            {{ isMonthly && "/month" }}
+            {{ isMonthly ? "/month" : "" }}
           </h4>
         </CardContent>
       </Card>
@@ -51,13 +49,14 @@
 <script setup lang="ts">
 import DonateCard from "~/components/global/DonateCard.vue"
 
+const route = useRoute()
 const currencySelector = ref("usd")
-const projectSelected = ref("general")
-const amount = ref("123")
+const causeSelected = ref("general")
+const amount = ref(123)
 const isMonthly = ref(true)
 const isEditing = ref(false)
 
-const projects = ref([
+const causes = ref([
   {
     name: "General donation",
     id: "general",
@@ -73,4 +72,11 @@ const projects = ref([
 function onConfirm() {
   isEditing.value = false
 }
+
+onBeforeMount(() => {
+  currencySelector.value = (route.query.currency as string) || "usd"
+  causeSelected.value = (route.query.causeId as string) || "general"
+  amount.value = Number(route.query.amount) || 123
+  isMonthly.value = route.query.frequency === "monthly"
+})
 </script>

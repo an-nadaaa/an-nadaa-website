@@ -76,7 +76,7 @@
           </div>
         </div>
 
-        <DonateCard
+        <CauseDonateCard
           class="mt-8 sm:hidden"
           v-model="toggleIndex"
           :cause="cause"
@@ -139,7 +139,7 @@
         </div>
       </div>
       <div class="hidden sm:block basis-[40%]">
-        <DonateCard
+        <CauseDonateCard
           :cause="cause"
           v-model="toggleIndex"
           :scrollToElement="scrollToElement"
@@ -162,7 +162,6 @@
 </template>
 <script setup lang="ts">
 import BankDetails from "~/components/global/BankDetails.vue"
-import DonateCard from "~/components/cause/DonateCard.vue"
 import "@egjs/flicking-plugins/dist/flicking-plugins.css"
 import VueEasyLightbox from "vue-easy-lightbox"
 import img1 from "assets/media/img/1.png"

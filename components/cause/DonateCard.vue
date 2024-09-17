@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 shadow-md width-full h-fit rounded-xl">
+  <Card class="p-4 shadow-md width-full h-fit rounded-xl">
     <h3 class="text-xl font-normal">
       <strong class="text-xl font-semibold">
         {{ formatCurrency(cause.raisedAmount) }}
@@ -17,7 +17,12 @@
       </TabsList>
     </Tabs>
     <div class="relative mt-4">
-      <Input class="w-full" :placeholder="'Enter amount'"></Input>
+      <Input
+        v-model="amount"
+        class="w-full"
+        :placeholder="'Enter amount'"
+        type="number"
+      ></Input>
       <div class="absolute top-0 right-0">
         <Select v-model="currencySelector" class="">
           <SelectTrigger class="border-l-0 rounded-l-none">
@@ -34,7 +39,7 @@
     </div>
 
     <div class="mt-4">
-      <NuxtLink :to="'/checkout'" class="w-full">
+      <NuxtLink :to="'/checkout?' + urlParams.toString()" class="w-full">
         <Button class="w-full">Make donation</Button>
       </NuxtLink>
       <Button
@@ -51,15 +56,24 @@
       <Icon name="lucide:share-2" class="mr-2"></Icon> Share with family and
       friends
     </p>
-  </div>
+  </Card>
 </template>
 
 <script setup lang="ts">
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Input from "../ui/input/Input.vue"
 
+const route = useRoute()
+const urlParams = computed(() => {
+  return new URLSearchParams({
+    causeId: route.params.id as string,
+    amount: amount.value,
+    currency: currencySelector.value,
+    frequency: toggleIndex.value,
+  })
+})
 const { formatCurrency } = useMoneyFormat()
-
+const amount = ref()
 const currencySelector = ref("usd")
 defineProps(["cause", "scrollToElement"])
 const toggleIndex: Ref = defineModel("toggleIndex")
