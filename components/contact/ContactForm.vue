@@ -86,6 +86,7 @@ import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
 import * as z from "zod"
 import { Textarea } from "@/components/ui/textarea"
+import parsePhoneNumber from "libphonenumber-js"
 
 const email = "b9a6d9877fa1aca555140617b2ec027b"
 
@@ -102,7 +103,17 @@ const formSchema = toTypedSchema(
       .optional(),
     email: z.string().email("Please enter a valid email"),
     company: z.string().optional(),
-    phoneNumber: z.string().optional(),
+    phoneNumber: z
+      .string()
+      .refine(
+        (value) => {
+          return parsePhoneNumber(value)?.isValid() ?? false
+        },
+        {
+          message: "Please enter a valid phone number",
+        }
+      )
+      .optional(),
     message: z.string().min(1, {
       message: "Message must be at least 1 character long",
     }),
