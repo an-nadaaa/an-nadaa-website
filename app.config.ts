@@ -1,3 +1,6 @@
+import logoColor from "~/assets/media/img/logos/an-nadaa/annadaa-color.svg"
+import logoWhite from "~/assets/media/img/logos/an-nadaa/annadaa-white.svg"
+
 export default defineAppConfig({
   siteName: "An-Nadaa – Educate Empower Improve",
   siteDescription:
@@ -5,6 +8,10 @@ export default defineAppConfig({
   contact: "contact@an-nadaa.com",
   siteLang: "en",
   colorModeFallback: "dark", // should replace COLOR_MODE_FALLBACK
+  logo: {
+    color: logoColor,
+    white: logoWhite,
+  },
   defaultCurrency: {
     symbol: "$",
     code: "USD",
