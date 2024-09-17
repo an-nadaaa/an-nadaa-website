@@ -13,21 +13,19 @@
         >
 
         <div class="flex items-center h-full pr-0 lg:pr-2">
-          <HoverCard :openDelay="100">
-            <HoverCardTrigger>
-              <NuxtLink class="hover:text-gray-200" :to="localePath('/causes')">
-                <div class="flex gap-x-1">
-                  <div class="">Causes</div>
-                  <div>
-                    <Icon
-                      class="absolute hidden lg:block text-xl translate-y-[2px]"
-                      name="lucide:chevron-down"
-                    ></Icon>
-                  </div>
+          <Popover :openDelay="100">
+            <PopoverTrigger>
+              <div class="flex gap-x-1">
+                <div class="">Causes</div>
+                <div>
+                  <Icon
+                    class="absolute hidden lg:block text-xl translate-y-[2px]"
+                    name="lucide:chevron-down"
+                  ></Icon>
                 </div>
-              </NuxtLink>
-            </HoverCardTrigger>
-            <HoverCardContent class="hidden w-72 lg:block">
+              </div>
+            </PopoverTrigger>
+            <PopoverContent class="hidden w-72 lg:block">
               <div class="grid gap-y-4">
                 <div
                   class="grid grid-cols-6 align-middle"
@@ -47,8 +45,8 @@
                   </p>
                 </div>
               </div>
-            </HoverCardContent>
-          </HoverCard>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <NuxtLink class="hover:text-gray-200" :to="localePath('/faq')"
@@ -79,7 +77,6 @@
 // @ts-ignore
 import logo from "~/assets/media/img/logos/annadaa-white.svg"
 
-const isHovering = ref(false)
 const localePath = useLocalePath()
 const causesLinks = [
   {
