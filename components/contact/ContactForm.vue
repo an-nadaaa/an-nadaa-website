@@ -63,7 +63,7 @@
         <FormItem>
           <FormLabel>Phone Number</FormLabel>
           <FormControl>
-            <PhoneInput v-bind="componentField"></PhoneInput>
+            <PhoneInput v-bind="componentField" />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -88,7 +88,6 @@ import * as z from "zod"
 import { Textarea } from "@/components/ui/textarea"
 
 const email = "b9a6d9877fa1aca555140617b2ec027b"
-const phoneInput = ref(null)
 
 const formSchema = toTypedSchema(
   z.object({
@@ -103,7 +102,7 @@ const formSchema = toTypedSchema(
       .optional(),
     email: z.string().email("Please enter a valid email"),
     company: z.string().optional(),
-    phoneNumber: z.number().optional(),
+    phoneNumber: z.string().optional(),
     message: z.string().min(1, {
       message: "Message must be at least 1 character long",
     }),
@@ -112,10 +111,6 @@ const formSchema = toTypedSchema(
 
 const form = useForm({
   validationSchema: formSchema,
-})
-
-const onSubmit = form.handleSubmit(async (values) => {
-  console.log(values)
 })
 </script>
 
