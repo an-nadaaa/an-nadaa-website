@@ -4,7 +4,9 @@
       <NuxtLink :href="localePath('/')">
         <img :src="logo" alt="Annadaa" class="w-32" />
       </NuxtLink>
-      <div class="items-center hidden space-x-4 sm:flex lg:space-x-8">
+      <div
+        class="items-center hidden sm:space-x-2 md:space-x-4 sm:flex lg:space-x-8"
+      >
         <NuxtLink class="hover:text-gray-200" :to="localePath('/')"
           >Home</NuxtLink
         >
@@ -28,7 +30,7 @@
             <PopoverContent class="hidden w-72 lg:block">
               <div class="grid gap-y-4">
                 <div
-                  class="grid grid-cols-6 align-middle"
+                  class="grid grid-cols-6 p-2 align-middle rounded-sm hover:cursor-pointer hover:bg-gray-100"
                   v-for="(item, index) in causesLinks"
                   :key="index"
                 >

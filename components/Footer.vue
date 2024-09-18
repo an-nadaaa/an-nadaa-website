@@ -9,7 +9,7 @@
           sake of Allah
         </h1>
 
-        <p class="mt-2 text-xs font-light text-white">
+        <p class="mt-2 font-light text-white">
           Your donation will go to where it is needed the most.
         </p>
         <Button class="px-8 mt-8">Donate</Button>

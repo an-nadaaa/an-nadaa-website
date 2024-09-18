@@ -47,7 +47,7 @@
 import DonateCard from "~/components/global/DonateCard.vue"
 
 const appConfig = useAppConfig()
-const logo = appConfig.logo.white
+const logo = appConfig.logo.color
 const route = useRoute()
 const currencySelector = ref("usd")
 const causeSelected = ref("general")

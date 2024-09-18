@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-dark-blue py-12">
-    <div class="container grid grid-cols-1 md:grid-cols-2 md:gap-12 text-white">
+  <div class="py-12 bg-dark-blue">
+    <div class="container grid grid-cols-1 text-white md:grid-cols-2 md:gap-12">
       <div class="h-full lg:pt-8">
         <div class="space-y-3 sm:space-y-6">
           <h1 class="text-3xl lg:text-4xl xl:text-6xl">
@@ -11,18 +11,16 @@
             deliver projects that bring huge positive impact to the community
           </p>
           <div
-            class="grid space-y-2 sm:w-fit sm:space-y-0 grid-cols-1 sm:flex sm:space-x-4"
+            class="grid grid-cols-1 space-y-2 sm:w-fit sm:space-y-0 sm:flex sm:space-x-4"
           >
-            <Button class="font-light w-full text-sm">Donate now</Button>
+            <Button class="w-full text-sm font-light">Donate now</Button>
             <Button
-              class="bg-white w-full text-sm hover:bg-gray-300 text-foreground font-light"
+              class="w-full text-sm font-light bg-white hover:bg-gray-300 text-foreground"
               >Watch our impact
               <Icon class="ml-2" name="lucide:circle-play" />
             </Button>
           </div>
-          <p
-            class="text-md sm:text-xs text-center sm:text-left font-extralight"
-          >
+          <p class="font-thin text-center text-md sm:text-sm sm:text-left">
             100,000+ lives impacted. Help us reach more
           </p>
         </div>
