@@ -88,8 +88,9 @@ import img1 from "~/assets/media/img/1.png"
 import img2 from "~/assets/media/img/2.png"
 import img3 from "~/assets/media/img/3.png"
 import img4 from "~/assets/media/img/4.png"
-import logo from "~/assets/media/img/logos/annadaa-white.svg"
 
+const appConfig = useAppConfig()
+const logo = appConfig.logo.white
 const localePath = useLocalePath()
 const plugins = [
   new Pagination({ type: "bullet" }),

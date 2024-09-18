@@ -74,9 +74,8 @@
   </div>
 </template>
 <script setup lang="ts">
-// @ts-ignore
-import logo from "~/assets/media/img/logos/annadaa-white.svg"
-
+const appConfig = useAppConfig()
+const logo = appConfig.logo.white
 const localePath = useLocalePath()
 const causesLinks = [
   {

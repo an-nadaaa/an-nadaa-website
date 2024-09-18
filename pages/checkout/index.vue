@@ -24,10 +24,7 @@
             Edit</Button
           >
           <h3 class="text-lg font-medium">Your donation</h3>
-          <img
-            src="~/assets/media/img/logos/annadaa-color.svg"
-            class="w-32 my-4"
-          />
+          <img :src="logo" class="w-32 my-4" />
 
           <h4 class="text-base font-medium">Donation</h4>
           <p class="text-sm font-light text-dark-gray">
@@ -49,6 +46,8 @@
 <script setup lang="ts">
 import DonateCard from "~/components/global/DonateCard.vue"
 
+const appConfig = useAppConfig()
+const logo = appConfig.logo.white
 const route = useRoute()
 const currencySelector = ref("usd")
 const causeSelected = ref("general")
