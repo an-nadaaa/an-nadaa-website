@@ -3,9 +3,9 @@
     <div class="grid sm:grid-cols-4 gap-x-3 gap-y-3">
       <div class="">
         <p class="select-label">Category</p>
-        <Select class="w-full">
+        <Select class="w-full" v-model="categorySelected">
           <SelectTrigger>
-            <SelectValue :placeholder="categories[0]" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent class="">
             <SelectGroup>
@@ -22,9 +22,9 @@
       </div>
       <div class="">
         <p class="select-label">Campaign State</p>
-        <Select class="w-full">
+        <Select class="w-full" v-model="stateSelected">
           <SelectTrigger>
-            <SelectValue :placeholder="states[0]" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent class="">
             <SelectGroup>
@@ -41,9 +41,9 @@
       </div>
       <div class="">
         <p class="select-label">Locations</p>
-        <Select class="w-full">
+        <Select class="w-full" v-model="locationSelected">
           <SelectTrigger>
-            <SelectValue :placeholder="locations[0]" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent class="">
             <SelectGroup>
@@ -59,7 +59,12 @@
         </Select>
       </div>
       <div>
-        <p class="pt-2 ml-4 underline text-primary sm:pt-8">Reset filter</p>
+        <p
+          @click="handleResetFilter"
+          class="pt-2 ml-4 underline text-primary sm:pt-8 hover:cursor-pointer w-fit hover:font-medium"
+        >
+          Reset filter
+        </p>
       </div>
     </div>
     <div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -100,6 +105,17 @@ const router = useRouter()
 const categories = ["All", "Education", "Food"]
 const states = ["All", "Ongoing", "Funded"]
 const locations = ["All", "Nigeria", "Malaysia"]
+
+const categorySelected = ref("all")
+const stateSelected = ref("all")
+const locationSelected = ref("all")
+
+function handleResetFilter() {
+  categorySelected.value = "all"
+  stateSelected.value = "all"
+  locationSelected.value = "all"
+}
+
 const campaigns = [
   {
     id: 1,
