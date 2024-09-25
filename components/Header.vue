@@ -14,14 +14,20 @@
           >About</NuxtLink
         >
 
-        <div class="flex items-center h-full pr-0 lg:pr-2">
+        <NuxtLink
+          class="hover:text-gray-200 lg:hidden"
+          :to="localePath('/causes')"
+          >Causes</NuxtLink
+        >
+
+        <div class="items-center hidden h-full pr-0 lg:flex lg:pr-2">
           <Popover :openDelay="100">
             <PopoverTrigger>
               <div class="flex gap-x-1">
                 <div class="">Causes</div>
                 <div>
                   <Icon
-                    class="absolute hidden lg:block text-xl translate-y-[2px]"
+                    class="absolute text-xl translate-y-[2px]"
                     name="lucide:chevron-down"
                   ></Icon>
                 </div>
