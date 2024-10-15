@@ -5,14 +5,14 @@
         <h1 class="text-4xl font-normal text-white xl:text-6xl">
           Donate for the
         </h1>
-        <h1 class="text-4xl font-normal text-white xl:text-6xl">
+        <h1 class="text-4xl font-normal text-white md:text-3xl xl:text-6xl">
           sake of Allah
         </h1>
 
         <p class="mt-2 font-light text-white">
           Your donation will go to where it is needed the most.
         </p>
-        <Button class="px-8 mt-8">Donate</Button>
+        <Button class="px-8 mt-8 md:mt-4 lg:mt-8">Donate</Button>
       </div>
       <div class="rounded-2xl">
         <AspectRatio :ratio="1.4 / 1">
