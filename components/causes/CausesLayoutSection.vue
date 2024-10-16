@@ -68,9 +68,13 @@
         </p>
       </div>
     </div>
+    <VueSpinnerBars
+      v-if="isLoading"
+      class="mx-auto my-48 text-5xl text-primary"
+    />
     <div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
       <h2
-        v-if="causes.length === 0"
+        v-if="causes.length === 0 && !isLoading"
         class="my-32 font-light text-center text-gray-400 sm:col-span-2 lg:col-span-3"
       >
         Sorry, nothing found :(
@@ -121,17 +125,17 @@
 </template>
 
 <script setup lang="ts">
+import { VueSpinnerBars } from "vue3-spinners"
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select"
 
-const pageSize = 12
+const pageSize = 1
 const currentPage = ref(1)
 const strapiFetch = useStrapiFetch()
 const categories = await strapiFetch("/categories", "GET", {}).then((res) => {
@@ -143,6 +147,7 @@ const locations = await strapiFetch("/locations", "GET", {}).then((res) => {
     ...res.data.value.data.map((location: any) => location.countryName),
   ]
 })
+const isLoading = ref(true)
 const states = ["All", "Ongoing", "Funded"]
 const categorySelected = ref("All")
 const stateSelected = ref("All")
@@ -158,6 +163,14 @@ function handleResetFilter() {
   stateSelected.value = "All"
   locationSelected.value = "All"
 }
+
+watch([categorySelected, stateSelected, locationSelected], () => {
+  currentPage.value = 1
+})
+
+watch([categorySelected, stateSelected, locationSelected, currentPage], () => {
+  causes.value = []
+})
 
 const causes = computedAsync(async () => {
   const qsQuery = {
@@ -191,6 +204,7 @@ const causes = computedAsync(async () => {
     },
     populate: "*",
   }
+  isLoading.value = true
 
   const { data: strapiResponse } = await strapiFetch(
     "/causes",
@@ -200,6 +214,10 @@ const causes = computedAsync(async () => {
     },
     qsQuery
   )
+
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+
+  isLoading.value = false
 
   pagination.value = strapiResponse.value.meta.pagination
 
