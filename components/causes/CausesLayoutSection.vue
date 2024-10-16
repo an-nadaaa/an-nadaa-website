@@ -69,12 +69,18 @@
       </div>
     </div>
     <div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
+      <h2
+        v-if="causes.length === 0"
+        class="my-32 font-light text-center text-gray-400 sm:col-span-2 lg:col-span-3"
+      >
+        Sorry, nothing found :(
+      </h2>
       <NuxtLink
         v-for="(cause, index) in causes"
         :id="index"
         :to="'/causes/' + cause.documentId"
       >
-        <HomeCampaignCardSection
+        <CauseCard
           :key="cause.documentId"
           :title="cause.title"
           :categoryTags="cause.categories.map((category:any) => category.title)"
@@ -88,8 +94,30 @@
         />
       </NuxtLink>
     </div>
+    <div
+      v-if="causes.length > 0"
+      class="flex justify-between w-full mt-4 gap-x-2"
+    >
+      <Button
+        class="w-full sm:w-44"
+        @click="handlePreviousPage"
+        :disabled="previousDisabled"
+        :variant="'white'"
+      >
+        <Icon name="lucide:arrow-left" class="mr-2" /> Previous
+      </Button>
+
+      <Button
+        class="w-full sm:w-44"
+        :disabled="nextDisabled"
+        @click="handleNextPage"
+        :variant="'white'"
+      >
+        Next <Icon class="ml-2" name="lucide:arrow-right" />
+      </Button>
+    </div>
   </div>
-  <!-- <h1>{{ causes }}</h1> -->
+  <!-- <h1>{{ categories }}</h1> -->
 </template>
 
 <script setup lang="ts">
@@ -104,7 +132,7 @@ import {
 } from "~/components/ui/select"
 
 const pageSize = 12
-const currentIndex = ref(0)
+const currentPage = ref(1)
 const strapiFetch = useStrapiFetch()
 const categories = await strapiFetch("/categories", "GET", {}).then((res) => {
   return ["All", ...res.data.value.data.map((category: any) => category.title)]
@@ -115,13 +143,15 @@ const locations = await strapiFetch("/locations", "GET", {}).then((res) => {
     ...res.data.value.data.map((location: any) => location.countryName),
   ]
 })
-// const categories = ["All", "Education", "Food"]
 const states = ["All", "Ongoing", "Funded"]
-// const locations = ["All", "Nigeria", "Malaysia"]
-
 const categorySelected = ref("All")
 const stateSelected = ref("All")
 const locationSelected = ref("All")
+const pagination = ref<Record<string, any>>({})
+const previousDisabled = computed(() => currentPage.value === 1)
+const nextDisabled = computed(
+  () => pagination.value.page >= pagination.value.pageCount
+)
 
 function handleResetFilter() {
   categorySelected.value = "All"
@@ -132,9 +162,6 @@ function handleResetFilter() {
 const causes = computedAsync(async () => {
   const qsQuery = {
     filters: {
-      // category: {
-      //   $eq: categorySelected.value === "All" ? null : categorySelected.value,
-      // },
       categories: {
         title:
           categorySelected.value === "All"
@@ -159,11 +186,12 @@ const causes = computedAsync(async () => {
       },
     },
     pagination: {
-      start: currentIndex.value,
-      limit: pageSize,
+      page: currentPage.value,
+      pageSize,
     },
     populate: "*",
   }
+
   const { data: strapiResponse } = await strapiFetch(
     "/causes",
     "GET",
@@ -173,8 +201,18 @@ const causes = computedAsync(async () => {
     qsQuery
   )
 
+  pagination.value = strapiResponse.value.meta.pagination
+
   return strapiResponse.value.data
-})
+}, [])
+
+function handleNextPage() {
+  currentPage.value += 1
+}
+
+function handlePreviousPage() {
+  currentPage.value -= 1
+}
 
 // const causes = [
 //   {
