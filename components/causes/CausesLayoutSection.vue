@@ -80,6 +80,7 @@
         Sorry, nothing found :(
       </h2>
       <NuxtLink
+        v-if="!isLoading"
         v-for="(cause, index) in causes"
         :id="index"
         :to="'/causes/' + cause.documentId"
@@ -135,7 +136,7 @@ import {
   SelectValue,
 } from "~/components/ui/select"
 
-const pageSize = 1
+const pageSize = 12
 const currentPage = ref(1)
 const strapiFetch = useStrapiFetch()
 const categories = await strapiFetch("/categories", "GET", {}).then((res) => {
@@ -296,5 +297,14 @@ function handlePreviousPage() {
 <style>
 .select-label {
   @apply text-sm text-gray-600 mb-2;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
