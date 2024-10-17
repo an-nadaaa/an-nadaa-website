@@ -1,10 +1,12 @@
+<!-- todo: add design for the project type of cause -->
+
 <template>
   <Card class="p-4 shadow-md width-full h-fit rounded-xl">
     <h3 class="text-xl font-normal">
       <strong class="text-xl font-semibold">
         {{ formatCurrency(cause.raisedAmount) }}
       </strong>
-      of {{ formatCurrency(cause.goalAmount) }} raised
+      of {{ formatCurrency(cause.goalDetails[0].goalAmount) }} raised
     </h3>
     <Tag class="my-2" text="20 days left" :variant="'purple'" />
     <p class="font-thin text-dark-gray">
