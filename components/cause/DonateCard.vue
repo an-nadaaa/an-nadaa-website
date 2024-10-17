@@ -4,7 +4,7 @@
       <strong class="text-xl font-semibold">
         {{ formatCurrency(cause.raisedAmount) }}
       </strong>
-      of {{ formatCurrency(cause.goalAmount) }} raised
+      of {{ formatCurrency(cause.goalDetails[0].goalAmount) }} raised
     </h3>
     <Tag class="my-2" text="20 days left" :variant="'purple'" />
     <p class="font-thin text-dark-gray">
