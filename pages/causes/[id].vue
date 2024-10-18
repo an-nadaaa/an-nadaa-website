@@ -83,15 +83,23 @@
           :scrollToElement="scrollToElement"
         />
 
+        <!-- <p>
+          {{ causeHtml }}
+        </p> -->
         <div
           :class="`relative overflow-hidden pb-24 ${
             isExpanded ? '' : 'h-[200px]'
           }`"
         >
-          <ContentRenderer
+          <div
             class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
-            :value="cause"
+            v-html="causeHtml"
           />
+
+          <!-- <ContentRenderer
+            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
+            :value="caus"
+          /> -->
 
           <div
             class="w-full p-6 py-8 rounded-xl"
@@ -138,7 +146,7 @@
           </Button>
         </div>
       </div>
-      <div class="hidden sm:block basis-[40%]">
+      <div class="hidden sm:block my-0 sm:my-8 lg:my-0 basis-[40%]">
         <CauseDonateCard
           :cause="cause"
           v-model="toggleIndex"
@@ -171,24 +179,44 @@ import img4 from "assets/media/img/4.png"
 import img5 from "assets/media/img/5.png"
 import img6 from "assets/media/img/6.png"
 import Flicking from "@egjs/vue3-flicking"
+import { micromark } from "micromark"
 
-const selectedCurrency = ref("usd")
-
+const strapiFetch = useStrapiFetch()
+// const selectedCurrency = ref("usd")
+// const route = useRoute()
+// const { id } = route.params
+const id = "l4zsf6qwpnf1rcyusvnojqv1"
 const localePath = useLocalePath()
 const bankInfo = ref()
 const currentIndex = ref(0)
 const toggleIndex = ref(0)
 const { locale } = useI18n()
-const { data: cause } = await useAsyncData("cause", () =>
-  queryContent("causes", locale.value).findOne()
-)
 const images = [img1, img2, img3, img4, img5, img6]
 const flickingElement = ref<any>(null)
 const lightboxVisible = ref(false)
+const qsQuery = {
+  filters: {
+    documentId: {
+      $eq: id,
+    },
+  },
+}
 
 const onHide = () => {
   lightboxVisible.value = false
 }
+
+const { data: strapiResponse } = await strapiFetch(
+  "/causes",
+  "GET",
+  {
+    populate: "*",
+    locale: locale.value,
+  },
+  qsQuery
+)
+const cause = strapiResponse.value.data[0]
+const causeHtml = micromark(cause.body)
 
 const isExpanded = ref(false)
 
