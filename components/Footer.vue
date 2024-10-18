@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-light-blue">
+  <div class="w-full pb-8 sm:pb-0 bg-light-blue">
     <div class="container grid grid-cols-1 gap-4 py-8 sm:grid-cols-2">
       <div class="p-8 bg-dark-blue rounded-2xl">
         <h1 class="text-4xl font-normal text-white xl:text-6xl">
