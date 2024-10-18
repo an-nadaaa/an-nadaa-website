@@ -13,7 +13,9 @@
           <div
             class="grid grid-cols-1 space-y-2 sm:w-fit sm:space-y-0 sm:flex sm:space-x-4"
           >
-            <Button class="w-full text-sm font-light">Donate now</Button>
+            <NuxtLink to="/donate">
+              <Button class="w-full text-sm font-light">Donate now</Button>
+            </NuxtLink>
             <Button
               class="w-full text-sm font-light bg-white hover:bg-gray-300 text-foreground"
               >Watch our impact
