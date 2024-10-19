@@ -22,10 +22,8 @@
           :key="index"
           :testimonial="testimonial"
         ></TestimonialCard>
-        <div class="px-14">
-          <Button :variant="'white'" class="w-full py-8 text-xl"
-            >View all</Button
-          >
+        <div class="px-0">
+          <Button :variant="'white'" class="w-full py-4">View all</Button>
         </div>
       </div>
     </div>
