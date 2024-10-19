@@ -39,47 +39,58 @@ import "@egjs/flicking-plugins/dist/flicking-plugins.css"
 import { Pagination } from "@egjs/flicking-plugins"
 import TestimonialCard from "./TestimonialCard.vue"
 
-const props = defineProps(["testimonials"])
+type Testimonial = {
+  testimonial: string
+  name: string
+  link?: string
+}
+
+defineProps({
+  testimonials: {
+    type: Array<Testimonial>,
+    required: true,
+  },
+})
 
 const plugins = [new Pagination({ type: "bullet" })]
 
-const testimonials = ref<
-  { testimonial: string; name: string; link?: string }[]
->(props.testimonials)
+// const testimonials = ref<
+//   { testimonial: string; name: string; link?: string }[]
+// >(props.testimonials)
 
-testimonials.value = [
-  {
-    testimonial:
-      "Me & My family pray for Allāh to allow us to see that day (Ramadan food package distribution), because we benefit tremendously. The food even lasts beyond eid.",
-    name: "Beneficiary",
-  },
-  {
-    testimonial:
-      "I have been following , supporting in whatever way I can to the foundation and ma Shaa Allah. I have been following , supporting in whatever way I can to the foundation and ma Shaa Allah.",
-    name: "CEO- Bridging Gaps Foundation / Donor from Canada",
-    link: "https://youtube.com",
-  },
-  {
-    testimonial:
-      "I have been a donor for 5 years and I am proud to be part of this community",
-    name: "John Doe",
-  },
-  {
-    testimonial:
-      "I have been a donor for 5 years and I am proud to be part of this community",
-    name: "John Doe",
-  },
-  {
-    testimonial:
-      "I have been a donor for 5 years and I am proud to be part of this community",
-    name: "John Doe",
-  },
-  {
-    testimonial:
-      "I have been a donor for 5 years and I am proud to be part of this community",
-    name: "John Doe",
-  },
-]
+// testimonials.value = [
+//   {
+//     testimonial:
+//       "Me & My family pray for Allāh to allow us to see that day (Ramadan food package distribution), because we benefit tremendously. The food even lasts beyond eid.",
+//     name: "Beneficiary",
+//   },
+//   {
+//     testimonial:
+//       "I have been following , supporting in whatever way I can to the foundation and ma Shaa Allah. I have been following , supporting in whatever way I can to the foundation and ma Shaa Allah.",
+//     name: "CEO- Bridging Gaps Foundation / Donor from Canada",
+//     link: "https://youtube.com",
+//   },
+//   {
+//     testimonial:
+//       "I have been a donor for 5 years and I am proud to be part of this community",
+//     name: "John Doe",
+//   },
+//   {
+//     testimonial:
+//       "I have been a donor for 5 years and I am proud to be part of this community",
+//     name: "John Doe",
+//   },
+//   {
+//     testimonial:
+//       "I have been a donor for 5 years and I am proud to be part of this community",
+//     name: "John Doe",
+//   },
+//   {
+//     testimonial:
+//       "I have been a donor for 5 years and I am proud to be part of this community",
+//     name: "John Doe",
+//   },
+// ]
 </script>
 
 <style></style>

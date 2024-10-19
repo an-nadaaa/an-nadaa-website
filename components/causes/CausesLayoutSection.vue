@@ -1,3 +1,5 @@
+<!-- todo: add featured tag on featured causes -->
+
 <template>
   <div class="container py-6 sm:py-12">
     <!-- <h1>{{ categories }}</h1> -->
