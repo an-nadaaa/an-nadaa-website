@@ -20,6 +20,15 @@
 
       <!-- Campaign Cards -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
+        <!-- <template v-if="isLoading">
+          <AspectRatio class="col-span-3" :ratio="506 / 520">
+            <div class="w-full"></div>
+          </AspectRatio>
+          <AspectRatio class="col-span-3" :ratio="506 / 520">
+            <div class="w-full h-full bg-black"></div>
+          </AspectRatio>
+        </template>
+        <template v-else> -->
         <NuxtLink
           v-for="(cause, index) in causes.slice(0, 5)"
           :id="index"
@@ -27,21 +36,26 @@
           :class="`${
             index === 0 || index === 1 ? 'sm:col-span-3' : 'sm:col-span-2'
           }
-          ${index > 2 ? 'hidden' : ''} sm:block col-span-1`"
+            ${index > 2 ? 'hidden' : ''} sm:block col-span-1`"
         >
           <CauseCard
-            :key="cause.documentId"
-            :title="cause.title"
-            :categoryTags="cause.categories.map((category:any) => category.title)"
-            :image="cause.images[0].formats.medium.url"
-            :amountRaised="cause.raisedAmount"
-            :goalAmount="cause.goalDetails[0].goalAmount"
-            :status="cause.causeStatus"
-            :funded="false"
-            :tags="cause.tags.map((tag:any) => tag.value)"
+            :cause="cause"
             class="hover:cursor-pointer hover:shadow-xl"
-          />
+          ></CauseCard>
+          <!-- <CauseCard
+              :key="cause.documentId"
+              :title="cause.title"
+              :categoryTags="cause.categories.map((category:any) => category.title)"
+              :image="cause.images[0].formats.medium.url"
+              :amountRaised="cause.raisedAmount"
+              :goalAmount="cause.goalDetails[0].goalAmount"
+              :status="cause.causeStatus"
+              :funded="false"
+              :tags="cause.tags.map((tag:any) => tag.value)"
+              class="hover:cursor-pointer hover:shadow-xl"
+            /> -->
         </NuxtLink>
+        <!-- </template> -->
       </div>
 
       <NuxtLink to="/causes">
@@ -54,8 +68,6 @@
 </template>
 
 <script setup lang="ts">
-// import CampaignCard from "~/components/home/CampaignCardSection.vue"
-
 const strapiFetch = useStrapiFetch()
 const causes =
   (await strapiFetch(
