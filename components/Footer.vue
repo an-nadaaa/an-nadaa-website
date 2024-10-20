@@ -12,7 +12,9 @@
         <p class="mt-2 font-light text-white">
           Your donation will go to where it is needed the most.
         </p>
-        <Button class="px-8 mt-8">Donate</Button>
+        <NuxtLink to="/donate">
+          <Button class="px-8 mt-8">Donate</Button>
+        </NuxtLink>
       </div>
       <div class="rounded-2xl">
         <AspectRatio :ratio="1.4 / 1">
@@ -111,7 +113,7 @@ const groups = [
     type: "Organisation",
     links: [
       { title: "About us", path: "/about" },
-      { title: "Contact", path: "/contact-us" },
+      { title: "Contact", path: "/contact" },
       { title: "Terms and Privacy", path: "/privacy" },
     ],
   },
