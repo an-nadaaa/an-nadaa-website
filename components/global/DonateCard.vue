@@ -10,12 +10,6 @@
           <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
           <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
         </TabsList>
-        <!-- <TabsContent value="monthly">
-                Make changes to your account here.
-              </TabsContent>
-              <TabsContent value="one-time">
-                Change your password here.
-              </TabsContent> -->
       </Tabs>
       <p class="mt-4 text-sm">Project Supported</p>
       <Select class="" v-model="causeSelected">
@@ -36,10 +30,10 @@
       </Select>
       <div class="relative mt-2">
         <Input
+          @input="validateAmount"
           v-model="amount"
           class="w-full text-base"
           :placeholder="'Enter amount'"
-          type="number"
         ></Input>
         <div class="absolute top-0 right-0">
           <Select v-model="currencySelector" class="">
@@ -58,6 +52,7 @@
 
       <div class="mt-4">
         <Button
+          v-if="isCheckout"
           @click="
             () => {
               if (onClick) {
@@ -66,10 +61,12 @@
             }
           "
           class="w-full"
-          >{{
-            route.fullPath.includes("checkout") ? "Confirm" : "Make donation"
-          }}</Button
+          >Confirm</Button
         >
+
+        <NuxtLink v-else :to="`/checkout?${urlQueries}`">
+          <Button class="w-full">Make donation</Button>
+        </NuxtLink>
         <Button
           v-if="!!scrollToElement"
           @click="
@@ -89,10 +86,33 @@
 </template>
 
 <script setup lang="ts">
-const causeSelected: Ref = defineModel("causeSelected")
-const currencySelector: Ref = defineModel("currencySelector")
-const amount: Ref = defineModel("amount")
+// const causeSelected: Ref = defineModel("causeSelected")
+// const currencySelector: Ref = defineModel("currencySelector")
+// const amount: Ref = defineModel("amount")
+const causeSelected = ref("general")
+const currencySelector = ref("usd")
+const amount = ref<any>("")
 const route = useRoute()
+const isCheckout = route.fullPath.includes("checkout")
+
+const urlQueries = computed(
+  () =>
+    new URLSearchParams({
+      currency: currencySelector.value,
+      amount: (amount.value || 0).toString(),
+      id: causeSelected.value,
+    })
+)
+
+function validateAmount() {
+  if (amount.value !== "") {
+    const value = amount.value.toString()
+    const regex = /^\d*\.?\d{0,2}$/
+    if (!regex.test(value)) {
+      amount.value = value.slice(0, -1)
+    }
+  }
+}
 
 defineProps({
   causes: {
