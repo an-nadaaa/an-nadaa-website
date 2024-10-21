@@ -32,9 +32,6 @@
     </p>
     <BankDetails class="mt-8" />
   </div>
-
-  <h1>{{ causeSelected }}</h1>
-
   <HomeFAQSection />
 </template>
 

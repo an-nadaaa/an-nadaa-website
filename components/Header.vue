@@ -10,10 +10,6 @@
         <NuxtLink class="hover:text-gray-200" :to="localePath('/')"
           >Home</NuxtLink
         >
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/about')"
-          >About</NuxtLink
-        >
-
         <NuxtLink
           class="hover:text-gray-200 lg:hidden"
           :to="localePath('/causes')"
@@ -56,6 +52,14 @@
             </PopoverContent>
           </Popover>
         </div>
+
+        <NuxtLink class="hover:text-gray-200" :to="localePath('/blogs')"
+          >Blogs</NuxtLink
+        >
+
+        <NuxtLink class="hover:text-gray-200" :to="localePath('/about')"
+          >About</NuxtLink
+        >
 
         <NuxtLink class="hover:text-gray-200" :to="localePath('/faq')"
           >FAQs</NuxtLink

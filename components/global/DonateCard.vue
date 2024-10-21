@@ -18,7 +18,7 @@
               </TabsContent> -->
       </Tabs>
       <p class="mt-4 text-sm">Project Supported</p>
-      <Select v-model="causeSelected">
+      <Select class="" v-model="causeSelected">
         <SelectTrigger class="mt-2">
           <SelectValue placeholder="General donation" />
         </SelectTrigger>
@@ -28,14 +28,16 @@
             v-for="(project, index) in causes"
             :key="index"
           >
-            {{ project.name }}
+            <p class="text-base">
+              {{ project.name }}
+            </p>
           </SelectItem>
         </SelectContent>
       </Select>
       <div class="relative mt-2">
         <Input
           v-model="amount"
-          class="w-full"
+          class="w-full text-base"
           :placeholder="'Enter amount'"
           type="number"
         ></Input>
