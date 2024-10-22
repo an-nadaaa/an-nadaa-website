@@ -1,7 +1,7 @@
 <template>
   <div class="grid gap-4 sm:grid-cols-2">
-    <div class="rounded-xl outline outline-1 outline-gray-300 p-6">
-      <div class="w-full grid lg:flex gap-y-4 gap-x-12">
+    <div class="p-6 rounded-xl outline outline-1 outline-gray-300">
+      <div class="grid w-full lg:flex gap-y-4 gap-x-12">
         <div class="w-full">
           <h4 class="font-normal">Nigeria Dollar Account</h4>
           <p class="font-light text-dark-gray">
@@ -9,11 +9,17 @@
           </p>
         </div>
         <Button @click="copyNigeriaAccount" :variant="'white'">
-          <Icon name="lucide:copy" class="mr-2" /> Copy</Button
-        >
+          <template v-if="copyClicked.nigeria">
+            <Icon name="lucide:check" class="mr-2" />
+            Copied
+          </template>
+          <template v-else>
+            <Icon name="lucide:copy" class="mr-2" /> Copy
+          </template>
+        </Button>
       </div>
 
-      <div class="pt-4 space-y-4 text-gray-700 w-full">
+      <div class="w-full pt-4 space-y-4 text-gray-700">
         <div class="flex items-start space-x-4">
           <Icon name="lucide:banknote" class="w-6 h-6"></Icon>
           <div>
@@ -55,8 +61,8 @@
         </div>
       </div>
     </div>
-    <div class="rounded-xl outline outline-1 outline-gray-300 p-6">
-      <div class="w-full grid lg:flex gap-y-4 gap-x-12">
+    <div class="p-6 rounded-xl outline outline-1 outline-gray-300">
+      <div class="grid w-full lg:flex gap-y-4 gap-x-12">
         <div class="w-full">
           <h4 class="font-normal">Malaysian Ringgit Account</h4>
           <p class="font-light text-dark-gray">
@@ -65,11 +71,17 @@
           </p>
         </div>
         <Button @click="copyMalaysiaAccount" :variant="'white'">
-          <Icon name="lucide:copy" class="mr-2" /> Copy</Button
-        >
+          <template v-if="copyClicked.malaysia">
+            <Icon name="lucide:check" class="mr-2" />
+            Copied
+          </template>
+          <template v-else>
+            <Icon name="lucide:copy" class="mr-2" /> Copy
+          </template>
+        </Button>
       </div>
 
-      <div class="pt-4 space-y-4 text-gray-700 w-full">
+      <div class="w-full pt-4 space-y-4 text-gray-700">
         <div class="flex items-start space-x-4">
           <Icon name="lucide:banknote" class="w-6 h-6"></Icon>
           <div>
@@ -104,7 +116,7 @@
 
         <p class="font-light">
           For any inquiries or further information
-          <NuxtLink class="text-primary underline" to="/contact"
+          <NuxtLink class="underline text-primary" to="/contact"
             >contact us</NuxtLink
           >
         </p>
@@ -114,6 +126,11 @@
 </template>
 
 <script setup lang="ts">
+const copyClicked = ref({
+  nigeria: false,
+  malaysia: false,
+})
+
 function copyNigeriaAccount() {
   const nigeriaAccount = `Bank Name: Guaranty Trust Bank
 Account Number: 0230787884
@@ -121,6 +138,11 @@ Account Name: ANNADAA Educational Foundation
 SWIFT Code: GTBINGLA XXX
 Sort Code: 058118119`
   navigator.clipboard.writeText(nigeriaAccount)
+
+  copyClicked.value.nigeria = true
+  setTimeout(() => {
+    copyClicked.value.nigeria = false
+  }, 2000)
 }
 
 function copyMalaysiaAccount() {
@@ -129,5 +151,10 @@ Account Number: 562263544473
 Account Name: Pertubuhan An-Nadaa Malaysia
 SWIFT Code: MBBEMYKL`
   navigator.clipboard.writeText(malaysiaAccount)
+
+  copyClicked.value.malaysia = true
+  setTimeout(() => {
+    copyClicked.value.malaysia = false
+  }, 2000)
 }
 </script>

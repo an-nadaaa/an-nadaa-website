@@ -1,3 +1,5 @@
+<!-- todo: add featured tag on featured causes -->
+
 <template>
   <div class="container py-6 sm:py-12">
     <!-- <h1>{{ categories }}</h1> -->
@@ -86,15 +88,7 @@
         :to="'/causes/' + cause.documentId"
       >
         <CauseCard
-          :key="cause.documentId"
-          :title="cause.title"
-          :categoryTags="cause.categories.map((category:any) => category.title)"
-          :image="cause.images[0].formats.medium.url"
-          :amountRaised="cause.raisedAmount"
-          :goalAmount="cause.goalDetails[0].goalAmount"
-          :status="cause.causeStatus"
-          :funded="false"
-          :tags="cause.tags.map((tag:any) => tag.value)"
+          :cause="cause"
           class="hover:cursor-pointer hover:shadow-xl"
         />
       </NuxtLink>
