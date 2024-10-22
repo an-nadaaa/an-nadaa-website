@@ -17,15 +17,25 @@
           <SelectValue placeholder="General donation" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem
-            :value="project.id"
-            v-for="(project, index) in causes"
-            :key="index"
-          >
-            <p class="text-base">
-              {{ project.name }}
-            </p>
-          </SelectItem>
+          <SelectGroup>
+            <SelectItem value="general"> General donation </SelectItem>
+          </SelectGroup>
+          <SelectGroup>
+            <SelectLabel
+              v-if="causes.length > 0"
+              class="pl-2 my-1 mt-0 text-base font-medium"
+              >Causes</SelectLabel
+            >
+            <SelectItem
+              :value="project.id"
+              v-for="(project, index) in causes"
+              :key="index"
+            >
+              <p class="text-base">
+                {{ project.name }}
+              </p>
+            </SelectItem>
+          </SelectGroup>
         </SelectContent>
       </Select>
       <div class="relative mt-2">

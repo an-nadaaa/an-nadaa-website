@@ -38,12 +38,7 @@ import BankDetails from "~/components/global/BankDetails.vue"
 import DonateCard from "~/components/global/DonateCard.vue"
 
 const strapiFetch = useStrapiFetch()
-const causes = ref([
-  {
-    name: "General donation",
-    id: "general",
-  },
-])
+const causes = ref<any[]>([])
 // const causeSelected = ref("general")
 // const currencySelector = ref("usd")
 const bankInfo = ref()
@@ -60,7 +55,7 @@ await strapiFetch("/causes", "GET")
         id: cause.documentId,
       }
     })
-    causes.value = [...causes.value, ...strapiCauses]
+    causes.value = [...strapiCauses]
   })
   .catch((err) => {
     console.log(err)
