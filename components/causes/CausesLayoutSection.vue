@@ -3,7 +3,27 @@
 <template>
   <div class="container py-6 sm:py-12">
     <!-- <h1>{{ categories }}</h1> -->
-    <div class="grid sm:grid-cols-4 gap-x-3 gap-y-3">
+    <div class="grid sm:grid-cols-5 gap-x-3 gap-y-3">
+      <div class="">
+        <p class="select-label">Cause Type</p>
+        <Select class="w-full" v-model="typeSelected">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent class="">
+            <SelectGroup>
+              <!-- <SelectLabel>Fruits</SelectLabel> -->
+              <SelectItem
+                v-for="(type, index) in causeType"
+                :key="index"
+                :value="type"
+                >{{ type }}</SelectItem
+              >
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div class="">
         <p class="select-label">Category</p>
         <Select class="w-full" v-model="categorySelected">
@@ -142,8 +162,11 @@ const locations = await strapiFetch("/locations", "GET", {}).then((res) => {
     ...res.data.value.data.map((location: any) => location.countryName),
   ]
 })
+const causeType = ["All", "Campaign", "Project"]
 const isLoading = ref(true)
 const states = ["All", "Ongoing", "Funded"]
+
+const typeSelected = ref("All")
 const categorySelected = ref("All")
 const stateSelected = ref("All")
 const locationSelected = ref("All")
@@ -159,17 +182,32 @@ function handleResetFilter() {
   locationSelected.value = "All"
 }
 
-watch([categorySelected, stateSelected, locationSelected], () => {
+watch([categorySelected, stateSelected, locationSelected, typeSelected], () => {
   currentPage.value = 1
 })
 
-watch([categorySelected, stateSelected, locationSelected, currentPage], () => {
-  causes.value = []
-})
+watch(
+  [
+    categorySelected,
+    stateSelected,
+    locationSelected,
+    currentPage,
+    typeSelected,
+  ],
+  () => {
+    causes.value = []
+  }
+)
 
 const causes = computedAsync(async () => {
   const qsQuery = {
     filters: {
+      causeType:
+        typeSelected.value === "All"
+          ? {}
+          : {
+              $eq: typeSelected.value.toLowerCase(),
+            },
       categories: {
         title:
           categorySelected.value === "All"
