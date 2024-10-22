@@ -3,7 +3,11 @@
 <template>
   <div class="container py-6 sm:py-12">
     <!-- <h1>{{ categories }}</h1> -->
-    <div class="grid sm:grid-cols-5 gap-x-3 gap-y-3">
+    <div
+      :class="`grid sm:grid-cols-5 gap-x-3 gap-y-3 transition-all sm:h-fit ${
+        isFilterExpanded ? ' h-fit pb-4' : 'h-0'
+      } overflow-y-hidden overflow-x-visible `"
+    >
       <div class="">
         <p class="select-label">Cause Type</p>
         <Select class="w-full" v-model="typeSelected">
@@ -90,6 +94,23 @@
         </p>
       </div>
     </div>
+
+    <Button
+      class="flex items-center justify-center w-full hover:bg-slate-300 hover:cursor-pointer sm:hidden gap-x-2"
+      :variant="'white'"
+      @click="isFilterExpanded = !isFilterExpanded"
+    >
+      <p class="text-dark-gray">
+        {{ isFilterExpanded ? "Hide filters" : "Show filters" }}
+      </p>
+      <Icon
+        :class="`transform transition-transform ${
+          isFilterExpanded ? 'rotate-180' : ''
+        }`"
+        name="lucide:chevrons-down"
+      />
+    </Button>
+
     <VueSpinnerBars
       v-if="isLoading"
       class="mx-auto my-48 text-5xl text-primary"
@@ -163,9 +184,10 @@ const locations = await strapiFetch("/locations", "GET", {}).then((res) => {
   ]
 })
 const causeType = ["All", "Campaign", "Project"]
-const isLoading = ref(true)
 const states = ["All", "Ongoing", "Funded"]
 
+const isFilterExpanded = ref(false)
+const isLoading = ref(true)
 const typeSelected = ref("All")
 const categorySelected = ref("All")
 const stateSelected = ref("All")
