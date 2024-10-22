@@ -10,10 +10,6 @@
         <NuxtLink class="hover:text-gray-200" :to="localePath('/')"
           >Home</NuxtLink
         >
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/about')"
-          >About</NuxtLink
-        >
-
         <NuxtLink
           class="hover:text-gray-200 lg:hidden"
           :to="localePath('/causes')"
@@ -57,6 +53,14 @@
           </Popover>
         </div>
 
+        <NuxtLink class="hover:text-gray-200" :to="localePath('/blogs')"
+          >Blogs</NuxtLink
+        >
+
+        <NuxtLink class="hover:text-gray-200" :to="localePath('/about')"
+          >About</NuxtLink
+        >
+
         <NuxtLink class="hover:text-gray-200" :to="localePath('/faq')"
           >FAQs</NuxtLink
         >
@@ -65,13 +69,13 @@
         >
       </div>
       <div class="items-center hidden space-x-8 sm:flex">
-        <NuxtLink
+        <!-- <NuxtLink
           :to="localePath('/login')"
           class="text-primary hover:text-blue-200"
           >Log in</NuxtLink
-        >
+        > -->
         <NuxtLink :to="localePath('/donate')">
-          <Button>Donate</Button>
+          <Button ref="donateButton">Donate</Button>
         </NuxtLink>
       </div>
 
@@ -80,8 +84,22 @@
       </div>
     </div>
   </div>
+
+  <NuxtLink :to="'/donate'">
+    <div
+      v-if="!isButtonVisible"
+      class="fixed bottom-0 z-50 w-full py-3 sm:hidden bg-primary"
+    >
+      <p class="text-lg text-center text-white">Donate now</p>
+    </div>
+  </NuxtLink>
 </template>
 <script setup lang="ts">
+import { useElementVisibility } from "@vueuse/core"
+
+const donateButton = ref(null)
+const isButtonVisible = useElementVisibility(donateButton)
+
 const appConfig = useAppConfig()
 const logo = appConfig.logo.white
 const localePath = useLocalePath()
