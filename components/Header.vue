@@ -31,23 +31,24 @@
             </PopoverTrigger>
             <PopoverContent class="hidden w-72 lg:block">
               <div class="grid gap-y-4">
-                <div
-                  class="grid grid-cols-6 p-2 align-middle rounded-sm hover:cursor-pointer hover:bg-gray-100"
-                  v-for="(item, index) in causesLinks"
-                  :key="index"
-                >
-                  <Icon
-                    :name="item.icon"
-                    class="col-span-1 text-2xl text-primary"
-                  ></Icon>
-                  <h5 class="col-span-5 text-base font-normal text-left">
-                    {{ item.title }}
-                  </h5>
-                  <div class="col-span-1"></div>
-                  <p class="col-span-5 text-xs font-light text-dark-gray">
-                    {{ item.description }}
-                  </p>
-                </div>
+                <NuxtLink v-for="(item, index) in causesLinks" :to="item.path">
+                  <div
+                    class="grid grid-cols-6 p-2 align-middle rounded-sm hover:cursor-pointer hover:bg-gray-100"
+                    :key="index"
+                  >
+                    <Icon
+                      :name="item.icon"
+                      class="col-span-1 text-2xl text-primary"
+                    ></Icon>
+                    <h5 class="col-span-5 text-base font-normal text-left">
+                      {{ item.title }}
+                    </h5>
+                    <div class="col-span-1"></div>
+                    <p class="col-span-5 text-xs font-light text-dark-gray">
+                      {{ item.description }}
+                    </p>
+                  </div>
+                </NuxtLink>
               </div>
             </PopoverContent>
           </Popover>
@@ -108,16 +109,18 @@ const causesLinks = [
     title: "Campaigns",
     description: "Opportunities to help those in need",
     icon: "lucide:book",
+    path: "/causes?type=campaign",
   },
   {
     title: "Projects",
     description: "A perpetual way to give to those who need it most",
     icon: "lucide:sparkles",
+    path: "/causes?type=project",
   },
-  {
-    title: "Case Studies",
-    description: "Get up and running on new features and techniques",
-    icon: "lucide:circle-play",
-  },
+  // {
+  //   title: "Case Studies",
+  //   description: "Get up and running on new features and techniques",
+  //   icon: "lucide:circle-play",
+  // },
 ]
 </script>

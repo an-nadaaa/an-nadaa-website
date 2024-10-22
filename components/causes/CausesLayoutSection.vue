@@ -4,7 +4,7 @@
   <div class="container py-6 sm:py-12">
     <!-- <h1>{{ categories }}</h1> -->
     <div
-      :class="`grid sm:grid-cols-5 gap-x-3 gap-y-3 transition-all sm:h-fit ${
+      :class="`grid sm:grid-cols-5 gap-x-3 p-1 gap-y-3 transition-all sm:h-fit ${
         isFilterExpanded ? ' h-fit pb-4' : 'h-0'
       } overflow-y-hidden overflow-x-visible `"
     >
@@ -112,7 +112,7 @@
     </Button>
 
     <VueSpinnerBars
-      v-if="isLoading"
+      v-if="isLoading && isMounted"
       class="mx-auto my-48 text-5xl text-primary"
     />
     <div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -157,7 +157,6 @@
       </Button>
     </div>
   </div>
-  <!-- <h1>{{ categories }}</h1> -->
 </template>
 
 <script setup lang="ts">
@@ -172,7 +171,7 @@ import {
 } from "~/components/ui/select"
 
 const pageSize = 12
-const currentPage = ref(1)
+const route = useRoute()
 const strapiFetch = useStrapiFetch()
 const categories = await strapiFetch("/categories", "GET", {}).then((res) => {
   return ["All", ...res.data.value.data.map((category: any) => category.title)]
@@ -185,9 +184,10 @@ const locations = await strapiFetch("/locations", "GET", {}).then((res) => {
 })
 const causeType = ["All", "Campaign", "Project"]
 const states = ["All", "Ongoing", "Funded"]
-
+const currentPage = ref(1)
 const isFilterExpanded = ref(false)
 const isLoading = ref(true)
+const isMounted = ref(false)
 const typeSelected = ref("All")
 const categorySelected = ref("All")
 const stateSelected = ref("All")
@@ -197,12 +197,25 @@ const previousDisabled = computed(() => currentPage.value === 1)
 const nextDisabled = computed(
   () => pagination.value.page >= pagination.value.pageCount
 )
+const typeRef = computed(() => route.query.type)
+
+if (route.query.type === "campaign" || route.query.type === "project") {
+  typeSelected.value =
+    route.query.type.charAt(0).toUpperCase() + route.query.type.slice(1)
+}
 
 function handleResetFilter() {
   categorySelected.value = "All"
   stateSelected.value = "All"
   locationSelected.value = "All"
+  typeSelected.value = "All"
 }
+
+watch(typeRef, (value) => {
+  if (value === "campaign" || value === "project") {
+    typeSelected.value = value.charAt(0).toUpperCase() + value.slice(1)
+  }
+})
 
 watch([categorySelected, stateSelected, locationSelected, typeSelected], () => {
   currentPage.value = 1
@@ -286,6 +299,10 @@ function handleNextPage() {
 function handlePreviousPage() {
   currentPage.value -= 1
 }
+
+onMounted(() => {
+  isMounted.value = true
+})
 
 // const causes = [
 //   {
