@@ -5,7 +5,7 @@
         <h1 class="text-4xl font-normal text-white xl:text-6xl">
           Donate for the
         </h1>
-        <h1 class="text-4xl font-normal text-white xl:text-6xl">
+        <h1 class="text-4xl font-normal text-white md:text-3xl xl:text-6xl">
           sake of Allah
         </h1>
 
