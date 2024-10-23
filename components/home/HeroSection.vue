@@ -13,8 +13,11 @@
           <div
             class="grid grid-cols-1 space-y-2 sm:w-fit sm:space-y-0 sm:flex sm:space-x-4"
           >
-            <Button class="w-full text-sm font-light">Donate now</Button>
+            <NuxtLink to="/donate">
+              <Button class="w-full text-sm font-light">Donate now</Button>
+            </NuxtLink>
             <Button
+              @click="goFullScreen"
               class="w-full text-sm font-light bg-white hover:bg-gray-300 text-foreground"
               >Watch our impact
               <Icon class="ml-2" name="lucide:circle-play" />
@@ -28,6 +31,7 @@
       <div class="mt-5 sm:mt-0">
         <AspectRatio class="overflow-hidden rounded-2xl" :ratio="1 / 1.1">
           <video
+            ref="videoPlayer"
             id="player"
             playsinline
             controls="false"
@@ -49,10 +53,29 @@ import Plyr from "plyr"
 import "plyr/dist/plyr.css"
 import AspectRatio from "../ui/aspect-ratio/AspectRatio.vue"
 
-const plyr = ref<any>(null)
+// const plyr = ref<any>(null)
+const videoPlayer = ref<any>(null)
 
 onMounted(() => {
   // plyr.value = new Plyr(document.getElementById("player") as HTMLElement)
 })
+
+function goFullScreen() {
+  const videoElement = videoPlayer.value
+  if (videoElement.requestFullscreen) {
+    videoElement.requestFullscreen()
+  } else if (videoElement.mozRequestFullScreen) {
+    // Firefox
+    videoElement.mozRequestFullScreen()
+  } else if (videoElement.webkitRequestFullscreen) {
+    // Chrome, Safari and Opera
+    videoElement.webkitRequestFullscreen()
+  } else if (videoElement.msRequestFullscreen) {
+    // IE/Edge
+    videoElement.msRequestFullscreen()
+  }
+
+  videoElement.play()
+}
 </script>
 <style lang=""></style>

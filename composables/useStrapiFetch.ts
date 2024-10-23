@@ -29,7 +29,10 @@ export const useStrapiFetch = () => {
     const response = await useFetch(
       `${STRAPI_API}${route}?${
         Object.keys(qsQueryObject).length > 0
-          ? `${qs.stringify(qsQueryObject, qsOptions)}&`
+          ? `${qs.stringify(qsQueryObject, {
+              ...qsOptions,
+              encodeValuesOnly: true,
+            })}&`
           : ""
       }${new URLSearchParams(urlSearchParams).toString()}`,
       {

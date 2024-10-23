@@ -1,3 +1,5 @@
+<!-- todo: add design for the project type of cause -->
+
 <template>
   <Card class="p-4 shadow-md width-full h-fit rounded-xl">
     <h3 class="text-xl font-normal">
