@@ -21,29 +21,41 @@
       </div>
 
       <h3 class="mt-2 text-lg font-normal">{{ cause.title }}</h3>
-      <div class="flex w-full max-w-[350px] items-center space-x-3">
-        <Progress
-          :model-value="
-            Math.round(
-              (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
-            )
-          "
-          class="h-[5px]"
-        ></Progress>
-        <p>
-          {{
-            Math.round(
-              (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
-            )
-          }}%
+
+      <template v-if="isProject">
+        <p class="mt-1 text-sm font-light">
+          {{ cause.goalDetails[0].projectDescription }}
         </p>
-      </div>
-      <p class="my-2 text-sm text-gray-800">
-        ${{ cause.raisedAmount?.toLocaleString() }} of ${{
-          cause.goalDetails[0].goalAmount?.toLocaleString()
-        }}
-        Raised
-      </p>
+        <p class="my-2 text-sm font-semibold text-gray-800">
+          ${{ cause.raisedAmount?.toLocaleString() }}
+          Raised
+        </p>
+      </template>
+      <template v-else>
+        <div class="flex w-full max-w-[350px] items-center space-x-3">
+          <Progress
+            :model-value="
+              Math.round(
+                (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
+              )
+            "
+            class="h-[5px]"
+          ></Progress>
+          <p>
+            {{
+              Math.round(
+                (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
+              )
+            }}%
+          </p>
+        </div>
+        <p class="my-2 text-sm text-gray-800">
+          ${{ cause.raisedAmount?.toLocaleString() }} of ${{
+            cause.goalDetails[0].goalAmount?.toLocaleString()
+          }}
+          Raised
+        </p>
+      </template>
       <div class="flex mt-4 space-x-2 overflow-x-hidden">
         <p
           :class="`text-xs text-gray-600 py-1 px-2  w-fit rounded-full ${
@@ -70,12 +82,14 @@
 import Progress from "../ui/progress/Progress.vue"
 import type { ApiCauseCause } from "~/types/contentTypes"
 
-defineProps({
+const props = defineProps({
   cause: {
     type: Object as () => ApiCauseCause["attributes"],
     required: true,
   },
 })
+
+const isProject = props.cause.goalDetails[0].__component === "cause.project"
 
 // type Cause = {
 //   title: string
