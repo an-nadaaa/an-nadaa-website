@@ -182,10 +182,8 @@ import Flicking from "@egjs/vue3-flicking"
 import { micromark } from "micromark"
 
 const strapiFetch = useStrapiFetch()
-// const selectedCurrency = ref("usd")
-// const route = useRoute()
-// const { id } = route.params
-const id = "l4zsf6qwpnf1rcyusvnojqv1"
+const route = useRoute()
+const { id } = route.params
 const localePath = useLocalePath()
 const bankInfo = ref()
 const currentIndex = ref(0)
@@ -194,28 +192,31 @@ const { locale } = useI18n()
 const images = [img1, img2, img3, img4, img5, img6]
 const flickingElement = ref<any>(null)
 const lightboxVisible = ref(false)
-const qsQuery = {
-  filters: {
-    documentId: {
-      $eq: id,
-    },
-  },
-}
 
 const onHide = () => {
   lightboxVisible.value = false
 }
 
-const { data: strapiResponse } = await strapiFetch(
-  "/causes",
+const cause = await strapiFetch(
+  "/causes/" + id,
   "GET",
   {
     populate: "*",
     locale: locale.value,
   },
-  qsQuery
-)
-const cause = strapiResponse.value.data[0]
+  {}
+).then((res) => {
+  if (res.error.value) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Cause not found",
+      fatal: true,
+    })
+  }
+
+  return res.data.value.data
+})
+// const cause = strapiResponse.value.data[0]
 const causeHtml = micromark(cause.body)
 
 const isExpanded = ref(false)
