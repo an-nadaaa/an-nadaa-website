@@ -27,7 +27,11 @@
           :class="`${
             index === 0 || index === 1 ? 'sm:col-span-3' : 'sm:col-span-2'
           }
-          ${index > 2 ? 'hidden' : ''} sm:block col-span-1`"
+          ${index > 2 ? 'hidden' : ''} md:block col-span-1
+          ${index === 2 || index === 3 ? 'md:col-span-3 lg:col-span-2' : ''}
+          ${index === 4 ? 'md:hidden lg:block' : ''}
+          
+          `"
         >
           <CampaignCard
             :key="campaign.id"
