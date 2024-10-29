@@ -113,11 +113,7 @@ const { formatCurrency } = useMoneyFormat()
 const amount = ref()
 const currencySelector = ref((defaultCurrency as any).code)
 defineProps(["cause", "scrollToElement"])
-const toggleIndex: Ref = defineModel("toggleIndex")
-
-onBeforeMount(() => {
-  toggleIndex.value = "monthly"
-})
+const toggleIndex = ref("monthly")
 </script>
 
 <style scoped>

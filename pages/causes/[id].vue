@@ -15,6 +15,7 @@
       <div :class="`basis-[60%]`">
         <div class="overflow-hidden aspect-16/9 rounded-2xl">
           <iframe
+            v-if="!!cause.videoPath"
             class="w-full h-full"
             src="https://www.youtube.com/embed/02FKz_9VeeM?si=dDgojZO9UtqUfeF8"
             title="YouTube video player"
@@ -23,6 +24,12 @@
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
           ></iframe>
+          <div v-else>
+            <img
+              :src="cause.images[currentIndex].formats.medium.url"
+              class="object-cover w-full h-full"
+            />
+          </div>
         </div>
 
         <VueEasyLightbox
@@ -32,7 +39,7 @@
           @hide="onHide"
         />
 
-        <div :class="`relative ${images.length > 0 ? '' : 'hidden'}`">
+        <div :class="`relative ${images.length > 3 ? '' : 'hidden'}`">
           <flicking
             ref="flickingElement"
             class="py-4"
@@ -78,7 +85,6 @@
 
         <CauseDonateCard
           class="mt-8 sm:hidden"
-          v-model="toggleIndex"
           :cause="cause"
           :scrollToElement="scrollToElement"
         />
@@ -147,11 +153,7 @@
         </div>
       </div>
       <div class="hidden sm:block my-0 sm:my-8 lg:my-0 basis-[40%]">
-        <CauseDonateCard
-          :cause="cause"
-          v-model="toggleIndex"
-          :scrollToElement="scrollToElement"
-        />
+        <CauseDonateCard :cause="cause" :scrollToElement="scrollToElement" />
       </div>
     </div>
     <div ref="bankInfo" class="w-full py-16">
@@ -187,9 +189,7 @@ const { id } = route.params
 const localePath = useLocalePath()
 const bankInfo = ref()
 const currentIndex = ref(0)
-const toggleIndex = ref(0)
 const { locale } = useI18n()
-const images = [img1, img2, img3, img4, img5, img6]
 const flickingElement = ref<any>(null)
 const lightboxVisible = ref(false)
 
@@ -215,6 +215,11 @@ const cause = await strapiFetch(
   }
 
   return res.data.value.data
+})
+
+const images = cause.images.map((image: any) => {
+  if (image.formats.large.url) return image.formats.large.url
+  else return image.url
 })
 // const cause = strapiResponse.value.data[0]
 const causeHtml = micromark(cause.body)
