@@ -205,7 +205,7 @@ const cause = await strapiFetch(
     locale: locale.value,
   },
   {}
-).then((res) => {
+).then((res: any) => {
   if (res.error.value) {
     throw createError({
       statusCode: 404,

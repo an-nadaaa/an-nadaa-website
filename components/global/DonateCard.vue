@@ -48,12 +48,17 @@
         <div class="absolute top-0 right-0">
           <Select v-model="currencySelector" class="">
             <SelectTrigger class="border-l-0 rounded-l-none">
-              <SelectValue placeholder="$" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent class="">
               <SelectGroup class="">
-                <SelectItem value="usd"> $ </SelectItem>
-                <SelectItem value="myr"> RM </SelectItem>
+                <SelectItem
+                  v-for="(currency, index) in Object.values(currencies as Record<string,any>)"
+                  :key="index"
+                  :value="currency.code"
+                >
+                  {{ currency.symbol }}</SelectItem
+                >
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -74,7 +79,7 @@
           >Confirm</Button
         >
 
-        <NuxtLink v-else :to="`/checkout?${urlQueries}`">
+        <NuxtLink v-else :class="{ disabled }" :to="`/checkout?${urlQueries}`">
           <Button class="w-full">Make donation</Button>
         </NuxtLink>
         <Button
@@ -96,11 +101,11 @@
 </template>
 
 <script setup lang="ts">
-// const causeSelected: Ref = defineModel("causeSelected")
-// const currencySelector: Ref = defineModel("currencySelector")
-// const amount: Ref = defineModel("amount")
+const { currencies, defaultCurrency } = useAppConfig()
+
+const disabled = computed(() => !amount.value || amount.value <= 0)
 const causeSelected = ref("general")
-const currencySelector = ref("usd")
+const currencySelector = ref((defaultCurrency as any).code)
 const amount = ref<any>("")
 const route = useRoute()
 const isCheckout = route.fullPath.includes("checkout")
@@ -139,3 +144,10 @@ defineProps({
   },
 })
 </script>
+
+<style scoped>
+.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+</style>

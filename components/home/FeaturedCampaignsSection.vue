@@ -95,7 +95,7 @@ const causes =
       //   "tags",
       // ],
     }
-  ).then((res) => res.data.value.data)) || []
+  ).then((res: any) => res.data.value.data)) || []
 
 // const router = useRouter()
 // const campaigns = [
