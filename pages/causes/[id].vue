@@ -26,13 +26,6 @@
             ></iframe>
           </div>
 
-          <VueEasyLightbox
-            :visible="lightboxVisible"
-            :imgs="images"
-            :index="currentIndex"
-            @hide="onHide"
-          />
-
           <div :class="`relative ${images.length > 0 ? '' : 'hidden'}`">
             <flicking
               ref="flickingElement"
@@ -89,6 +82,12 @@
           >
             <div
               v-for="(image, index) in images"
+              @click="
+                () => {
+                  currentIndex = index
+                  lightboxVisible = true
+                }
+              "
               :key="index"
               class="relative flex items-center justify-center w-full overflow-hidden"
             >
@@ -106,6 +105,13 @@
             </template>
           </flicking>
         </template>
+
+        <VueEasyLightbox
+          :visible="lightboxVisible"
+          :imgs="images"
+          :index="currentIndex"
+          @hide="onHide"
+        />
 
         <CauseDonateCard
           class="mt-8 sm:hidden"
