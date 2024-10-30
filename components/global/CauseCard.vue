@@ -4,7 +4,7 @@
   >
     <AspectRatio :ratio="3 / 2">
       <img
-        :src="cause.images[0].formats.medium.url"
+        :src="cause.thumbnail.formats?.medium?.url || cause.thumbnail.url"
         alt=""
         class="object-cover w-full h-full rounded-lg"
       />
