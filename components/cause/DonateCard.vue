@@ -73,6 +73,7 @@
     </div>
 
     <p
+      @click="share"
       class="flex items-center justify-center mt-4 font-light hover:cursor-pointer hover:underline"
     >
       <Icon name="lucide:share-2" class="mr-2"></Icon> Share with family and
@@ -87,6 +88,12 @@ import Input from "../ui/input/Input.vue"
 
 const { currencies, defaultCurrency } = useAppConfig()
 const route = useRoute()
+const { formatCurrency } = useMoneyFormat()
+const amount = ref()
+const currencySelector = ref((defaultCurrency as any).code)
+const props = defineProps(["cause", "scrollToElement"])
+const toggleIndex = ref("monthly")
+const url = ref("")
 
 const disabled = computed(() => !amount.value || amount.value <= 0)
 const urlQueries = computed(
@@ -109,11 +116,24 @@ function validateAmount() {
   }
 }
 
-const { formatCurrency } = useMoneyFormat()
-const amount = ref()
-const currencySelector = ref((defaultCurrency as any).code)
-defineProps(["cause", "scrollToElement"])
-const toggleIndex = ref("monthly")
+function share() {
+  if (navigator.share) {
+    navigator
+      .share({
+        title: `Donate to An-Nadaa | ${props.cause.title}`,
+        text: `Support ${props.cause.title} by donating to An-Nadaa`,
+        url: url.value,
+      })
+      .then(() => console.log("Content shared successfully!"))
+      .catch((error) => console.error("Error sharing", error))
+  } else {
+    console.log("Web Share API is not supported in this browser.")
+  }
+}
+
+onMounted(() => {
+  url.value = window.location.href
+})
 </script>
 
 <style scoped>
