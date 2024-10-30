@@ -13,75 +13,99 @@
     </h1>
     <div class="grid mt-8 gap-x-4 lg:flex">
       <div :class="`basis-[60%]`">
-        <div class="overflow-hidden aspect-16/9 rounded-2xl">
-          <iframe
-            v-if="!!cause.videoPath"
-            class="w-full h-full"
-            src="https://www.youtube.com/embed/02FKz_9VeeM?si=dDgojZO9UtqUfeF8"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
-          <div v-else>
-            <img
-              :src="cause.images[currentIndex].formats.medium.url"
-              class="object-cover w-full h-full"
-            />
+        <template v-if="cause.videoPath">
+          <div class="overflow-hidden aspect-16/9 rounded-2xl">
+            <iframe
+              class="w-full h-full"
+              src="https://www.youtube.com/embed/02FKz_9VeeM?si=dDgojZO9UtqUfeF8"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
           </div>
-        </div>
 
-        <VueEasyLightbox
-          :visible="lightboxVisible"
-          :imgs="images"
-          :index="currentIndex"
-          @hide="onHide"
-        />
+          <VueEasyLightbox
+            :visible="lightboxVisible"
+            :imgs="images"
+            :index="currentIndex"
+            @hide="onHide"
+          />
 
-        <div :class="`relative ${images.length > 3 ? '' : 'hidden'}`">
+          <div :class="`relative ${images.length > 0 ? '' : 'hidden'}`">
+            <flicking
+              ref="flickingElement"
+              class="py-4"
+              :options="{
+                circular: true,
+                align: { camera: '0%', panel: '0%' },
+              }"
+            >
+              <div
+                v-for="(image, index) in images"
+                :key="index"
+                @click="
+                  () => {
+                    currentIndex = index
+                    lightboxVisible = true
+                  }
+                "
+                class="mr-2 overflow-hidden rounded-lg aspect-4/3 hover:cursor-pointer"
+              >
+                <img :src="image" class="object-cover w-24 h-full md:w-36" />
+              </div>
+            </flicking>
+
+            <div class="absolute flex justify-between w-full top-1/2">
+              <div
+                @click="() => flickingElement?.prev()"
+                class="hover:cursor-pointer shadow-md -translate-y-1/2 -translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
+              >
+                <Icon
+                  name="lucide:arrow-left"
+                  class="h-full w-full text-primary relative -translate-x-[0px]"
+                ></Icon>
+              </div>
+
+              <div
+                @click="() => flickingElement?.next()"
+                class="right-0 hover:cursor-pointer shadow-md -translate-y-1/2 translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
+              >
+                <Icon
+                  name="lucide:arrow-right"
+                  class="h-full w-full text-primary relative -translate-x-[0px]"
+                ></Icon>
+              </div>
+            </div>
+          </div>
+        </template>
+        <template v-else>
           <flicking
-            ref="flickingElement"
-            class="py-4"
-            :options="{ circular: true, align: { camera: '0%', panel: '0%' } }"
+            ref="flickingElementBig"
+            class="aspect-16/9 rounded-2xl"
+            :options="{ circular: true }"
+            :plugins="plugins"
           >
             <div
               v-for="(image, index) in images"
               :key="index"
-              @click="
-                () => {
-                  currentIndex = index
-                  lightboxVisible = true
-                }
-              "
-              class="mr-2 overflow-hidden rounded-lg aspect-4/3 hover:cursor-pointer"
+              class="relative flex items-center justify-center w-full overflow-hidden"
             >
-              <img :src="image" class="object-cover w-24 h-full md:w-36" />
+              <div class="absolute inset-0">
+                <img :src="image" class="object-cover w-full h-full blur-lg" />
+              </div>
+              <img
+                :src="image"
+                class="relative z-10 object-contain max-w-full max-h-full"
+              />
             </div>
+            <template #viewport>
+              <span class="flicking-arrow-prev is-thin"></span>
+              <span class="flicking-arrow-next is-thin"></span>
+            </template>
           </flicking>
-
-          <div class="absolute flex justify-between w-full top-1/2">
-            <div
-              @click="() => flickingElement?.prev()"
-              class="hover:cursor-pointer shadow-md -translate-y-1/2 -translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
-            >
-              <Icon
-                name="lucide:arrow-left"
-                class="h-full w-full text-primary relative -translate-x-[0px]"
-              ></Icon>
-            </div>
-
-            <div
-              @click="() => flickingElement?.next()"
-              class="right-0 hover:cursor-pointer shadow-md -translate-y-1/2 translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
-            >
-              <Icon
-                name="lucide:arrow-right"
-                class="h-full w-full text-primary relative -translate-x-[0px]"
-              ></Icon>
-            </div>
-          </div>
-        </div>
+        </template>
 
         <CauseDonateCard
           class="mt-8 sm:hidden"
@@ -182,16 +206,21 @@ import img5 from "assets/media/img/5.png"
 import img6 from "assets/media/img/6.png"
 import Flicking from "@egjs/vue3-flicking"
 import { micromark } from "micromark"
+import { Arrow } from "@egjs/flicking-plugins"
+import "@egjs/flicking-plugins/dist/arrow.css"
 
 const strapiFetch = useStrapiFetch()
 const route = useRoute()
 const { id } = route.params
 const localePath = useLocalePath()
 const bankInfo = ref()
+const index = ref(0)
 const currentIndex = ref(0)
 const { locale } = useI18n()
 const flickingElement = ref<any>(null)
+const flickingElementBig = ref<any>(null)
 const lightboxVisible = ref(false)
+const plugins = [new Arrow()]
 
 const onHide = () => {
   lightboxVisible.value = false
@@ -217,10 +246,12 @@ const cause = await strapiFetch(
   return res.data.value.data
 })
 
-const images = cause.images.map((image: any) => {
-  if (image.formats.large.url) return image.formats.large.url
-  else return image.url
-})
+const images = [
+  cause.thumbnail.formats?.large?.url || cause.thumbnail.url,
+  ...cause.images.map((image: any) => {
+    return image.url
+  }),
+]
 // const cause = strapiResponse.value.data[0]
 const causeHtml = micromark(cause.body)
 
@@ -231,4 +262,15 @@ function scrollToElement() {
 }
 </script>
 
-<style></style>
+<style scoped>
+.flicking-arrow-prev {
+  @apply text-primary;
+}
+
+.flicking-arrow-prev:before,
+.flicking-arrow-next:before,
+.flicking-arrow-prev:after,
+.flicking-arrow-next:after {
+  @apply bg-primary;
+}
+</style>

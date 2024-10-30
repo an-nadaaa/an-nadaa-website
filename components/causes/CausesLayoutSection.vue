@@ -173,15 +173,22 @@ import {
 const pageSize = 12
 const route = useRoute()
 const strapiFetch = useStrapiFetch()
-const categories = await strapiFetch("/categories", "GET", {}).then((res) => {
-  return ["All", ...res.data.value.data.map((category: any) => category.title)]
-})
-const locations = await strapiFetch("/locations", "GET", {}).then((res) => {
-  return [
-    "All",
-    ...res.data.value.data.map((location: any) => location.countryName),
-  ]
-})
+const categories = await strapiFetch("/categories", "GET", {}).then(
+  (res: any) => {
+    return [
+      "All",
+      ...res.data.value.data.map((category: any) => category.title),
+    ]
+  }
+)
+const locations = await strapiFetch("/locations", "GET", {}).then(
+  (res: any) => {
+    return [
+      "All",
+      ...res.data.value.data.map((location: any) => location.countryName),
+    ]
+  }
+)
 const causeType = ["All", "Campaign", "Project"]
 const states = ["All", "Ongoing", "Funded"]
 const currentPage = ref(1)
