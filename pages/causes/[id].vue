@@ -15,9 +15,16 @@
       <div :class="`basis-[60%]`">
         <template v-if="cause.videoPath">
           <div class="overflow-hidden aspect-16/9 rounded-2xl">
+            <!-- <VideoPlayer
+              class="w-full h-full"
+              :src="cause.videoPath"
+              :thumbnail="
+                cause.thumbnail.formats?.large?.url || cause.thumbnail.url
+              "
+            ></VideoPlayer> -->
             <iframe
               class="w-full h-full"
-              src="https://www.youtube.com/embed/02FKz_9VeeM?si=dDgojZO9UtqUfeF8"
+              :src="cause.videoPath"
               title="YouTube video player"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -214,6 +221,7 @@ import Flicking from "@egjs/vue3-flicking"
 import { micromark } from "micromark"
 import { Arrow } from "@egjs/flicking-plugins"
 import "@egjs/flicking-plugins/dist/arrow.css"
+import VideoPlayer from "~/components/global/VideoPlayer.vue"
 
 const strapiFetch = useStrapiFetch()
 const route = useRoute()
