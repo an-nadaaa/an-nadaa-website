@@ -80,10 +80,8 @@ const strapiFetch = useStrapiFetch()
 const { locale } = useI18n()
 const { formateDayMonthYear } = useDateFormatter()
 const route = useRoute()
-const pageUrl = window.location.href
-// const blogId = route.params.id;
-// todo: change blogId to id from route
-const blogId = "dvldqyc45ub0ql2xnyg4yb2t"
+const pageUrl = ref()
+const blogId = route.params.id
 
 const blog = await strapiFetch(
   "/blogs/" + blogId,
@@ -105,13 +103,17 @@ const blog = await strapiFetch(
 })
 const blogHtml = micromark(blog.body)
 
+onMounted(() => {
+  pageUrl.value = window.location.href
+})
+
 useHead({
   title: blog.title,
   meta: [{ name: "description", content: blog.description }],
 })
 
 function handleCopyLink() {
-  const textToCopy = `Check out this blog from An-Nadaa titled "${blog?.title}": ${pageUrl}`
+  const textToCopy = `Check out this blog from An-Nadaa titled "${blog?.title}": ${pageUrl.value}`
   navigator.clipboard.writeText(textToCopy)
 
   copyClicked.value = true
@@ -123,14 +125,14 @@ function handleCopyLink() {
 function handleTwitterClick() {
   const url = `https://twitter.com/intent/tweet?text=Check+out+this+blog+from+An-Nadaa+titled+${encodeURIComponent(
     blog.title
-  )}%3A+${encodeURIComponent(pageUrl)}`
+  )}%3A+${encodeURIComponent(pageUrl.value)}`
 
   window.open(url, "_blank")
 }
 
 function handleFacebookClick() {
   const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-    pageUrl
+    pageUrl.value
   )}`
 
   // &quote=Check+out+this+blog+from+An-Nadaa+titled+${encodeURIComponent(
@@ -142,7 +144,7 @@ function handleFacebookClick() {
 
 function handleLinkedinClick() {
   const url = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-    pageUrl
+    pageUrl.value
   )}&title=${encodeURIComponent(
     blog.title
   )}&summary=Check+out+this+blog+from+An-Nadaa`

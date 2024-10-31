@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "HOST=0 PORT=3000 nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -38,6 +38,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "vee-validate": "^4.13.2",
+    "vidstack": "^1.12.12",
     "vue": "^3.3.13",
     "vue-easy-lightbox": "^1.19.0",
     "vue3-spinners": "^1.2.2",

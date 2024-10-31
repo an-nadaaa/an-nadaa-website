@@ -1,3 +1,5 @@
+import { vite as vidstack } from "vidstack/plugins"
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   future: {
@@ -77,5 +79,13 @@ export default defineNuxtConfig({
     defaultDirection: "ltr",
     lazy: true,
     strategy: "prefix_except_default",
+  },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.startsWith("media-"),
+    },
+  },
+  vite: {
+    plugins: [vidstack()],
   },
 })

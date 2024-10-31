@@ -658,7 +658,7 @@ export interface ApiCauseCause extends Struct.CollectionTypeSchema {
         },
         number
       >;
-    campaignType: Schema.Attribute.Enumeration<['project', 'campaign']> &
+    causeType: Schema.Attribute.Enumeration<['project', 'campaign']> &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
