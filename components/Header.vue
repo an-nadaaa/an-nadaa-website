@@ -93,7 +93,7 @@
   <NuxtLink :to="'/donate'">
     <div
       v-if="!isButtonVisible"
-      class="fixed bottom-0 z-50 w-full py-3 sm:hidden bg-primary"
+      class="fixed bottom-0 z-[100] w-full py-3 sm:hidden bg-primary"
     >
       <p class="text-lg text-center text-white">Donate now</p>
     </div>
