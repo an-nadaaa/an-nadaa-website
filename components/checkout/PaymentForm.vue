@@ -90,6 +90,7 @@
                   </FormLabel>
                   <FormControl>
                     <Input
+                      @input="onDateInput"
                       type="text"
                       v-bind="componentField"
                       placeholder="MM/YY"
@@ -106,6 +107,7 @@
                   <FormControl>
                     <Input
                       type="password"
+                      @input="onCvcInput"
                       v-bind="componentField"
                       placeholder="***"
                     />
@@ -146,6 +148,11 @@ const props = defineProps({
   },
 })
 
+const currentDate = new Date()
+const currentMonth = currentDate.getMonth() + 1
+const currentYear = currentDate.getFullYear() % 100
+const inyear = ref()
+
 const formSchema = toTypedSchema(
   z.object({
     firstName: z.string().min(1, {
@@ -169,12 +176,33 @@ const formSchema = toTypedSchema(
     cardNumber: z.string().length(16, {
       message: "Invalid card number",
     }),
-    expiryDate: z.string().length(5, {
-      message: "Please ensure it is in the format MM/YY",
-    }),
-    cvc: z.string().length(3, {
-      message: "CVC must be 3 characters long",
-    }),
+    expiryDate: z
+      .string()
+      .regex(/^\d{2}\/\d{2}$/, {
+        message: "Please ensure it is in the format MM/YY",
+      })
+      .refine(
+        (value) => {
+          const [month, year] = value.split("/") as [string, string]
+          const expiryYear = parseInt(year, 10)
+          const expiryMonth = parseInt(month, 10)
+          return (
+            expiryYear > currentYear ||
+            (expiryYear === currentYear && expiryMonth >= currentMonth)
+          )
+        },
+        {
+          message: "Card has expired",
+        }
+      ),
+    cvc: z
+      .string()
+      .length(3, {
+        message: "CVC must be 3 characters long",
+      })
+      .regex(/^\d+$/, {
+        message: "CVC must be a number",
+      }),
   })
 )
 
@@ -182,17 +210,28 @@ const form = useForm({
   validationSchema: formSchema,
 })
 
-// const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
-//   // props.submitHandler(values)
-//   console.log("Form submitted", values)
-// })
 const handleSubmit = form.handleSubmit((values) => {
   console.log("Form submitted", values)
 })
 
-// const handleSubmit = (e: Event) => {
-//   e.preventDefault()
-//   // console.log("Form submitted")
-//   console.log(e.target)
-// }
+const onDateInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  let value = input.value.replace(/\D/g, "")
+
+  if (value.length > 2) {
+    value = value.slice(0, 2) + "/" + value.slice(2, 4)
+  }
+
+  input.value = value
+}
+
+const onCvcInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  let value = input.value.replace(/\D/g, "")
+  input.value = value
+
+  if (value.length > 3) {
+    input.value = value.slice(0, 3)
+  }
+}
 </script>
