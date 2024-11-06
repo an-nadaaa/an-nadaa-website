@@ -75,11 +75,7 @@
                   >Card PIN<span class="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="text"
-                    v-bind="componentField"
-                    placeholder="Card Number"
-                  />
+                  <CardInput v-bind="componentField" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,7 +100,7 @@
               </FormField>
             </div>
             <div class="space-y-2">
-              <FormField v-slot="{ componentField }" name="CVC">
+              <FormField v-slot="{ componentField }" name="cvc">
                 <FormItem>
                   <FormLabel>CVC<span class="text-red-500">*</span> </FormLabel>
                   <FormControl>
@@ -124,7 +120,6 @@
       </form>
     </CardContent>
   </Card>
-  <p>{{ handleSubmit }}</p>
 </template>
 
 <script setup lang="ts">
@@ -142,6 +137,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import CardInput from "./CardInput.vue"
 
 const props = defineProps({
   submitHandler: {
@@ -153,10 +149,10 @@ const props = defineProps({
 const formSchema = toTypedSchema(
   z.object({
     firstName: z.string().min(1, {
-      message: "First name must be at least 2 characters long",
+      message: "First name must be at least 1 characters long",
     }),
     lastName: z.string().min(1, {
-      message: "Last name must be at least 2 characters long",
+      message: "Last name must be at least 1 characters long",
     }),
     email: z.string().email("Invalid email address"),
     phoneNumber: z
@@ -171,7 +167,7 @@ const formSchema = toTypedSchema(
       )
       .optional(),
     cardNumber: z.string().length(16, {
-      message: "Card number must be 16 characters long",
+      message: "Invalid card number",
     }),
     expiryDate: z.string().length(5, {
       message: "Please ensure it is in the format MM/YY",
@@ -186,10 +182,17 @@ const form = useForm({
   validationSchema: formSchema,
 })
 
-// const onSubmit = form.handleSubmit(async (values: Record<string, any>) => {
-//   props.submitHandler(values)
+// const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
+//   // props.submitHandler(values)
+//   console.log("Form submitted", values)
 // })
 const handleSubmit = form.handleSubmit((values) => {
   console.log("Form submitted", values)
 })
+
+// const handleSubmit = (e: Event) => {
+//   e.preventDefault()
+//   // console.log("Form submitted")
+//   console.log(e.target)
+// }
 </script>

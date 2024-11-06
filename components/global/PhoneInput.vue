@@ -62,7 +62,6 @@ import {
 import { onClickOutside } from "@vueuse/core"
 import { useVModel } from "@vueuse/core"
 import type { HTMLAttributes } from "vue"
-import { cn } from "~/lib/utils"
 
 const props = defineProps<{
   defaultValue?: string | number
