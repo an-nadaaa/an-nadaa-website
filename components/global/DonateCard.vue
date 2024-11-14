@@ -5,7 +5,7 @@
       <p class="font-light text-dark-gray">
         Your donation makes a difference no matter how little
       </p>
-      <Tabs default-value="monthly" class="mt-2">
+      <Tabs v-model="frequencySelector" default-value="monthly" class="mt-2">
         <TabsList class="w-full">
           <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
           <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
@@ -106,6 +106,7 @@ const { currencies, defaultCurrency } = useAppConfig()
 const disabled = computed(() => !amount.value || amount.value <= 0)
 const causeSelected = ref("general")
 const currencySelector = ref((defaultCurrency as any).code)
+const frequencySelector = ref("monthly")
 const amount = ref<any>("")
 const route = useRoute()
 const isCheckout = route.fullPath.includes("checkout")
@@ -116,6 +117,7 @@ const urlQueries = computed(
       currency: currencySelector.value,
       amount: (amount.value || 0).toString(),
       id: causeSelected.value,
+      frequency: frequencySelector.value,
     })
 )
 

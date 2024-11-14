@@ -6,7 +6,11 @@
       >
     </div>
     <div class="relative order-2 sm:order-1">
-      <CheckoutPaymentForm class="shadow-lg" :submit-handler="onSubmit" />
+      <CheckoutPaymentForm
+        class="shadow-lg"
+        v-model:donation-details="donationDetails"
+        v-model:loading="loading"
+      />
       <transition name="blur">
         <div
           v-if="isEditing"
@@ -62,13 +66,6 @@
 <script setup lang="ts">
 import DonateCard from "~/components/checkout/DonateCard.vue"
 
-// new URLSearchParams({
-//   currency: currencySelector.value,
-//   amount: (amount.value || 0).toString(),
-//   id: route.params.id as string,
-//   frequency: toggleIndex.value,
-// })
-
 const strapiFetch = useStrapiFetch()
 const appConfig = useAppConfig()
 const logo = (appConfig.logo as any).color
@@ -82,7 +79,17 @@ const donateAmount = ref<any>(Number(amount) || "")
 const donationFrequency = ref((frequency as string) || "monthly")
 const isEditing = ref(false)
 const causes = ref<any[]>([])
+const loading = ref(false)
+
 const isMonthly = computed(() => donationFrequency.value === "monthly")
+const donationDetails = computed(() => {
+  return {
+    causeSelected: causeSelected.value,
+    donateAmount: parseFloat(donateAmount.value),
+    currencySelected: currencySelected.value,
+    donationFrequency: donationFrequency.value,
+  }
+})
 
 function onConfirm() {
   isEditing.value = false
@@ -102,17 +109,11 @@ await strapiFetch("/causes", "GET")
     console.log(err)
   })
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   currencySelected.value = (currency as string) || "USD"
   causeSelected.value = (id as string) || "general"
   donateAmount.value = Number(amount) || null
-  // isMonthly.value = frequency === "monthly"
 })
-
-const onSubmit = async (values: Record<string, any>) => {
-  console.log("Form submitted", values)
-  // router.push("/checkout/status")
-}
 </script>
 
 <style scoped>
