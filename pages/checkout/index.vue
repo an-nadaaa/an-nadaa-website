@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 import DonateCard from "~/components/checkout/DonateCard.vue"
+import { useStrapiFetch } from "~/composables/useStrapiFetch"
 
 const strapiFetch = useStrapiFetch()
 const appConfig = useAppConfig()

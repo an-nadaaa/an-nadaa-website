@@ -5,9 +5,9 @@ let stripeInstance: Stripe | null = null
 
 export const useStripe = async () => {
   const { STRIPE_PK } = useRuntimeConfig().public
-  
+
   if (!stripeInstance) {
-    stripeInstance = await loadStripe(STRIPE_PK)
+    stripeInstance = await loadStripe(STRIPE_PK as string)
   }
   return stripeInstance
 }
