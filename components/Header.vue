@@ -116,37 +116,28 @@
             </NuxtLink>
           </template>
           <template v-else>
-            <div
-              @click="
-                () => {
-                  isMobileCauseOpen = !isMobileCauseOpen
-                }
-              "
-              class="flex justify-between text-white"
-            >
-              <p class="text-lg">Causes</p>
-              <div>
-                <Icon
-                  :class="`text-2xl translate-y-[2px] transition-all ${
-                    isMobileCauseOpen ? 'rotate-180' : ''
-                  }`"
-                  name="lucide:chevron-down"
-                ></Icon>
-              </div>
-            </div>
-            <div v-if="isMobileCauseOpen" class="mt-4 space-y-4">
-              <NuxtLink
-                v-for="(item, index) in causesLinks"
-                @click="hide"
-                :key="index"
-                :to="item.path"
-              >
-                <div
-                  class="flex items-center mt-4 rounded-sm hover:text-gray-200"
-                >
-                  <h5 class="font-light text-md">{{ item.title }}</h5>
-                </div>
-              </NuxtLink>
+            <div>
+              <Accordion class="p-0" type="single" collapsible>
+                <AccordionItem class="p-0 border-b-0" value="item-1">
+                  <AccordionTrigger class="text-lg font-normal"
+                    >Causes</AccordionTrigger
+                  >
+                  <AccordionContent class="pb-0">
+                    <NuxtLink
+                      v-for="(item, index) in causesLinks"
+                      @click="hide"
+                      :key="index"
+                      :to="item.path"
+                    >
+                      <div
+                        class="flex items-center mt-4 rounded-sm hover:text-gray-200"
+                      >
+                        <h5 class="font-light text-md">{{ item.title }}</h5>
+                      </div>
+                    </NuxtLink>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </template>
         </div>
@@ -197,6 +188,12 @@
 import { useElementVisibility } from "@vueuse/core"
 import { useDonateButton } from "~/composables/useDonateButton"
 import { useMobileNavigation } from "~/composables/useMobileNavigation"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const isCauseOpen = ref(false)
 const isMobileCauseOpen = ref(false)
@@ -236,6 +233,13 @@ const links = [
   { title: "Contact", path: "/contact" },
 ]
 const causesLinks = [
+  {
+    title: "All",
+    description: "Opportunities to help those in need",
+    icon: "lucide:book",
+    path: "/causes",
+  },
+
   {
     title: "Campaigns",
     description: "Opportunities to help those in need",
