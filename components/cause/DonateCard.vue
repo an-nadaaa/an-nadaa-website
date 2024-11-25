@@ -1,7 +1,13 @@
 <!-- todo: add design for the project type of cause -->
 
 <template>
-  <Card class="p-4 overflow-x-hidden shadow-md width-full h-fit rounded-xl">
+  <Card
+    :class="{
+      'p-4 overflow-x-hidden shadow-md width-full h-fit rounded-xl':
+        cause.isActive,
+      'opacity-50 pointer-events-none p-4': !cause.isActive,
+    }"
+  >
     <h3 class="text-xl font-normal">
       <strong class="text-xl font-semibold">
         {{ formatCurrency(cause.raisedAmount) }}

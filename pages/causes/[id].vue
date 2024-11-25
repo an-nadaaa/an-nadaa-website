@@ -203,7 +203,12 @@
           Contact information can be found here
         </NuxtLink>
       </p>
-      <BankDetails class="mt-8" />
+      <BankDetails
+        :class="{
+          'mt-8': true,
+          'opacity-50 pointer-events-none': !cause.isActive,
+        }"
+      />
     </div>
   </div>
 </template>
