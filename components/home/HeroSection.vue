@@ -14,7 +14,9 @@
             class="grid grid-cols-1 space-y-2 sm:w-fit sm:space-y-0 sm:flex sm:space-x-4"
           >
             <NuxtLink to="/donate">
-              <Button class="w-full text-sm font-light">Donate now</Button>
+              <Button ref="donateButton" class="w-full text-sm font-light"
+                >Donate now</Button
+              >
             </NuxtLink>
             <Button
               @click="goFullScreen"
@@ -52,7 +54,18 @@
 import Plyr from "plyr"
 import "plyr/dist/plyr.css"
 import AspectRatio from "../ui/aspect-ratio/AspectRatio.vue"
+import { useDonateButton } from "~/composables/useDonateButton"
 
+const donateButton = ref(null)
+const { hideDonateButton, showDonateButton } = useDonateButton()
+useIntersectionObserver(donateButton, ([entry]) => {
+  if (!entry) return
+  if (!entry.isIntersecting) {
+    showDonateButton()
+  } else {
+    hideDonateButton()
+  }
+})
 // const plyr = ref<any>(null)
 const videoPlayer = ref<any>(null)
 

@@ -62,6 +62,7 @@ const causes =
       populate: "*",
       filters: {
         isFeatured: true,
+        isActive: true,
         environment: process.env.NODE_ENV,
       },
       // fields: [

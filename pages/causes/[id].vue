@@ -203,7 +203,12 @@
           Contact information can be found here
         </NuxtLink>
       </p>
-      <BankDetails class="mt-8" />
+      <BankDetails
+        :class="{
+          'mt-8': true,
+          'opacity-50 pointer-events-none': !cause.isActive,
+        }"
+      />
     </div>
   </div>
 </template>
@@ -221,7 +226,7 @@ import Flicking from "@egjs/vue3-flicking"
 import { micromark } from "micromark"
 import { Arrow } from "@egjs/flicking-plugins"
 import "@egjs/flicking-plugins/dist/arrow.css"
-import VideoPlayer from "~/components/global/VideoPlayer.vue"
+// import VideoPlayer from "~/components/global/VideoPlayer.vue"
 
 const strapiFetch = useStrapiFetch()
 const route = useRoute()

@@ -47,7 +47,17 @@ function scrollToElement() {
   bankInfo.value?.scrollIntoView({ behavior: "smooth" })
 }
 
-await strapiFetch("/causes", "GET")
+await strapiFetch(
+  "/causes",
+  "GET",
+  {},
+  {
+    filters: {
+      isActive: true,
+      environment: process.env.NODE_ENV,
+    },
+  }
+)
   .then((res: any) => {
     const strapiCauses = res.data.value.data.map((cause: any) => {
       return {

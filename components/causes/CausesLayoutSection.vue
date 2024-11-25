@@ -244,6 +244,9 @@ watch(
 const causes = computedAsync(async () => {
   const qsQuery = {
     filters: {
+      isActive: {
+        $eq: true,
+      },
       causeType:
         typeSelected.value === "All"
           ? {}
@@ -370,6 +373,7 @@ onMounted(() => {
 //   },
 //   // Add more campaigns as needed
 // ]
+// todo: filter to isActive: true
 </script>
 
 <style>
