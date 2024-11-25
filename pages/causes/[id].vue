@@ -221,7 +221,7 @@ import Flicking from "@egjs/vue3-flicking"
 import { micromark } from "micromark"
 import { Arrow } from "@egjs/flicking-plugins"
 import "@egjs/flicking-plugins/dist/arrow.css"
-import VideoPlayer from "~/components/global/VideoPlayer.vue"
+// import VideoPlayer from "~/components/global/VideoPlayer.vue"
 
 const strapiFetch = useStrapiFetch()
 const route = useRoute()
