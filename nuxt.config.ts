@@ -1,3 +1,5 @@
+import { vite as vidstack } from "vidstack/plugins"
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   future: {
@@ -25,6 +27,10 @@ export default defineNuxtConfig({
           ? process.env.STRAPI_API_KEY_PROD
           : process.env.STRAPI_API_KEY_DEV,
     },
+    STRIPE_SK:
+      process.env.NODE_ENV === "production"
+        ? process.env.STRIPE_SK_PROD
+        : process.env.STRIPE_SK_DEV,
   },
 
   modules: [
@@ -77,5 +83,13 @@ export default defineNuxtConfig({
     defaultDirection: "ltr",
     lazy: true,
     strategy: "prefix_except_default",
+  },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.startsWith("media-"),
+    },
+  },
+  vite: {
+    plugins: [vidstack()],
   },
 })

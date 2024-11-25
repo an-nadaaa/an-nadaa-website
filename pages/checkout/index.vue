@@ -1,17 +1,33 @@
 <template>
-  <div class="container grid py-4 sm:py-20 gap-x-8 gap-y-8 sm:grid-cols-2">
-    <div class="order-2 sm:order-1">
-      <CheckoutPaymentForm class="shadow-lg" />
+  <div class="container grid py-4 sm:py-10 gap-x-8 gap-y-2 sm:grid-cols-2">
+    <div class="sm:col-span-2">
+      <Button @click="() => router.back()" :variant="'white'" class="mb-2"
+        ><Icon :name="'lucide:arrow-left'" class="mr-2" />Go back</Button
+      >
+    </div>
+    <div class="relative order-2 sm:order-1">
+      <CheckoutPaymentForm
+        class="shadow-lg"
+        v-model:donation-details="donationDetails"
+        v-model:loading="loading"
+      />
+      <transition name="blur">
+        <div
+          v-if="isEditing"
+          class="absolute inset-0 bg-white bg-opacity-50 backdrop-blur-sm"
+        ></div>
+      </transition>
     </div>
     <div class="order-1 sm:order-2">
       <DonateCard
-        v-if="isEditing"
-        class="shadow-lg outline-1"
+        v-if="isEditing || !donateAmount"
+        class="outline-1"
         :causes="causes"
         :on-click="onConfirm"
-        v-model:currency-selector="currencySelector"
+        v-model:currency-selected="currencySelected"
         v-model:cause-selected="causeSelected"
-        v-model:amount="amount"
+        v-model:amount="donateAmount"
+        v-model:donation-frequency="donationFrequency"
       />
       <Card v-else class="pt-4">
         <CardContent class="relative">
@@ -23,19 +39,23 @@
             <Icon name="lucide:pen" class="mr-2" />
             Edit</Button
           >
-          <h3 class="text-lg font-medium">Your donation</h3>
+          <h3 class="font-normal">Your donation</h3>
           <img :src="logo" class="w-32 my-4" />
 
-          <h4 class="text-base font-medium">Donation</h4>
-          <p class="text-sm font-light text-dark-gray">
+          <h4 class="font-medium">Donation</h4>
+          <p class="font-light text-dark-gray">
             {{
-              causeSelected === "general" ? "General Donation" : causeSelected
+              causeSelected === "general"
+                ? "General Donation"
+                : causes.find((cause) => {
+                    return causeSelected === cause.id
+                  })?.name || "ERROR FINDING CAUSE"
             }}
           </p>
 
           <h4 class="mt-6 text-3xl font-normal">
-            {{ amount }} {{ currencySelector.toUpperCase() }}
-            {{ isMonthly ? "/month" : "" }}
+            {{ donateAmount }} {{ currencySelected.toUpperCase()
+            }}{{ isMonthly ? "/month" : "" }}
           </h4>
         </CardContent>
       </Card>
@@ -44,38 +64,65 @@
 </template>
 
 <script setup lang="ts">
-import DonateCard from "~/components/global/DonateCard.vue"
+import DonateCard from "~/components/checkout/DonateCard.vue"
+import { useStrapiFetch } from "~/composables/useStrapiFetch"
 
+const strapiFetch = useStrapiFetch()
 const appConfig = useAppConfig()
-const logo = appConfig.logo.color
+const logo = (appConfig.logo as any).color
 const route = useRoute()
-const currencySelector = ref("usd")
-const causeSelected = ref("general")
-const amount = ref(123)
-const isMonthly = ref(true)
-const isEditing = ref(false)
+const router = useRouter()
 
-const causes = ref([
-  {
-    name: "General donation",
-    id: "general",
-    description: "Support the general fund of An-Nadaa",
-  },
-  {
-    name: "Project Education",
-    id: "education",
-    description: "Support the education fund of An-Nadaa",
-  },
-])
+const { currency, id, amount, frequency } = route.query
+const currencySelected = ref("USD")
+const causeSelected = ref("general")
+const donateAmount = ref<any>(Number(amount) || "")
+const donationFrequency = ref((frequency as string) || "monthly")
+const isEditing = ref(false)
+const causes = ref<any[]>([])
+const loading = ref(false)
+
+const isMonthly = computed(() => donationFrequency.value === "monthly")
+const donationDetails = computed(() => {
+  return {
+    causeSelected: causeSelected.value,
+    donateAmount: parseFloat(donateAmount.value),
+    currencySelected: currencySelected.value,
+    donationFrequency: donationFrequency.value,
+  }
+})
 
 function onConfirm() {
   isEditing.value = false
 }
 
-onBeforeMount(() => {
-  currencySelector.value = (route.query.currency as string) || "usd"
-  causeSelected.value = (route.query.causeId as string) || "general"
-  amount.value = Number(route.query.amount) || 123
-  isMonthly.value = route.query.frequency === "monthly"
+await strapiFetch("/causes", "GET")
+  .then((res: any) => {
+    const strapiCauses = res.data.value.data.map((cause: any) => {
+      return {
+        name: cause.title,
+        id: cause.documentId,
+      }
+    })
+    causes.value = [...strapiCauses]
+  })
+  .catch((err: any) => {
+    console.log(err)
+  })
+
+onBeforeMount(async () => {
+  currencySelected.value = (currency as string) || "USD"
+  causeSelected.value = (id as string) || "general"
+  donateAmount.value = Number(amount) || null
 })
 </script>
+
+<style scoped>
+.blur-enter-active,
+.blur-leave-active {
+  transition: opacity 0.5s;
+}
+.blur-enter, .blur-leave-to /* .blur-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+</style>

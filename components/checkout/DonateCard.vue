@@ -1,11 +1,11 @@
 <template>
   <Card class="pt-4">
     <CardContent>
-      <h3 class="font-normal">Make your donation</h3>
+      <h3 class="font-normal">Donation details</h3>
       <p class="font-light text-dark-gray">
-        Your donation makes a difference no matter how little
+        Your donation make a difference no matter how little
       </p>
-      <Tabs v-model="frequencySelector" default-value="monthly" class="mt-2">
+      <Tabs v-model="donationFrequency" default-value="monthly" class="mt-2">
         <TabsList class="w-full">
           <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
           <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
@@ -46,7 +46,7 @@
           :placeholder="'Enter amount'"
         ></Input>
         <div class="absolute top-0 right-0">
-          <Select v-model="currencySelector" class="">
+          <Select v-model="currencySelected" class="">
             <SelectTrigger class="border-l-0 rounded-l-none">
               <SelectValue />
             </SelectTrigger>
@@ -67,6 +67,7 @@
 
       <div class="mt-4">
         <Button
+          :class="{ disabled }"
           v-if="isCheckout"
           @click="
             () => {
@@ -101,23 +102,36 @@
 </template>
 
 <script setup lang="ts">
-const { currencies, defaultCurrency } = useAppConfig()
+const { currencies } = useAppConfig()
 
-const disabled = computed(() => !amount.value || amount.value <= 0)
-const causeSelected = ref("general")
-const currencySelector = ref((defaultCurrency as any).code)
-const frequencySelector = ref("monthly")
-const amount = ref<any>("")
+const disabled = computed(() => !amount.value || parseFloat(amount.value) <= 0)
+const causeSelected = defineModel("causeSelected", {
+  type: String,
+  default: "general",
+})
+const currencySelected = defineModel("currencySelected", {
+  type: String,
+  required: true,
+})
+const amount = defineModel("amount", {
+  type: String,
+  required: true,
+})
+const donationFrequency = defineModel("donationFrequency", {
+  type: String,
+  required: true,
+})
+
+// const amount = ref<any>("")
 const route = useRoute()
 const isCheckout = route.fullPath.includes("checkout")
 
 const urlQueries = computed(
   () =>
     new URLSearchParams({
-      currency: currencySelector.value,
+      currency: currencySelected.value,
       amount: (amount.value || 0).toString(),
       id: causeSelected.value,
-      frequency: frequencySelector.value,
     })
 )
 

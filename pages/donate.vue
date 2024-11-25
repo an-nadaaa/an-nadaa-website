@@ -48,7 +48,7 @@ function scrollToElement() {
 }
 
 await strapiFetch("/causes", "GET")
-  .then((res) => {
+  .then((res: any) => {
     const strapiCauses = res.data.value.data.map((cause: any) => {
       return {
         name: cause.title,
@@ -57,7 +57,7 @@ await strapiFetch("/causes", "GET")
     })
     causes.value = [...strapiCauses]
   })
-  .catch((err) => {
+  .catch((err: any) => {
     console.log(err)
   })
 </script>
