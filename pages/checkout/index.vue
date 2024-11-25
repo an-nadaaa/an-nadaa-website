@@ -64,8 +64,8 @@
 </template>
 
 <script setup lang="ts">
-import DonateCard from "~/components/checkout/DonateCard.vue"
 import { useStrapiFetch } from "~/composables/useStrapiFetch"
+import DonateCard from "~/components/checkout/DonateCard.vue"
 
 const strapiFetch = useStrapiFetch()
 const appConfig = useAppConfig()
@@ -96,7 +96,12 @@ function onConfirm() {
   isEditing.value = false
 }
 
-await strapiFetch("/causes", "GET")
+await strapiFetch(
+  "/causes",
+  "GET",
+  {},
+  { filters: { isActive: true, environment: process.env.NODE_ENV } }
+)
   .then((res: any) => {
     const strapiCauses = res.data.value.data.map((cause: any) => {
       return {
