@@ -272,7 +272,7 @@ const images = [
   }),
 ]
 // const cause = strapiResponse.value.data[0]
-const causeHtml = micromark(cause.body)
+const causeHtml = micromark(cause.body || "")
 
 const isExpanded = ref(false)
 
