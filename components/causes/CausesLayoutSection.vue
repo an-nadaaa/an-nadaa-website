@@ -209,6 +209,8 @@ const typeRef = computed(() => route.query.type)
 if (route.query.type === "campaign" || route.query.type === "project") {
   typeSelected.value =
     route.query.type.charAt(0).toUpperCase() + route.query.type.slice(1)
+} else {
+  typeSelected.value = "All"
 }
 
 function handleResetFilter() {
@@ -221,6 +223,8 @@ function handleResetFilter() {
 watch(typeRef, (value) => {
   if (value === "campaign" || value === "project") {
     typeSelected.value = value.charAt(0).toUpperCase() + value.slice(1)
+  } else {
+    typeSelected.value = "All"
   }
 })
 

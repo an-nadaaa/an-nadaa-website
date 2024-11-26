@@ -235,9 +235,9 @@ const links = [
 const causesLinks = [
   {
     title: "All",
-    description: "Opportunities to help those in need",
-    icon: "lucide:book",
-    path: "/causes",
+    description: "Discover all causes",
+    icon: "lucide:align-justify",
+    path: "/causes?type=all",
   },
 
   {
