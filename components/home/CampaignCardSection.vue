@@ -30,7 +30,7 @@
         }}
         Raised
       </p>
-      <div class="flex mt-4 space-x-2">
+      <div class="flex mt-4 space-x-2 overflow-x-hidden">
         <p
           :class="`text-xs text-gray-600 py-1 px-2  w-fit rounded-full ${
             status === 'Funded'
@@ -43,7 +43,7 @@
         <p
           v-for="(tag, index) in tags"
           :key="index"
-          class="px-2 py-1 text-xs text-purple-700 bg-purple-100 rounded-full w-fit"
+          class="px-2 py-1 text-xs text-purple-700 bg-purple-100 rounded-full min-w-max"
         >
           {{ tag }}
         </p>

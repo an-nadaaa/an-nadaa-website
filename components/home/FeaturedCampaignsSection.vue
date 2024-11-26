@@ -21,9 +21,9 @@
       <!-- Campaign Cards -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
         <NuxtLink
-          v-for="(campaign, index) in campaigns.slice(0, 5)"
+          v-for="(cause, index) in causes.slice(0, 5)"
           :id="index"
-          :to="'/causes/' + campaign.id"
+          :to="'/causes/' + cause.documentId"
           :class="`${
             index === 0 || index === 1 ? 'sm:col-span-3' : 'sm:col-span-2'
           }
@@ -33,19 +33,12 @@
           
           `"
         >
-          <CampaignCard
-            :key="campaign.id"
-            :title="campaign.title"
-            :categoryTags="campaign.categoryTags"
-            :image="campaign.image"
-            :amountRaised="campaign.amountRaised"
-            :goalAmount="campaign.goalAmount"
-            :status="campaign.status"
-            :funded="campaign.funded"
-            :tags="campaign.tags"
+          <CauseCard
+            :cause="cause"
             class="hover:cursor-pointer hover:shadow-xl"
-          />
+          ></CauseCard>
         </NuxtLink>
+        <!-- </template> -->
       </div>
 
       <NuxtLink to="/causes">
@@ -58,70 +51,29 @@
 </template>
 
 <script setup lang="ts">
-import CampaignCard from "~/components/home/CampaignCardSection.vue"
-
-const router = useRouter()
-const campaigns = [
-  {
-    id: 1,
-    title: "Sponsor a Child Education",
-    categoryTags: ["Education", "Sadaqah"],
-    image:
-      "https://wallpapers.com/images/hd/colorful-google-polka-dots-ot2t9bbzehsjggdx.jpg",
-    amountRaised: 4271,
-    goalAmount: 10650,
-    status: "Ongoing",
-    funded: false,
-    tags: ["20 days left"],
-  },
-  {
-    id: 2,
-    title: "Build a Masjid",
-    categoryTags: ["Sadaqah Jariyah"],
-    image:
-      "https://mrwallpaper.com/images/hd/vintage-google-website-7qgz2szwjhkoybl2.jpg",
-    amountRaised: 400,
-    goalAmount: 4271,
-    status: "Funded",
-    funded: true,
-  },
-  {
-    id: 2,
-    title: "Build a Masjid",
-    categoryTags: ["Sadaqah Jariyah"],
-    image:
-      "https://mrwallpaper.com/images/hd/vintage-google-website-7qgz2szwjhkoybl2.jpg",
-    amountRaised: 1700,
-    goalAmount: 4271,
-    status: "Funded",
-    funded: true,
-  },
-  {
-    id: 2,
-    title: "Build a Masjid",
-    categoryTags: ["Sadaqah Jariyah"],
-    image:
-      "https://mrwallpaper.com/images/hd/vintage-google-website-7qgz2szwjhkoybl2.jpg",
-    amountRaised: 2000,
-    goalAmount: 4271,
-    status: "Ongoing",
-    funded: true,
-  },
-  {
-    id: 2,
-    title: "Build a Masjid",
-    categoryTags: ["Sadaqah Jariyah"],
-    image:
-      "https://mrwallpaper.com/images/hd/vintage-google-website-7qgz2szwjhkoybl2.jpg",
-    amountRaised: 4271,
-    goalAmount: 4271,
-    status: "Funded",
-    funded: true,
-  },
-  // Add more campaigns as needed
-]
+const strapiFetch = useStrapiFetch()
+const causes =
+  (await strapiFetch(
+    "/causes",
+    "GET",
+    {},
+    {
+      sort: "createdAt:desc",
+      populate: "*",
+      filters: {
+        isFeatured: true,
+        isActive: true,
+        environment: process.env.NODE_ENV,
+      },
+      // fields: [
+      //   "title",
+      //   "isPrivate",
+      //   "isActive",
+      //   "locale",
+      //   "raisedAmount",
+      //   "causeStatus",
+      //   "tags",
+      // ],
+    }
+  ).then((res: any) => res.data.value.data)) || []
 </script>
-
-<style scoped>
-/* Add any additional styles here */
-</style>

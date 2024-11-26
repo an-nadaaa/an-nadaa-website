@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full pb-8 sm:pb-0 bg-light-blue">
+  <div class="w-full bg-light-blue">
     <div class="container grid grid-cols-1 gap-4 py-8 sm:grid-cols-2">
       <div class="p-8 bg-dark-blue rounded-2xl">
         <h1 class="text-4xl font-normal text-white xl:text-6xl">
           Donate for the
         </h1>
-        <h1 class="text-4xl font-normal text-white xl:text-6xl">
+        <h1 class="text-4xl font-normal text-white md:text-3xl xl:text-6xl">
           sake of Allah
         </h1>
 
@@ -13,7 +13,7 @@
           Your donation will go to where it is needed the most.
         </p>
         <NuxtLink to="/donate">
-          <Button class="px-8 mt-8">Donate</Button>
+          <Button class="px-8 mt-8" ref="donateButton">Donate</Button>
         </NuxtLink>
       </div>
       <div class="rounded-2xl">
@@ -40,7 +40,16 @@
         </AspectRatio>
       </div>
     </div>
-    <div class="px-6 text-white bg-dark-blue sm:px-0">
+    <div
+      :class="[
+        'px-6',
+        'pb-24',
+        'text-white',
+        'bg-dark-blue',
+        'sm:px-0',
+        'sm:pb-0',
+      ]"
+    >
       <div
         class="container grid grid-cols-1 py-8 space-y-8 sm:space-y-0 sm:grid-cols-2 lg:gap-x-8 lg:grid-cols-4"
       >
@@ -90,6 +99,20 @@ import img1 from "~/assets/media/img/1.png"
 import img2 from "~/assets/media/img/2.png"
 import img3 from "~/assets/media/img/3.png"
 import img4 from "~/assets/media/img/4.png"
+
+import { useDonateButton } from "~/composables/useDonateButton"
+
+const donateButton = ref(null)
+const { hideDonateButton, showDonateButton, donateButtonVisible } =
+  useDonateButton()
+useIntersectionObserver(donateButton, ([entry]) => {
+  if (!entry) return
+  if (!entry.isIntersecting) {
+    showDonateButton()
+  } else {
+    hideDonateButton()
+  }
+})
 
 const appConfig = useAppConfig()
 const logo = appConfig.logo.white

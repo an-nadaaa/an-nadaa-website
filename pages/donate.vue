@@ -14,11 +14,9 @@
         </p>
       </div>
       <DonateCard
-        class="z-10"
+        class="z-50"
         :scroll-to-element="scrollToElement"
         :causes="causes"
-        v-model:cause-selected="causeSelected"
-        v-model:currency-selector="currencySelector"
       />
     </div>
   </div>
@@ -36,37 +34,40 @@
 </template>
 
 <script setup lang="ts">
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import BankDetails from "~/components/global/BankDetails.vue"
-import type { ModelRef } from "vue"
 import DonateCard from "~/components/global/DonateCard.vue"
 
-const causes = ref([
-  {
-    name: "General donation",
-    id: "general",
-    description: "Support the general fund of An-Nadaa",
-  },
-  {
-    name: "Project Education",
-    id: "education",
-    description: "Support the education fund of An-Nadaa",
-  },
-])
-const causeSelected = ref("general")
-const currencySelector = ref("usd")
+const strapiFetch = useStrapiFetch()
+const causes = ref<any[]>([])
+// const causeSelected = ref("general")
+// const currencySelector = ref("usd")
 const bankInfo = ref()
 
 function scrollToElement() {
   bankInfo.value?.scrollIntoView({ behavior: "smooth" })
 }
+
+await strapiFetch(
+  "/causes",
+  "GET",
+  {},
+  {
+    filters: {
+      isActive: true,
+      environment: process.env.NODE_ENV,
+    },
+  }
+)
+  .then((res: any) => {
+    const strapiCauses = res.data.value.data.map((cause: any) => {
+      return {
+        name: cause.title,
+        id: cause.documentId,
+      }
+    })
+    causes.value = [...strapiCauses]
+  })
+  .catch((err: any) => {
+    console.log(err)
+  })
 </script>
