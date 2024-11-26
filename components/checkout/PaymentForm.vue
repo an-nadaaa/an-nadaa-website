@@ -268,6 +268,7 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
         phone: phoneNumber,
         currency: currencySelected,
         donationType: donationFrequency,
+        causeId: causeSelected,
       }),
     })
 

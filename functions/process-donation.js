@@ -12,10 +12,18 @@ const STRIPE_GENERAL_PRODUCT =
   process.env.CONTEXT === "production"
     ? process.env.STRIPE_GENERAL_PRODUCT_ID_PROD
     : process.env.STRIPE_GENERAL_PRODUCT_ID_DEV
+const STRAPI_BASE_URL =
+  process.env.CONTEXT === "production"
+    ? process.env.STRAPI_API_PROD
+    : process.env.STRAPI_API_DEV
+const STRAPI_API_KEY =
+  process.env.CONTEXT === "production"
+    ? process.env.STRAPI_API_KEY_PROD
+    : process.env.STRAPI_API_KEY_DEV
 
 const stripe = require("stripe")(STRIPE_SK),
   headers = {
-    "Access-Control-Allow-Origin": BASE_URL,
+    "Access-Control-Allow-Origin": BASE_URL, // Allow requests from our Strapi frontend
     "Access-Control-Allow-Headers": "Content-Type",
   }
 
@@ -28,8 +36,18 @@ export const handler = async (event) => {
       name,
       phone,
       donationType,
+      causeId,
       currency,
     } = JSON.parse(event.body)
+
+    let productId
+
+    if (!causeId) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Cause ID is required" }),
+      }
+    }
 
     // Create or retrieve customer
     const customers = await stripe.customers.list({
@@ -49,6 +67,41 @@ export const handler = async (event) => {
       })
     }
 
+    if (causeId !== "general") {
+      productId = await fetch(`${STRAPI_BASE_URL}/causes/${causeId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${STRAPI_API_KEY}`,
+        },
+      })
+        .then(async (res) => {
+          if (res.ok) {
+            let id = (await res.json()).data.product
+
+            if (!id) {
+              throw new Error("Product not found")
+            }
+            return id
+          } else {
+            // Create a custom error with the status code
+            const error = new Error(`HTTP Error: ${response.status}`)
+            error.status = response.status // Attach the status code to the error
+            throw error
+          }
+        })
+        .catch((error) => {
+          if (error.status === 404) {
+            return {
+              statusCode: 404,
+              body: JSON.stringify({ error: "Cause not found" }),
+            }
+          } else {
+            throw new Error("Failed to fetch cause")
+          }
+        })
+    }
+
     if (donationType === "monthly") {
       // Create subscription
       const subscription = await stripe.subscriptions.create({
@@ -57,7 +110,7 @@ export const handler = async (event) => {
           {
             price_data: {
               currency: currency.toLowerCase(),
-              product: STRIPE_GENERAL_PRODUCT,
+              product: productId || STRIPE_GENERAL_PRODUCT,
               unit_amount: amount,
               recurring: {
                 interval: "month",
@@ -83,24 +136,24 @@ export const handler = async (event) => {
       }
     } else {
       // stripe.
-      // // Process one-time payment
-      // const session = await stripe.checkout.sessions.create({
-      //   payment_method_types: ["card"],
-      //   line_items: [
-      //     {
-      //       price_data: {
-      //         currency: currency.toLowerCase(),
-      //         product: STRIPE_GENERAL_PRODUCT,
-      //         unit_amount: amount,
-      //       },
-      //       quantity: 1,
-      //     },
-      //   ],
-      //   mode: "payment",
-      //   customer: customer.id,
-      //   success_url: `${BASE_URL}/status`,
-      //   // cancel_url: `${BASE_URL}/cancel`,
-      // })
+      // Process one-time payment
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: currency.toLowerCase(),
+              product: productId || STRIPE_GENERAL_PRODUCT,
+              unit_amount: amount,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        customer: customer.id,
+        success_url: `${BASE_URL}/status`,
+        // cancel_url: `${BASE_URL}/cancel`,
+      })
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount, // amount in cents
