@@ -111,10 +111,10 @@ await strapiFetch(
     })
     causes.value = [...strapiCauses]
 
-    if (id) {
+    if (id && id !== "general") {
       if (
         !(strapiCauses as any[]).find((cause: any) => {
-          return causeSelected.value === cause.id
+          return id === cause.id
         })
       ) {
         throw new Error("404 - Cause not found")
