@@ -77,7 +77,12 @@ export const handler = async (event) => {
       })
         .then(async (res) => {
           if (res.ok) {
-            let id = (await res.json()).data.product
+            let cause = (await res.json()).data
+            let id = cause.product
+
+            if (!cause.isActive) {
+              throw new Error("Cause is not active")
+            }
 
             if (!id) {
               throw new Error("Product not found")
@@ -97,7 +102,7 @@ export const handler = async (event) => {
               body: JSON.stringify({ error: "Cause not found" }),
             }
           } else {
-            throw new Error("Failed to fetch cause")
+            throw new Error(error.message)
           }
         })
     }
