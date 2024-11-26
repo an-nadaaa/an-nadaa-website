@@ -110,9 +110,26 @@ await strapiFetch(
       }
     })
     causes.value = [...strapiCauses]
+
+    if (id && id !== "general") {
+      if (
+        !(strapiCauses as any[]).find((cause: any) => {
+          return id === cause.id
+        })
+      ) {
+        throw new Error("404 - Cause not found")
+      }
+    }
   })
   .catch((err: any) => {
     console.log(err)
+
+    if (err.message.includes("404"))
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Cause not found",
+        fatal: true,
+      })
   })
 
 onBeforeMount(async () => {
