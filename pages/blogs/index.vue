@@ -13,12 +13,16 @@
         to society. Our journey is a testament to the power of collective action
         and the potential for positive change.
       </p>
-      <div class="grid mt-8 sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-8">
-        <div class="group" v-for="(blog, index) in blogs" :key="index">
-          <NuxtLink :to="`/blogs/${blog.id}`">
+      <div class="grid gap-4 mt-8 sm:grid-cols-2 xl:grid-cols-3">
+        <div
+          class="p-4 transition-all rounded-lg group hover:shadow-lg"
+          v-for="(blog, index) in blogs"
+          :key="index"
+        >
+          <NuxtLink :to="`/blogs/${blog.documentId}`">
             <div class="overflow-hidden h-80">
               <img
-                :src="blog.image"
+                :src="blog.image.formats.medium.url"
                 class="object-cover w-full h-full rounded-xl"
               />
             </div>
@@ -36,119 +40,153 @@
 
       <div class="w-full">
         <Button
+          :disabled="buttonDisabled || buttonIsLoading"
+          @click="fetchBlogs"
           :variant="'white'"
           class="relative w-full mt-4 -translate-x-1/2 sm:w-80 left-1/2"
-          >Load more</Button
         >
+          <template v-if="buttonIsLoading">
+            <VueSpinnerBars class="text-primary" />
+          </template>
+          <template v-else> Load more </template>
+        </Button>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import img1 from "~/assets/media/img/1.png";
-import img2 from "~/assets/media/img/2.png";
-import img3 from "~/assets/media/img/3.png";
+import { VueSpinnerBars } from "vue3-spinners"
+const strapiFetch = useStrapiFetch()
+const { formateDayMonthYear } = useDateFormatter()
 
-const { formateDayMonthYear } = useDateFormatter();
+const buttonIsLoading = ref(false)
+const blogs = ref<any[]>([])
+const buttonDisabled = ref(false)
+let currentPage = 1
 
-type Blog = {
-  title: string;
-  description: string;
-  image: string;
-  createdAt: string;
-  id: string;
-};
+async function fetchBlogs() {
+  buttonIsLoading.value = true
+  const res = await strapiFetch(
+    "/blogs",
+    "GET",
+    {},
+    {
+      sort: "publishedAt:desc",
+      populate: "*",
+      pagination: {
+        page: currentPage,
+        pageSize: 12,
+      },
+    }
+  ).then((res) => res.data.value)
+  blogs.value = [...blogs.value, ...res.data]
+  currentPage += 1
+  buttonDisabled.value =
+    res.meta.pagination.pageCount <= res.meta.pagination.page
 
-const blogs = ref<Blog[]>([]);
+  buttonIsLoading.value = false
+}
 
-blogs.value = [
-  {
-    title: "The Power of Zakat",
-    description:
-      "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
-    image: img1,
-    createdAt: "2021-10-01",
-    id: "1",
-  },
-  {
-    title: "Education for All",
-    description:
-      "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
-    image: img2,
-    createdAt: "2021-09-15",
-    id: "2",
-  },
-  {
-    title: "Building Sustainable Communities",
-    description:
-      "Sustainability is at the heart of everything we do at An-Nadaa. We believe in building communities that are resilient, self-sufficient, and environmentally conscious. Through our projects and initiatives, we are working to create a more sustainable future for all.",
-    image: img3,
-    createdAt: "2021-08-30",
-    id: "3",
-  },
-  {
-    title: "The Power of Zakat",
-    description:
-      "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
-    image: img1,
-    createdAt: "2021-10-01",
-    id: "4",
-  },
-  {
-    title: "Education for All",
-    description:
-      "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
-    image: img2,
-    createdAt: "2021-09-15",
-    id: "5",
-  },
-  {
-    title: "The Power of Zakat",
-    description:
-      "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
-    image: img1,
-    createdAt: "2021-10-01",
-    id: "4",
-  },
-  {
-    title: "Education for All",
-    description:
-      "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
-    image: img2,
-    createdAt: "2021-09-15",
-    id: "5",
-  },
-  {
-    title: "The Power of Zakat",
-    description:
-      "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
-    image: img1,
-    createdAt: "2021-10-01",
-    id: "4",
-  },
-  {
-    title: "Education for All",
-    description:
-      "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
-    image: img2,
-    createdAt: "2021-09-15",
-    id: "5",
-  },
-  {
-    title: "The Power of Zakat",
-    description:
-      "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
-    image: img1,
-    createdAt: "2021-10-01",
-    id: "4",
-  },
-  {
-    title: "Education for All",
-    description:
-      "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
-    image: img2,
-    createdAt: "2021-09-15",
-    id: "5",
-  },
-];
+await fetchBlogs()
+
+// type Blog = {
+//   title: string
+//   description: string
+//   image: string
+//   createdAt: string
+//   id: string
+// }
+
+// const blogs = ref<Blog[]>([])
+
+// blogs.value = [
+//   {
+//     title: "The Power of Zakat",
+//     description:
+//       "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
+//     image: img1,
+//     createdAt: "2021-10-01",
+//     id: "1",
+//   },
+//   {
+//     title: "Education for All",
+//     description:
+//       "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
+//     image: img2,
+//     createdAt: "2021-09-15",
+//     id: "2",
+//   },
+//   {
+//     title: "Building Sustainable Communities",
+//     description:
+//       "Sustainability is at the heart of everything we do at An-Nadaa. We believe in building communities that are resilient, self-sufficient, and environmentally conscious. Through our projects and initiatives, we are working to create a more sustainable future for all.",
+//     image: img3,
+//     createdAt: "2021-08-30",
+//     id: "3",
+//   },
+//   {
+//     title: "The Power of Zakat",
+//     description:
+//       "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
+//     image: img1,
+//     createdAt: "2021-10-01",
+//     id: "4",
+//   },
+//   {
+//     title: "Education for All",
+//     description:
+//       "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
+//     image: img2,
+//     createdAt: "2021-09-15",
+//     id: "5",
+//   },
+//   {
+//     title: "The Power of Zakat",
+//     description:
+//       "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
+//     image: img1,
+//     createdAt: "2021-10-01",
+//     id: "4",
+//   },
+//   {
+//     title: "Education for All",
+//     description:
+//       "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
+//     image: img2,
+//     createdAt: "2021-09-15",
+//     id: "5",
+//   },
+//   {
+//     title: "The Power of Zakat",
+//     description:
+//       "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
+//     image: img1,
+//     createdAt: "2021-10-01",
+//     id: "4",
+//   },
+//   {
+//     title: "Education for All",
+//     description:
+//       "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
+//     image: img2,
+//     createdAt: "2021-09-15",
+//     id: "5",
+//   },
+//   {
+//     title: "The Power of Zakat",
+//     description:
+//       "Zakat is a powerful tool for social change. It is a means of redistributing wealth and ensuring that those in need are supported. At An-Nadaa, we believe in the power of Zakat to transform lives and create a more just and equitable society.",
+//     image: img1,
+//     createdAt: "2021-10-01",
+//     id: "4",
+//   },
+//   {
+//     title: "Education for All",
+//     description:
+//       "Education is a fundamental human right. It is the key to unlocking opportunities and creating a better future for all. At An-Nadaa, we are committed to providing quality education to children in need, empowering them to reach their full potential.",
+//     image: img2,
+//     createdAt: "2021-09-15",
+//     id: "5",
+//   },
+// ]
 </script>

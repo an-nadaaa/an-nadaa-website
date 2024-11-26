@@ -1,11 +1,11 @@
 <template>
-  <div class="py-20 lg:py-42 overflow-hidden">
+  <div class="py-20 overflow-hidden lg:py-42">
     <div class="container">
       <div class="w-full max-w-[750px] mx-auto space-y-4">
-        <h6 class="text-center text-sm font-medium text-orange-accent">
+        <h6 class="text-sm font-medium text-center text-orange-accent">
           ABOUT US
         </h6>
-        <h1 class="text-center font-semibold">
+        <h1 class="font-semibold text-center">
           An-Nadaa is a non-profit organisation working since 2014 and
           registered in Nigera and Malaysia.
         </h1>
@@ -20,20 +20,22 @@
           gives us capability to expand our project outwards and cover whole of
           Nigeria and then onwards to the whole of African continent.
         </p>
-        <div class="w-full flex justify-center">
-          <Button>Learn more about us</Button>
+        <div class="flex justify-center w-full">
+          <NuxtLink to="/about">
+            <Button>Learn more about us</Button>
+          </NuxtLink>
         </div>
       </div>
     </div>
     <div
       class="w-[120%] relative -left-[30px] sm:left-1/2 sm:-translate-x-1/2 grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4 mt-16"
     >
-      <div class="col-span-1 flex items-center">
+      <div class="flex items-center col-span-1">
         <AspectRatio :ratio="1.05 / 1">
           <img
             src="~/assets/media/img/1.png"
             alt=""
-            class="w-full h-full object-cover rounded-xl"
+            class="object-cover w-full h-full rounded-xl"
           />
         </AspectRatio>
       </div>
@@ -42,34 +44,34 @@
           <img
             src="~/assets/media/img/4.png"
             alt=""
-            class="w-full h-full object-cover rounded-xl"
+            class="object-cover w-full h-full rounded-xl"
           />
         </AspectRatio>
       </div>
-      <div class="col-span-1 flex items-center">
+      <div class="flex items-center col-span-1">
         <AspectRatio :ratio="1.05 / 1">
           <img
             src="~/assets/media/img/5.png"
             alt=""
-            class="w-full h-full object-cover rounded-xl"
+            class="object-cover w-full h-full rounded-xl"
           />
         </AspectRatio>
       </div>
-      <div class="hidden sm:block col-span-1">
+      <div class="hidden col-span-1 sm:block">
         <AspectRatio :ratio="5 / 6.5">
           <img
             src="~/assets/media/img/3.png"
             alt=""
-            class="w-full h-full object-cover rounded-xl"
+            class="object-cover w-full h-full rounded-xl"
           />
         </AspectRatio>
       </div>
-      <div class="hidden col-span-1 sm:flex items-center">
+      <div class="items-center hidden col-span-1 sm:flex">
         <AspectRatio :ratio="1.05 / 1">
           <img
             src="~/assets/media/img/6.png"
             alt=""
-            class="w-full h-full object-cover rounded-xl"
+            class="object-cover w-full h-full rounded-xl"
           />
         </AspectRatio>
       </div>

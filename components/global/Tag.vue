@@ -7,13 +7,13 @@
 <script setup lang="ts">
 type Colors = "purple" | "green" | "red"
 
-const props = defineProps({
+defineProps({
   text: {
     type: String,
     required: true,
   },
   variant: {
-    type: String as PropType<Colors>,
+    type: String,
     default: "green",
   },
 })
