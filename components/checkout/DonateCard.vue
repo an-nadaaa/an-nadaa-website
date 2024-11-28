@@ -5,9 +5,19 @@
       <p class="font-light text-dark-gray">
         Your donation make a difference no matter how little
       </p>
-      <Tabs v-model="donationFrequency" default-value="monthly" class="mt-2">
+      <Tabs v-model="donationFrequency" default-value="one-time" class="mt-4">
         <TabsList class="w-full">
-          <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
+          <TabsTrigger
+            value="monthly"
+            class="relative w-full pointer-events-none"
+          >
+            Monthly
+            <p
+              class="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-[15px] p-[2px] text-xs text-white border border-gray-200 rounded-sm bg-slate-300"
+            >
+              Coming soon
+            </p>
+          </TabsTrigger>
           <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
         </TabsList>
       </Tabs>
