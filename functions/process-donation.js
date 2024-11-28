@@ -108,6 +108,13 @@ export const handler = async (event) => {
     }
 
     if (donationType === "monthly") {
+      // todo: enable monthly donations
+
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Monthly donations are disabled" }),
+      }
+
       // Create subscription
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
