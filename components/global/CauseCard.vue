@@ -1,6 +1,6 @@
 <template>
   <Card
-    class="p-0 px-4 py-1 pt-4 transition transform bg-white rounded-lg shadow-md"
+    class="relative h-full p-0 px-4 py-1 pt-4 pb-4 transition transform bg-white rounded-lg shadow-md"
   >
     <AspectRatio :ratio="3 / 2">
       <img
@@ -9,54 +9,56 @@
         class="object-cover w-full h-full rounded-lg"
       />
     </AspectRatio>
-    <div class="py-4">
-      <div class="flex space-x-2">
-        <p
-          v-for="(category, index) in cause.categories.map((category:any) => category.title)"
-          :key="index"
-          class="px-2 py-1 text-xs text-gray-600 bg-gray-100 rounded-full w-fit"
-        >
-          {{ category }}
-        </p>
-      </div>
-
-      <h3 class="mt-2 text-lg font-normal">{{ cause.title }}</h3>
-
-      <template v-if="isProject">
-        <p class="mt-1 text-sm font-light">
-          {{ cause.goalDetails[0].projectDescription }}
-        </p>
-        <p class="my-2 text-sm font-semibold text-gray-800">
-          ${{ cause.raisedAmount?.toLocaleString() }}
-          Raised
-        </p>
-      </template>
-      <template v-else>
-        <div class="flex w-full max-w-[350px] items-center space-x-3">
-          <Progress
-            :model-value="
-              Math.round(
-                (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
-              )
-            "
-            class="h-[5px]"
-          ></Progress>
-          <p>
-            {{
-              Math.round(
-                (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
-              )
-            }}%
+    <div class="">
+      <div class="pt-2 pb-6">
+        <div class="flex space-x-2">
+          <p
+            v-for="(category, index) in cause.categories.map((category:any) => category.title)"
+            :key="index"
+            class="px-2 py-1 text-xs text-gray-600 bg-gray-100 rounded-full w-fit"
+          >
+            {{ category }}
           </p>
         </div>
-        <p class="my-2 text-sm text-gray-800">
-          ${{ cause.raisedAmount?.toLocaleString() }} of ${{
-            cause.goalDetails[0].goalAmount?.toLocaleString()
-          }}
-          Raised
-        </p>
-      </template>
-      <div class="flex mt-4 space-x-2 overflow-x-hidden">
+
+        <h3 class="mt-2 text-lg font-normal">{{ cause.title }}</h3>
+
+        <template v-if="isProject">
+          <p class="mt-1 text-sm font-light">
+            {{ cause.goalDetails[0].projectDescription }}
+          </p>
+          <p class="my-2 text-sm font-semibold text-gray-800">
+            ${{ cause.raisedAmount?.toLocaleString() }}
+            Raised
+          </p>
+        </template>
+        <template v-else>
+          <div class="flex w-full max-w-[350px] items-center space-x-3">
+            <Progress
+              :model-value="
+                Math.round(
+                  (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
+                )
+              "
+              class="h-[5px]"
+            ></Progress>
+            <p>
+              {{
+                Math.round(
+                  (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
+                )
+              }}%
+            </p>
+          </div>
+          <p class="my-2 text-sm text-gray-800">
+            ${{ cause.raisedAmount?.toLocaleString() }} of ${{
+              cause.goalDetails[0].goalAmount?.toLocaleString()
+            }}
+            Raised
+          </p>
+        </template>
+      </div>
+      <div class="absolute flex mt-4 space-x-2 overflow-x-hidden bottom-4">
         <p
           :class="`text-xs text-gray-600 py-1 px-2  w-fit rounded-full ${
             cause.causeStatus === 'Funded'

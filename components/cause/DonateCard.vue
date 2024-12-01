@@ -21,7 +21,7 @@
       <Tag
         v-for="(tag, index) in cause.tags"
         :key="index"
-        class="my-2"
+        class="my-2 mr-1"
         :text="tag.value"
         :variant="tag.color"
       />
