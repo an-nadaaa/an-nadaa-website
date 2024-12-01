@@ -63,7 +63,8 @@ const causes =
       filters: {
         isFeatured: true,
         isActive: true,
-        environment: process.env.NODE_ENV,
+        environment:
+          process.env.NODE_ENV === "production" ? "production" : "development",
       },
       // fields: [
       //   "title",
