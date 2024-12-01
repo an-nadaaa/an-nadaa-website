@@ -248,6 +248,10 @@ watch(
 const causes = computedAsync(async () => {
   const qsQuery = {
     filters: {
+      environment: {
+        $eq:
+          process.env.NODE_ENV === "production" ? "production" : "development",
+      },
       isActive: {
         $eq: true,
       },
