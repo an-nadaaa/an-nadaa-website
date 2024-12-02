@@ -50,7 +50,9 @@ function scrollToElement() {
 await strapiFetch(
   "/causes",
   "GET",
-  {},
+  {
+    populate: "*",
+  },
   {
     filters: {
       isActive: true,
@@ -59,12 +61,22 @@ await strapiFetch(
   }
 )
   .then((res: any) => {
-    const strapiCauses = res.data.value.data.map((cause: any) => {
-      return {
-        name: cause.title,
-        id: cause.documentId,
-      }
-    })
+    const strapiCauses = res.data.value.data
+      .filter((cause: any) => {
+        const currentDate = new Date()
+        const startsAt = new Date(cause.startsAt)
+        const endsAt = cause.endsAt
+          ? new Date(cause.goalDetails[0].endsAt)
+          : null
+
+        return currentDate > startsAt && (!endsAt || currentDate < endsAt)
+      })
+      .map((cause: any) => {
+        return {
+          name: cause.title,
+          id: cause.documentId,
+        }
+      })
     causes.value = [...strapiCauses]
   })
   .catch((err: any) => {

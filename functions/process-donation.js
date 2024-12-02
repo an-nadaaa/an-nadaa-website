@@ -94,6 +94,10 @@ export const handler = async (event) => {
               throw new Error("Cause has not started yet")
             }
 
+            if (cause.endsAt && new Date() > new Date(cause.endsAt)) {
+              throw new Error("Cause has ended")
+            }
+
             if (
               cause.causeType === "campaign" &&
               new Date(cause.goalDetails[0].endsAt) < new Date()
