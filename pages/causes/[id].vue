@@ -24,7 +24,7 @@
             ></VideoPlayer> -->
             <iframe
               class="w-full h-full"
-              :src="cause.videoPath"
+              :src="videoPath"
               title="YouTube video player"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -247,6 +247,17 @@ const cause = await strapiFetch(
 
   return res.data.value.data
 })
+
+function convertYouTubeLink(link: string): string {
+  const regex = /youtu\.be\/([a-zA-Z0-9_-]+)/
+  const match = link.match(regex)
+  if (match && match[1]) {
+    return `https://www.youtube.com/embed/${match[1]}`
+  }
+  return link
+}
+
+const videoPath = convertYouTubeLink(cause.videoPath)
 
 let images: any[] = []
 
