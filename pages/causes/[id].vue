@@ -23,6 +23,7 @@
               "
             ></VideoPlayer> -->
             <iframe
+              v-if="videoPath"
               class="w-full h-full"
               :src="videoPath"
               title="YouTube video player"
@@ -257,7 +258,7 @@ function convertYouTubeLink(link: string): string {
   return link
 }
 
-const videoPath = convertYouTubeLink(cause.videoPath)
+const videoPath = cause.videoPath ? convertYouTubeLink(cause.videoPath) : null
 
 let images: any[] = []
 
