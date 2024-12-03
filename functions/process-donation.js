@@ -100,6 +100,7 @@ export const handler = async (event) => {
 
             if (
               cause.causeType === "campaign" &&
+              cause.goalDetails[0].endsAt &&
               new Date(cause.goalDetails[0].endsAt) < new Date()
             ) {
               throw new Error("Campaign has ended")
@@ -209,6 +210,8 @@ export const handler = async (event) => {
       }
     }
   } catch (error) {
+    console.log("Error:", error)
+
     return {
       statusCode: 400,
       body: JSON.stringify({ error: error.message }),
