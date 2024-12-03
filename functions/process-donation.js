@@ -190,6 +190,10 @@ export const handler = async (event) => {
         currency: currency.toLowerCase(),
         payment_method: paymentMethodId,
         // confirm: true,
+        metadata: {
+          productId,
+          causeId,
+        },
         automatic_payment_methods: {
           enabled: true,
           allow_redirects: "never",
