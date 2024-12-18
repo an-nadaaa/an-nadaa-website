@@ -67,14 +67,27 @@ export const handler = async function (event, context) {
           images: [entity.cover],
         })
       } else {
-        product = await stripe.products.update(entity.product, {
-          name: entity.title,
-          // description: entity.description,
-          images: [entity.cover],
-        })
+        try {
+          product = await stripe.products.update(entity.product, {
+            name: entity.title,
+            // description: entity.description,
+            images: [entity.cover],
+          })
+        } catch (error) {
+          if (JSON.stringify(error).includes("No such product")) {
+            product = await stripe.products.create({
+              name: entity.title,
+              // description: entity.description,
+              images: [entity.cover],
+            })
+          } else {
+            throw error
+          }
+        }
       }
     } catch (error) {
       console.error("Error Creating product:", error)
+
       return {
         statusCode: 500,
         headers,

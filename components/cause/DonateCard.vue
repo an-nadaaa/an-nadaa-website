@@ -21,7 +21,7 @@
       <Tag
         v-for="(tag, index) in cause.tags"
         :key="index"
-        class="my-2"
+        class="my-2 mr-1"
         :text="tag.value"
         :variant="tag.color"
       />
@@ -29,9 +29,20 @@
     <p class="font-thin text-dark-gray">
       Your donation will make a difference no matter how little
     </p>
-    <Tabs v-model="toggleIndex" default-value="monthly">
+    <Tabs class="mt-4" v-model="toggleIndex" default-value="one-time">
       <TabsList class="w-full">
-        <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
+        <!-- todo: remove the coming soon block -->
+        <TabsTrigger
+          value="monthly"
+          class="relative w-full pointer-events-none"
+        >
+          Monthly
+          <p
+            class="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-[15px] p-[2px] text-xs text-white border border-gray-200 rounded-sm bg-slate-300"
+          >
+            Coming soon
+          </p>
+        </TabsTrigger>
         <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
       </TabsList>
     </Tabs>
@@ -98,7 +109,7 @@ const { formatCurrency } = useMoneyFormat()
 const amount = ref()
 const currencySelector = ref((defaultCurrency as any).code)
 const props = defineProps(["cause", "scrollToElement"])
-const toggleIndex = ref("monthly")
+const toggleIndex = ref("one-time")
 const url = ref("")
 
 const disabled = computed(() => !amount.value || amount.value <= 0)

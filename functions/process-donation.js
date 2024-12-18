@@ -68,25 +68,44 @@ export const handler = async (event) => {
     }
 
     if (causeId !== "general") {
-      productId = await fetch(`${STRAPI_BASE_URL}/causes/${causeId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${STRAPI_API_KEY}`,
-        },
-      })
+      productId = await fetch(
+        `${STRAPI_BASE_URL}/causes/${causeId}?populate=*`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${STRAPI_API_KEY}`,
+          },
+        }
+      )
         .then(async (res) => {
           if (res.ok) {
             let cause = (await res.json()).data
             let id = cause.product
+            if (!id) {
+              throw new Error("Product not found")
+            }
 
             if (!cause.isActive) {
               throw new Error("Cause is not active")
             }
 
-            if (!id) {
-              throw new Error("Product not found")
+            if (new Date(cause.startsAt) > new Date()) {
+              throw new Error("Cause has not started yet")
             }
+
+            if (cause.endsAt && new Date() > new Date(cause.endsAt)) {
+              throw new Error("Cause has ended")
+            }
+
+            if (
+              cause.causeType === "campaign" &&
+              cause.goalDetails[0].endsAt &&
+              new Date(cause.goalDetails[0].endsAt) < new Date()
+            ) {
+              throw new Error("Campaign has ended")
+            }
+
             return id
           } else {
             // Create a custom error with the status code
@@ -108,6 +127,13 @@ export const handler = async (event) => {
     }
 
     if (donationType === "monthly") {
+      // todo: enable monthly donations
+
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Monthly donations are disabled" }),
+      }
+
       // Create subscription
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
@@ -165,6 +191,10 @@ export const handler = async (event) => {
         currency: currency.toLowerCase(),
         payment_method: paymentMethodId,
         // confirm: true,
+        metadata: {
+          productId,
+          causeId,
+        },
         automatic_payment_methods: {
           enabled: true,
           allow_redirects: "never",
@@ -180,6 +210,8 @@ export const handler = async (event) => {
       }
     }
   } catch (error) {
+    console.log("Error:", error)
+
     return {
       statusCode: 400,
       body: JSON.stringify({ error: error.message }),

@@ -23,8 +23,9 @@
               "
             ></VideoPlayer> -->
             <iframe
+              v-if="videoPath"
               class="w-full h-full"
-              :src="cause.videoPath"
+              :src="videoPath"
               title="YouTube video player"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -145,24 +146,13 @@
           /> -->
 
           <div
+            v-if="cause.importantNote && cause.importantNote.length > 0"
             class="w-full p-6 py-8 rounded-xl"
             :style="{ border: '1px solid #e1e1e1' }"
           >
             <h4 class="font-normal">Important Note</h4>
             <p class="font-light text-dark-gray">
-              As you have trusted An-Nadaa to perform udhiya for you and to
-              fulfill this responsibility with full Amaana (trust), we require
-              some information. As one may know, the udhiya is valid only if
-              performed after the Eid prayer (refer to this link for details)
-              and three days following the Day of Eid. In Nigeria, Eid will most
-              likely be on 28 June and some of you might be in a country where
-              Eid is on a different due due to moon sighting or the time zone
-              difference might be such that you finish Eid prayers when it’s
-              night time in Nigeria. Keeping this in mind, do let us know where
-              you will be celebrating Eid by dropping us an email on
-              contact@an-nadaa.com. For any donations received without
-              confirmation, the udhiya will be performed on the third day of Eid
-              to be on the safe side.
+              {{ cause.importantNote }}
             </p>
           </div>
 
@@ -216,12 +206,6 @@
 import BankDetails from "~/components/global/BankDetails.vue"
 import "@egjs/flicking-plugins/dist/flicking-plugins.css"
 import VueEasyLightbox from "vue-easy-lightbox"
-import img1 from "assets/media/img/1.png"
-import img2 from "assets/media/img/2.png"
-import img3 from "assets/media/img/3.png"
-import img4 from "assets/media/img/4.png"
-import img5 from "assets/media/img/5.png"
-import img6 from "assets/media/img/6.png"
 import Flicking from "@egjs/vue3-flicking"
 import { micromark } from "micromark"
 import { Arrow } from "@egjs/flicking-plugins"
@@ -265,14 +249,29 @@ const cause = await strapiFetch(
   return res.data.value.data
 })
 
-const images = [
-  cause.thumbnail.formats?.large?.url || cause.thumbnail.url,
-  ...cause.images.map((image: any) => {
-    return image.url
-  }),
-]
+function convertYouTubeLink(link: string): string {
+  const regex = /youtu\.be\/([a-zA-Z0-9_-]+)/
+  const match = link.match(regex)
+  if (match && match[1]) {
+    return `https://www.youtube.com/embed/${match[1]}`
+  }
+  return link
+}
+
+const videoPath = cause.videoPath ? convertYouTubeLink(cause.videoPath) : null
+
+let images: any[] = []
+
+if (cause.images) {
+  images = [
+    cause.thumbnail.formats?.large?.url || cause.thumbnail.url,
+    ...cause.images.map((image: any) => {
+      return image.url
+    }),
+  ]
+}
 // const cause = strapiResponse.value.data[0]
-const causeHtml = micromark(cause.body)
+const causeHtml = micromark(cause.body || "")
 
 const isExpanded = ref(false)
 
