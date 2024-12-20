@@ -14,32 +14,42 @@
         and the potential for positive change.
       </p>
       <div class="grid gap-4 mt-8 sm:grid-cols-2 xl:grid-cols-3">
-        <div
-          class="p-4 transition-all rounded-lg group hover:shadow-lg"
-          v-for="(blog, index) in blogs"
-          :key="index"
-        >
-          <NuxtLink :to="`/blogs/${blog.documentId}`">
-            <div class="overflow-hidden h-80">
-              <img
-                :src="blog.image.formats.medium.url"
-                class="object-cover w-full h-full rounded-xl"
-              />
-            </div>
-            <div class="mt-1 group-hover:underline">
-              <h2 class="text-2xl font-normal text-foreground">
-                {{ blog.title }}
-              </h2>
-              <p class="text-sm text-dark-gray">
-                {{ formateDayMonthYear(blog.createdAt) }}
-              </p>
-            </div>
-          </NuxtLink>
-        </div>
+        <template v-if="blogs.length === 0">
+          <div class="w-full h-96 sm:col-span-2 xl:col-span-3">
+            <h2 class="my-32 font-light text-center text-gray-400">
+              Sorry, nothing found :(
+            </h2>
+          </div>
+        </template>
+        <template v-else>
+          <div
+            class="p-4 transition-all rounded-lg group hover:shadow-lg"
+            v-for="(blog, index) in blogs"
+            :key="index"
+          >
+            <NuxtLink :to="`/blogs/${blog.documentId}`">
+              <div class="overflow-hidden h-80">
+                <img
+                  :src="blog.image.formats.medium.url"
+                  class="object-cover w-full h-full rounded-xl"
+                />
+              </div>
+              <div class="mt-1 group-hover:underline">
+                <h2 class="text-2xl font-normal text-foreground">
+                  {{ blog.title }}
+                </h2>
+                <p class="text-sm text-dark-gray">
+                  {{ formateDayMonthYear(blog.createdAt) }}
+                </p>
+              </div>
+            </NuxtLink>
+          </div>
+        </template>
       </div>
 
       <div class="w-full">
         <Button
+          v-if="blogs.length > 0"
           :disabled="buttonDisabled || buttonIsLoading"
           @click="fetchBlogs"
           :variant="'white'"

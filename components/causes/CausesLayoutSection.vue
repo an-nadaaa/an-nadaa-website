@@ -287,6 +287,7 @@ const causes = computedAsync(async () => {
               },
       },
     },
+    sort: ["createdAt:desc"],
     pagination: {
       page: currentPage.value,
       pageSize,

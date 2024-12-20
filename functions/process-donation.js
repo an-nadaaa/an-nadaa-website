@@ -44,6 +44,7 @@ export const handler = async (event) => {
 
     if (!causeId) {
       return {
+        headers,
         statusCode: 400,
         body: JSON.stringify({ error: "Cause ID is required" }),
       }
@@ -117,6 +118,7 @@ export const handler = async (event) => {
         .catch((error) => {
           if (error.status === 404) {
             return {
+              headers,
               statusCode: 404,
               body: JSON.stringify({ error: "Cause not found" }),
             }
@@ -130,6 +132,7 @@ export const handler = async (event) => {
       // todo: enable monthly donations
 
       return {
+        headers,
         statusCode: 400,
         body: JSON.stringify({ error: "Monthly donations are disabled" }),
       }
@@ -158,6 +161,7 @@ export const handler = async (event) => {
       })
 
       return {
+        headers,
         statusCode: 200,
         body: JSON.stringify({
           subscriptionId: subscription.id,
@@ -202,6 +206,7 @@ export const handler = async (event) => {
       })
 
       return {
+        headers,
         statusCode: 200,
         body: JSON.stringify({
           paymentIntentId: paymentIntent.id,
@@ -213,6 +218,7 @@ export const handler = async (event) => {
     console.log("Error:", error)
 
     return {
+      headers,
       statusCode: 400,
       body: JSON.stringify({ error: error.message }),
     }
