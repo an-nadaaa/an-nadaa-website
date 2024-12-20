@@ -252,9 +252,9 @@ const causes = computedAsync(async () => {
         $eq:
           process.env.NODE_ENV === "production" ? "production" : "development",
       },
-      isActive: {
-        $eq: true,
-      },
+      // isActive: {
+      //   $eq: true,
+      // },
       isPrivate: {
         $eq: false,
       },
