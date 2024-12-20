@@ -56,6 +56,7 @@ await strapiFetch(
   {
     filters: {
       isActive: true,
+      isPrivate: false,
       environment: process.env.NODE_ENV,
     },
   }

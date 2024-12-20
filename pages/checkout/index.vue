@@ -100,7 +100,13 @@ await strapiFetch(
   "/causes",
   "GET",
   {},
-  { filters: { isActive: true, environment: process.env.NODE_ENV } }
+  {
+    filters: {
+      isActive: true,
+      isPrivate: false,
+      environment: process.env.NODE_ENV,
+    },
+  }
 )
   .then((res: any) => {
     const strapiCauses = res.data.value.data.map((cause: any) => {
