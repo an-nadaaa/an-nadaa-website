@@ -255,6 +255,9 @@ const causes = computedAsync(async () => {
       isActive: {
         $eq: true,
       },
+      isPrivate: {
+        $eq: false,
+      },
       causeType:
         typeSelected.value === "All"
           ? {}
