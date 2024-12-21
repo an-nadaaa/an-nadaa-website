@@ -1,6 +1,6 @@
 import Stripe from "stripe"
 const STRIPE_SK =
-  process.env.CONTEXT === "production"
+  process.env.NODE_ENV === "production"
     ? process.env.STRIPE_SK_PROD
     : process.env.STRIPE_SK_DEV
 

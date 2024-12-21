@@ -7,15 +7,15 @@ export default defineEventHandler(async (event) => {
 
     // Netlify Function (process-donation.js)
     const STRIPE_SK =
-      process.env.CONTEXT === "production"
+      process.env.NODE_ENV === "production"
         ? process.env.STRIPE_SK_PROD
         : process.env.STRIPE_SK_DEV
     const BASE_URL =
-      process.env.CONTEXT === "production"
+      process.env.NODE_ENV === "production"
         ? process.env.BASE_URL_PROD
         : process.env.BASE_URL_DEV
     const STRIPE_GENERAL_PRODUCT =
-      process.env.CONTEXT === "production"
+      process.env.NODE_ENV === "production"
         ? process.env.STRIPE_GENERAL_PRODUCT_ID_PROD
         : process.env.STRIPE_GENERAL_PRODUCT_ID_DEV
     const STRAPI_BASE_URL = runtimeConfig.public.STRAPI_API
