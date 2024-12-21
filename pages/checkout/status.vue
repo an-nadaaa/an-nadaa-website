@@ -39,15 +39,12 @@ onBeforeMount(async () => {
       subscriptionStatus: Stripe.Subscription.Status
       amount?: number | null
       currency?: string | null
-    } = await fetch(
-      runtimeConfig.public.functionBaseUrl + "/transaction-status?id=" + id,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    ).then((res) => res.json())
+    } = await fetch("/transaction-status?id=" + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json())
 
     if (details.paymentIntentStatus === "succeeded") {
       transactionDetails.value = {

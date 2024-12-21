@@ -251,7 +251,7 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
     }
 
     // Send to serverless function
-    const response = await fetch("/.netlify/functions/process-donation", {
+    const response = await fetch("/api/process-donation", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
