@@ -1,3 +1,6 @@
+const dotenv = require("dotenv")
+dotenv.config()
+
 // this function creates a new product and returns the product
 const STRIPE_SK_DEV = process.env.STRIPE_SK_DEV
 const STRIPE_SK_PROD = process.env.STRIPE_SK_PROD
@@ -6,7 +9,7 @@ const BASE_URL =
     ? process.env.BASE_URL
     : "http://localhost:1337"
 const headers = {
-  "Access-Control-Allow-Origin": BASE_URL,
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "Content-Type",
 }
 

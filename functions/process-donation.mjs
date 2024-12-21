@@ -1,3 +1,7 @@
+import dotenv from "dotenv"
+import Stripe from "stripe"
+
+dotenv.config()
 // Netlify Function (process-donation.js)
 const STRIPE_SK =
   process.env.CONTEXT === "production"
@@ -20,9 +24,9 @@ const STRAPI_API_KEY =
     ? process.env.STRAPI_API_KEY_PROD
     : process.env.STRAPI_API_KEY_DEV
 
-const stripe = require("stripe")(STRIPE_SK),
+const stripe = new Stripe(STRIPE_SK),
   headers = {
-    "Access-Control-Allow-Origin": BASE_URL, // Allow requests from our Strapi frontend
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
   }
 
