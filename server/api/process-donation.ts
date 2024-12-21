@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     if (customers.data.length > 0) {
       customer = customers.data[0]
     } else {
-      customer = await stripe.customers.create({
+      const customer = await stripe.customers.create({
         email,
         name,
         phone,
@@ -206,7 +206,7 @@ export default defineEventHandler(async (event) => {
           productId,
           causeId,
         },
-        customer,
+        customer: customer.id,
         automatic_payment_methods: {
           enabled: true,
           allow_redirects: "never",
