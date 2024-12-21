@@ -1,3 +1,6 @@
+const dotenv = require("dotenv")
+dotenv.config()
+
 const STRIPE_SK =
   process.env.CONTEXT === "production"
     ? process.env.STRIPE_SK_PROD

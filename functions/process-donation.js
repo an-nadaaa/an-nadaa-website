@@ -1,3 +1,5 @@
+const dotenv = require("dotenv")
+dotenv.config()
 // Netlify Function (process-donation.js)
 const STRIPE_SK =
   process.env.CONTEXT === "production"

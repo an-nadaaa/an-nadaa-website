@@ -1,3 +1,3 @@
 [functions]
+  external_node_modules = ["stripe", "dotenv" ]
   directory = "functions"
-  external_node_modules = ["stripe"]
