@@ -1,8 +1,4 @@
-import dotenv from "dotenv"
-
 // this function creates a new product and returns the product
-
-dotenv.config()
 const STRIPE_SK_DEV = process.env.STRIPE_SK_DEV
 const STRIPE_SK_PROD = process.env.STRIPE_SK_PROD
 const BASE_URL =

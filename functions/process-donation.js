@@ -1,5 +1,4 @@
 // Netlify Function (process-donation.js)
-require("dotenv").config()
 const STRIPE_SK =
   process.env.CONTEXT === "production"
     ? process.env.STRIPE_SK_PROD
