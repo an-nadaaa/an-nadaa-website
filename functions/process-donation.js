@@ -22,7 +22,7 @@ const STRAPI_API_KEY =
 
 const stripe = require("stripe")(STRIPE_SK),
   headers = {
-    "Access-Control-Allow-Origin": BASE_URL, // Allow requests from our Strapi frontend
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
   }
 

@@ -9,7 +9,7 @@ const BASE_URL =
 
 const stripe = require("stripe")(STRIPE_SK),
   headers = {
-    "Access-Control-Allow-Origin": BASE_URL,
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
   }
 
