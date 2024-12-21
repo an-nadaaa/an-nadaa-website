@@ -1,3 +1,4 @@
 [functions]
-  external_node_modules = ["stripe", "dotenv" ]
-  directory = "functions"
+node_bundler = "esbuild"
+external_node_modules = ["stripe", "dotenv" ]
+directory = "functions"
