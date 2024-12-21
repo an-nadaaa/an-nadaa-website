@@ -96,7 +96,7 @@ importers:
         specifier: ^0.10.4
         version: 0.10.4(magicast@0.3.5)(rollup@4.24.0)
       stripe:
-        specifier: ^17.3.1
+        specifier: 17.3.1
         version: 17.3.1
       tailwind-merge:
         specifier: ^2.5.2
