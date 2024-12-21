@@ -206,6 +206,7 @@ export default defineEventHandler(async (event) => {
           productId,
           causeId,
         },
+        customer,
         automatic_payment_methods: {
           enabled: true,
           allow_redirects: "never",

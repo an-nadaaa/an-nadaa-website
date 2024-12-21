@@ -39,7 +39,7 @@ onBeforeMount(async () => {
       subscriptionStatus: Stripe.Subscription.Status
       amount?: number | null
       currency?: string | null
-    } = await fetch("/transaction-status?id=" + id, {
+    } = await fetch("/api/transaction-status?id=" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
