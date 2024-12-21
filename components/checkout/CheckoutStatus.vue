@@ -13,39 +13,51 @@
         </div>
       </template>
       <template v-else>
-        <img :src="success ? GreenCheck : RedError" class="w-32 mx-auto" />
-        <h4 class="mt-8 text-2xl font-medium text-center">
-          {{ success ? "Payment successful" : "Payment unsuccessful" }}
-        </h4>
-        <p v-if="success" class="mt-4 font-light text-center">
-          <template v-if="!isSubscription">
-            Thank you! Your payment of
-            <strong class="font-medium">
-              {{ currency === "usd" ? "$" : "RM" }}{{ amount / 100 }}
-            </strong>
-            has been received.
-          </template>
-          <template v-else>
-            Thank you! Your monthly donation of
-            <strong class="font-medium">
-              {{ currency === "usd" ? "$" : "RM" }}{{ amount / 100 }}
-            </strong>
-            has started.
-          </template>
-        </p>
-        <p v-else class="text-center">
-          <template v-if="amount > 0">
-            We are sorry your payment of
-            <strong class="font-medium">
-              {{ currency === "usd" ? "$" : "RM" }}{{ amount }}
-            </strong>
+        <img
+          :src="success && !isServerError ? GreenCheck : RedError"
+          class="w-32 mx-auto"
+        />
+        <template v-if="isServerError">
+          <h4 class="mt-8 text-2xl font-medium text-center">Server error!</h4>
+          <p class="mt-4 font-light text-center">
+            Your donation may or may not have been processed. Please check your
+            bank statement to verify, else you may contact us.
+          </p>
+        </template>
+        <template v-else>
+          <h4 class="mt-8 text-2xl font-medium text-center">
+            {{ success ? "Payment successful" : "Payment unsuccessful" }}
+          </h4>
+          <p v-if="success" class="mt-4 font-light text-center">
+            <template v-if="!isSubscription">
+              Thank you! Your payment of
+              <strong class="font-medium">
+                {{ currency === "usd" ? "$" : "RM" }}{{ amount / 100 }}
+              </strong>
+              has been received.
+            </template>
+            <template v-else>
+              Thank you! Your monthly donation of
+              <strong class="font-medium">
+                {{ currency === "usd" ? "$" : "RM" }}{{ amount / 100 }}
+              </strong>
+              has started.
+            </template>
+          </p>
+          <p v-else class="text-center">
+            <template v-if="amount > 0">
+              We are sorry your payment of
+              <strong class="font-medium">
+                {{ currency === "usd" ? "$" : "RM" }}{{ amount }}
+              </strong>
 
-            to ANNADAA Educational Foundation was unsuccessful
-          </template>
-          <template v-else>
-            Sorry, we were not able to process your donation
-          </template>
-        </p>
+              to ANNADAA Educational Foundation was unsuccessful
+            </template>
+            <template v-else>
+              Sorry, we were not able to process your donation
+            </template>
+          </p>
+        </template>
         <NuxtLink to="/">
           <Button class="w-full mt-4">Goto home page</Button>
         </NuxtLink>
@@ -66,6 +78,10 @@ defineProps({
   },
   currency: {
     type: String,
+    required: true,
+  },
+  isServerError: {
+    type: Boolean,
     required: true,
   },
   success: {
