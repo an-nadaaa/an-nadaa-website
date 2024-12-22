@@ -1,19 +1,11 @@
+import Stripe from "stripe"
 const STRIPE_SK =
-  process.env.CONTEXT === "production"
+  process.env.NODE_ENV === "production"
     ? process.env.STRIPE_SK_PROD
     : process.env.STRIPE_SK_DEV
-const BASE_URL =
-  process.env.CONTEXT === "production"
-    ? process.env.BASE_URL_PROD
-    : process.env.BASE_URL_DEV
 
-const stripe = require("stripe")(STRIPE_SK),
-  headers = {
-    "Access-Control-Allow-Origin": BASE_URL,
-    "Access-Control-Allow-Headers": "Content-Type",
-  }
-
-async function getPaymentIntentDetails(paymentIntentId) {
+const stripe = new Stripe(STRIPE_SK as string)
+async function getPaymentIntentDetails(paymentIntentId: string) {
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
 
@@ -30,14 +22,14 @@ async function getPaymentIntentDetails(paymentIntentId) {
   }
 }
 
-async function getSubscriptionDetails(subscriptionId) {
+async function getSubscriptionDetails(subscriptionId: string) {
   try {
     // Retrieve the subscription object
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
 
     // Retrieve the latest invoice related to the subscription
     const latestInvoice = await stripe.invoices.retrieve(
-      subscription.latest_invoice
+      subscription.latest_invoice as string
     )
 
     let paymentIntentStatus = null
@@ -47,7 +39,7 @@ async function getSubscriptionDetails(subscriptionId) {
     // Retrieve the PaymentIntent linked to this invoice if it exists
     if (latestInvoice.payment_intent) {
       const paymentIntent = await stripe.paymentIntents.retrieve(
-        latestInvoice.payment_intent
+        latestInvoice.payment_intent as string
       )
 
       paymentIntentStatus = paymentIntent.status
@@ -69,42 +61,36 @@ async function getSubscriptionDetails(subscriptionId) {
   }
 }
 
-export const handler = async (event) => {
-  try {
-    // console.log(event)
+export default defineEventHandler(async (event) => {
+  const query = getQuery(event)
 
-    const { id } = event.queryStringParameters
+  const id = query.id as string
 
-    let response
+  let response
 
-    if (id.startsWith("sub_")) {
-      response = await getSubscriptionDetails(id)
-    } else if (id.startsWith("pi_")) {
-      response = await getPaymentIntentDetails(id)
-    } else {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          error:
-            "Invalid request. Please provide a valid transaction ID in the query parameters.",
-        }),
-      }
-    }
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(response),
-    }
-  } catch (error) {
-    console.error("Error processing request:", error)
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        error: "An error occurred while processing your request.",
-      }),
-    }
+  if (id.startsWith("sub_")) {
+    response = await getSubscriptionDetails(id)
+  } else if (id.startsWith("pi_")) {
+    response = await getPaymentIntentDetails(id)
+  } else {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Invalid request. Please provide a valid transaction ID.",
+    })
+    // return {
+    //   statusCode: 400,
+    //   headers,
+    //   body: JSON.stringify({
+    //     error:
+    //       "Invalid request. Please provide a valid transaction ID in the query parameters.",
+    //   }),
+    // }
   }
-}
+
+  return response
+  // return {
+  //   statusCode: 200,
+  //   headers,
+  //   body: JSON.stringify(response),
+  // }
+})

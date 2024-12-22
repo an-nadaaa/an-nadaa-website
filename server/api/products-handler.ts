@@ -1,6 +1,9 @@
+import Stripe from "stripe"
 // this function creates a new product and returns the product
 const STRIPE_SK_DEV = process.env.STRIPE_SK_DEV
 const STRIPE_SK_PROD = process.env.STRIPE_SK_PROD
+const STRIPE_SK =
+  process.env.NODE_ENV === "production" ? STRIPE_SK_PROD : STRIPE_SK_DEV
 const BASE_URL =
   process.env.CONTEXT === "production"
     ? process.env.BASE_URL
@@ -9,37 +12,32 @@ const headers = {
   "Access-Control-Allow-Origin": BASE_URL,
   "Access-Control-Allow-Headers": "Content-Type",
 }
+const stripe = new Stripe(STRIPE_SK as string)
 
-export const handler = async function (event, context) {
+export default defineEventHandler(async (event) => {
   // CORS
-  if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
-      headers,
-    }
-  }
+  // if (event.method === "OPTIONS") {
+  //   return {
+  //     statusCode: 200,
+  //     headers,
+  //   }
+  // }
 
-  if (event.httpMethod === "GET" || event.httpMethod === "PUT") {
-    return {
+  if (event.method === "GET" || event.method === "PUT") {
+    throw createError({
       statusCode: 405,
-      headers,
-      body: JSON.stringify({
-        message: "Method Not Allowed",
-      }),
-    }
+      statusMessage: "Method Not Allowed",
+    })
   }
 
-  if (event.httpMethod === "POST") {
-    const entity = JSON.parse(event.body)
+  if (event.method === "POST") {
+    const entity = await readBody(event)
 
     console.log("Entity:", entity)
 
     // return
 
-    const ENV = entity.environment
     const DEFAULT_PRODUCT_VALUE = "PRODUCT_WILL_BE_CREATED"
-    const STRIPE_SK = ENV === "production" ? STRIPE_SK_PROD : STRIPE_SK_DEV
-    const stripe = require("stripe")(STRIPE_SK)
 
     // if (entity.product !== DEFAULT_PRODUCT_VALUE && entity.product) {
     //   // if product is already created
@@ -83,49 +81,47 @@ export const handler = async function (event, context) {
       }
     } catch (error) {
       console.error("Error Creating product:", error)
-
-      return {
+      throw createError({
         statusCode: 500,
-        headers,
-        body: JSON.stringify(error),
-      }
+        statusMessage: "Internal Server Error",
+        data: error,
+      })
     }
 
     console.log("Product:", product)
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(product),
-    }
+    return product
+    // return {
+    //   statusCode: 200,
+    //   headers,
+    //   body: JSON.stringify(product),
+    // }
   }
 
-  if (event.httpMethod === "DELETE") {
+  if (event.method === "DELETE") {
     console.log("Delete Product")
 
-    const entity = JSON.parse(event.body)
+    const entity = await readBody(event)
     const ENV = entity.environment
     const STRIPE_GENERAL_PRODUCT =
       ENV === "production"
-        ? Netlify.env.STRIPE_GENERAL_PRODUCT_ID_PROD
-        : Netlify.env.STRIPE_GENERAL_PRODUCT_ID_DEV
+        ? process.env.STRIPE_GENERAL_PRODUCT_ID_PROD
+        : process.env.STRIPE_GENERAL_PRODUCT_ID_DEV
     const STRIPE_SK = ENV === "production" ? STRIPE_SK_PROD : STRIPE_SK_DEV
     const stripe = require("stripe")(STRIPE_SK)
 
     if (entity.product === STRIPE_GENERAL_PRODUCT) {
-      return {
+      throw createError({
         statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          message: "Cannot delete the general product",
-        }),
-      }
+        statusMessage: "Cannot delete the general product",
+      })
     }
 
     if (!entity.product) {
       return {
-        statusCode: 200,
-        headers,
+        message: "No product ID provided so no product was deleted",
+        // statusCode: 200,
+        // headers,
         // body: JSON.stringify(product),
       }
     }
@@ -134,18 +130,19 @@ export const handler = async function (event, context) {
       product = await stripe.products.del(entity.product)
     } catch (error) {
       console.error("Error Deleting Product:", error)
-      return {
+      throw createError({
         statusCode: 500,
-        headers,
-        body: JSON.stringify(error),
-      }
+        statusMessage: "Internal Server Error",
+        data: error,
+      })
     }
     // console.log("Product Deleted:", product)
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(product),
-    }
+    return product
+    // return {
+    //   statusCode: 200,
+    //   headers,
+    //   body: JSON.stringify(product),
+    // }
   }
-}
+})

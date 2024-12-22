@@ -34,7 +34,7 @@
             ></iframe>
           </div>
 
-          <div :class="`relative ${images.length > 0 ? '' : 'hidden'}`">
+          <div v-if="images !== null" :class="`relative`">
             <flicking
               ref="flickingElement"
               class="py-4"
@@ -56,10 +56,21 @@
               >
                 <img :src="image" class="object-cover w-24 h-full md:w-36" />
               </div>
+              <template #viewport>
+                <!-- <span
+                  v-if="images.length > 1"
+                  class="flicking-arrow-prev is-circle"
+                ></span>
+                <span
+                  v-if="images.length > 1"
+                  class="flicking-arrow-next is-circle"
+                ></span> -->
+              </template>
             </flicking>
 
             <div class="absolute flex justify-between w-full top-1/2">
               <div
+                v-if="images.length > 1"
                 @click="() => flickingElement?.prev()"
                 class="hover:cursor-pointer shadow-md -translate-y-1/2 -translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
               >
@@ -71,6 +82,7 @@
 
               <div
                 @click="() => flickingElement?.next()"
+                v-if="images.length > 1"
                 class="right-0 hover:cursor-pointer shadow-md -translate-y-1/2 translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
               >
                 <Icon
@@ -108,8 +120,16 @@
               />
             </div>
             <template #viewport>
-              <span class="flicking-arrow-prev is-thin"></span>
-              <span class="flicking-arrow-next is-thin"></span>
+              <span
+                :class="`flicking-arrow-prev is-thin ${
+                  images.length === 1 ? 'hidden' : ''
+                }`"
+              ></span>
+              <span
+                :class="`flicking-arrow-next is-thin ${
+                  images.length === 1 ? 'hidden' : ''
+                }`"
+              ></span>
             </template>
           </flicking>
         </template>
@@ -262,14 +282,28 @@ const videoPath = cause.videoPath ? convertYouTubeLink(cause.videoPath) : null
 
 let images: any[] = []
 
-if (cause.images) {
-  images = [
-    cause.thumbnail.formats?.large?.url || cause.thumbnail.url,
-    ...cause.images.map((image: any) => {
-      return image.url
-    }),
-  ]
-}
+onBeforeMount(() => {
+  if (cause.thumbnail) {
+    images = [cause.thumbnail.url]
+  }
+  if (cause.images) {
+    images = [
+      ...images,
+      ...cause.images.map((image: any) => {
+        return image.url
+      }),
+    ]
+  }
+})
+
+// if (cause.images) {
+//   images = [
+//     ...images,
+//     ...cause.images.map((image: any) => {
+//       return image.url
+//     }),
+//   ]
+// }
 // const cause = strapiResponse.value.data[0]
 const causeHtml = micromark(cause.body || "")
 
