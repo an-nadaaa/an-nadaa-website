@@ -1,6 +1,6 @@
 <template>
   <Card
-    class="relative h-full p-0 px-4 py-1 pt-4 pb-4 transition transform bg-white rounded-lg shadow-md"
+    :class="`relative h-full p-0 px-4 py-1 pt-4 pb-4 transition transform bg-white rounded-lg shadow-md `"
   >
     <AspectRatio :ratio="3 / 2">
       <img
@@ -77,6 +77,7 @@
         </p>
       </div>
     </div>
+    <!-- {{ cause }} -->
   </Card>
 </template>
 

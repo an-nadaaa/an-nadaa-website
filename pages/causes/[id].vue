@@ -56,10 +56,21 @@
               >
                 <img :src="image" class="object-cover w-24 h-full md:w-36" />
               </div>
+              <template #viewport>
+                <span
+                  v-if="images.length > 1"
+                  class="flicking-arrow-prev"
+                ></span>
+                <span
+                  v-if="images.length > 1"
+                  class="flicking-arrow-next"
+                ></span>
+              </template>
             </flicking>
 
             <div class="absolute flex justify-between w-full top-1/2">
               <div
+                v-if="images.length > 1"
                 @click="() => flickingElement?.prev()"
                 class="hover:cursor-pointer shadow-md -translate-y-1/2 -translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
               >
@@ -71,6 +82,7 @@
 
               <div
                 @click="() => flickingElement?.next()"
+                v-if="images.length > 1"
                 class="right-0 hover:cursor-pointer shadow-md -translate-y-1/2 translate-x-[30%] bg-white h-10 w-10 p-2 rounded-full z-50"
               >
                 <Icon
@@ -108,8 +120,16 @@
               />
             </div>
             <template #viewport>
-              <span class="flicking-arrow-prev is-thin"></span>
-              <span class="flicking-arrow-next is-thin"></span>
+              <span
+                :class="`flicking-arrow-prev is-circle ${
+                  images.length === 1 ? 'hidden' : ''
+                }`"
+              ></span>
+              <span
+                :class="`flicking-arrow-next is-circle ${
+                  images.length === 1 ? 'hidden' : ''
+                }`"
+              ></span>
             </template>
           </flicking>
         </template>
@@ -201,6 +221,7 @@
       />
     </div>
   </div>
+  {{ cause }}
 </template>
 <script setup lang="ts">
 import BankDetails from "~/components/global/BankDetails.vue"
@@ -260,11 +281,11 @@ function convertYouTubeLink(link: string): string {
 
 const videoPath = cause.videoPath ? convertYouTubeLink(cause.videoPath) : null
 
-let images: any[] = []
+let images: any[] = [cause.thumbnail.url]
 
 if (cause.images) {
   images = [
-    cause.thumbnail.formats?.large?.url || cause.thumbnail.url,
+    ...images,
     ...cause.images.map((image: any) => {
       return image.url
     }),
