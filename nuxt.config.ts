@@ -2,6 +2,11 @@ import { vite as vidstack } from "vidstack/plugins"
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    head: {
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    },
+  },
   future: {
     compatibilityVersion: 4,
   },

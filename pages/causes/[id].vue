@@ -34,7 +34,7 @@
             ></iframe>
           </div>
 
-          <div :class="`relative ${images.length > 0 ? '' : 'hidden'}`">
+          <div v-if="images !== null" :class="`relative`">
             <flicking
               ref="flickingElement"
               class="py-4"
@@ -281,16 +281,30 @@ function convertYouTubeLink(link: string): string {
 
 const videoPath = cause.videoPath ? convertYouTubeLink(cause.videoPath) : null
 
-let images: any[] = [cause.thumbnail.url]
+let images: any[] = []
 
-if (cause.images) {
-  images = [
-    ...images,
-    ...cause.images.map((image: any) => {
-      return image.url
-    }),
-  ]
-}
+onBeforeMount(() => {
+  if (cause.thumbnail) {
+    images = [cause.thumbnail.url]
+  }
+  if (cause.images) {
+    images = [
+      ...images,
+      ...cause.images.map((image: any) => {
+        return image.url
+      }),
+    ]
+  }
+})
+
+// if (cause.images) {
+//   images = [
+//     ...images,
+//     ...cause.images.map((image: any) => {
+//       return image.url
+//     }),
+//   ]
+// }
 // const cause = strapiResponse.value.data[0]
 const causeHtml = micromark(cause.body || "")
 

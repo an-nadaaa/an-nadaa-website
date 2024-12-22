@@ -91,4 +91,12 @@ const plugins = [new Pagination({ type: "bullet" })]
 // ]
 </script>
 
-<style></style>
+<style>
+.flicking-pagination-bullet {
+  @apply bg-gray-300 hover:bg-blue-400;
+}
+
+.flicking-pagination-bullet-active {
+  @apply bg-blue-400;
+}
+</style>

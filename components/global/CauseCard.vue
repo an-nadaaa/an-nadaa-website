@@ -4,7 +4,11 @@
   >
     <AspectRatio :ratio="3 / 2">
       <img
-        :src="cause.thumbnail.formats?.medium?.url || cause.thumbnail.url"
+        :src="
+          cause.thumbnail?.formats?.medium?.url ||
+          cause.thumbnail?.url ||
+          placeholderImg
+        "
         alt=""
         class="object-cover w-full h-full rounded-lg"
       />
@@ -84,6 +88,7 @@
 <script setup lang="ts">
 import Progress from "../ui/progress/Progress.vue"
 import type { ApiCauseCause } from "~/types/contentTypes"
+import placeholderImg from "~/assets/media/img/placeholder.png"
 
 const props = defineProps({
   cause: {
