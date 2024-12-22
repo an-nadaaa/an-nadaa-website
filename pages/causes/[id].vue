@@ -57,14 +57,14 @@
                 <img :src="image" class="object-cover w-24 h-full md:w-36" />
               </div>
               <template #viewport>
-                <span
+                <!-- <span
                   v-if="images.length > 1"
-                  class="flicking-arrow-prev"
+                  class="flicking-arrow-prev is-circle"
                 ></span>
                 <span
                   v-if="images.length > 1"
-                  class="flicking-arrow-next"
-                ></span>
+                  class="flicking-arrow-next is-circle"
+                ></span> -->
               </template>
             </flicking>
 
@@ -121,12 +121,12 @@
             </div>
             <template #viewport>
               <span
-                :class="`flicking-arrow-prev is-circle ${
+                :class="`flicking-arrow-prev is-thin ${
                   images.length === 1 ? 'hidden' : ''
                 }`"
               ></span>
               <span
-                :class="`flicking-arrow-next is-circle ${
+                :class="`flicking-arrow-next is-thin ${
                   images.length === 1 ? 'hidden' : ''
                 }`"
               ></span>
@@ -221,7 +221,6 @@
       />
     </div>
   </div>
-  {{ cause }}
 </template>
 <script setup lang="ts">
 import BankDetails from "~/components/global/BankDetails.vue"
