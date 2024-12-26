@@ -151,7 +151,7 @@
           {{ causeHtml }}
         </p> -->
         <div
-          :class="`relative overflow-hidden pb-24 ${
+          :class="` mt-4 relative overflow-hidden pb-24 ${
             isExpanded ? '' : 'h-[200px]'
           }`"
         >
