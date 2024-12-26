@@ -10,6 +10,21 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
+  nitro: {
+    routeRules: {
+      "/botswana": { redirect: "/causes/arxc351ma9727fevmv4qgomy" },
+      "/build-a-mosque": { redirect: "/causes/arl51t0ph1mhp9j0zu746dqy" },
+      "/build-a-well": {
+        redirect: "/causes/ipusjulg6wj0l8eia6sivph9",
+      },
+      "/help-widows": {
+        redirect: "/causes/ghdapx0kf7cz9se7rhb7w60p",
+      },
+      "/help-orphans": {
+        redirect: "/causes/ghdapx0kf7cz9se7rhb7w60p",
+      },
+    },
+  },
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   runtimeConfig: {
