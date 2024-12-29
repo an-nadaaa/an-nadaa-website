@@ -21,15 +21,15 @@
           alt="Mirage"
         />
         <img
-          class="h-8 sm:h-12"
+          class="h-12 sm:h-16"
           src="~/assets/media/img/logos/ajr.svg"
           alt="StaticKit"
         />
-        <img
+        <!-- <img
           class="h-8 sm:h-12"
           src="~/assets/media/img/logos/myfund.svg"
           alt="StaticKit"
-        />
+        /> -->
         <img
           class="h-8 sm:h-12"
           src="~/assets/media/img/logos/ethis.svg"
