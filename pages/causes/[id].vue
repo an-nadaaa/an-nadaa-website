@@ -269,6 +269,17 @@ const cause = await strapiFetch(
   return res.data.value.data
 })
 
+useHead({
+  title: cause.title,
+  meta: [
+    {
+      hid: "description",
+      name: "description",
+      content: cause.description,
+    },
+  ],
+})
+
 function convertYouTubeLink(link: string): string {
   const regex = /youtu\.be\/([a-zA-Z0-9_-]+)/
   const match = link.match(regex)
