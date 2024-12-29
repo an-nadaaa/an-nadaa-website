@@ -210,7 +210,7 @@
         detailing the purpose of the donation and a proof of transfer especially
         if it's for Zakat purpose.
         <NuxtLink class="underline text-primary" :to="localePath('/contact')">
-          Contact information can be found here
+          Contact information can be found here.
         </NuxtLink>
       </p>
       <BankDetails
