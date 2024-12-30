@@ -1,11 +1,18 @@
 <template>
   <div class="container py-8">
-    <div class="w-full">
-      <NuxtLink to="/causes">
-        <Button :variant="'white'">
+    <div class="w-fit">
+      <NuxtLink to="/causes" class="w-fit">
+        <!-- <Button :variant="'white'">
           <Icon :name="'lucide:arrow-left'" class="mr-2" />
           Back to causes</Button
-        >
+        > -->
+        <div class="relative w-fit hover:underline">
+          <Icon
+            :name="'lucide:arrow-left'"
+            class="absolute left-0 mr-1 top-[5px]"
+          />
+          <p class="ml-6 text-lg">Back to causes</p>
+        </div>
       </NuxtLink>
     </div>
     <h1 class="mt-4 font-medium">
@@ -318,7 +325,7 @@ onBeforeMount(() => {
 // const cause = strapiResponse.value.data[0]
 const causeHtml = micromark(cause.body || "")
 
-const isExpanded = ref(false)
+const isExpanded = ref(true)
 
 function scrollToElement() {
   bankInfo.value?.scrollIntoView({ behavior: "smooth" })
