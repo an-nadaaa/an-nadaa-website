@@ -5,7 +5,7 @@
     <AspectRatio class="relative" :ratio="3 / 2">
       <div v-if="cause.isFeatured && route.path !== '/'">
         <div
-          class="absolute top-0 right-0 px-2 py-1 text-sm text-white rounded-bl-lg bg-primary"
+          class="absolute top-0 right-0 px-2 py-1 text-sm text-white rounded-tr-lg rounded-bl-lg bg-primary"
         >
           Featured
         </div>
