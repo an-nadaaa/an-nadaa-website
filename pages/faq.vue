@@ -11,7 +11,9 @@
             Can’t find the answer you’re looking for? Please reach out our team.
           </p>
         </div>
-        <Button class="w-fit">Contact us</Button>
+        <NuxtLink to="/contact">
+          <Button class="w-fit">Contact us</Button>
+        </NuxtLink>
       </div>
     </div>
   </div>

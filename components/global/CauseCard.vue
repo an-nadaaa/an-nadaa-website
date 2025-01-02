@@ -2,7 +2,14 @@
   <Card
     :class="`relative h-full p-0 px-4 py-1 pt-4 pb-4 transition transform bg-white rounded-lg shadow-md `"
   >
-    <AspectRatio :ratio="3 / 2">
+    <AspectRatio class="relative" :ratio="3 / 2">
+      <div v-if="cause.isFeatured && route.path !== '/'">
+        <div
+          class="absolute top-0 right-0 px-2 py-1 text-sm text-white rounded-tr-lg rounded-bl-lg bg-primary"
+        >
+          Featured
+        </div>
+      </div>
       <img
         :src="
           cause.thumbnail?.formats?.medium?.url ||
@@ -90,6 +97,7 @@ import Progress from "../ui/progress/Progress.vue"
 import type { ApiCauseCause } from "~/types/contentTypes"
 import placeholderImg from "~/assets/media/img/placeholder.png"
 
+const route = useRoute()
 const props = defineProps({
   cause: {
     type: Object as () => ApiCauseCause["attributes"],

@@ -1,5 +1,21 @@
 <template>
-  <div class="container py-16">
+  <div class="container py-8">
+    <div class="lg:px-16 w-fit">
+      <NuxtLink to="/blogs" class="w-fit">
+        <!-- <Button :variant="'white'">
+          <Icon :name="'lucide:arrow-left'" class="mr-2" />
+          Back to causes</Button
+        > -->
+        <div class="relative w-fit hover:underline">
+          <Icon
+            :name="'lucide:arrow-left'"
+            class="absolute left-0 mr-1 top-[5px]"
+          />
+          <p class="ml-6 text-lg">Back to blogs</p>
+        </div>
+      </NuxtLink>
+    </div>
+
     <div class="px-0 lg:px-32 xl:px-44">
       <h1 class="font-normal text-center">{{ blog?.title }}</h1>
       <p class="my-4 text-center text-dark-gray">
@@ -12,7 +28,7 @@
         <NuxtImg
           class="object-cover w-full h-full"
           :alt="blog?.title"
-          :src="blog?.image.formats.large.url"
+          :src="blog.image?.formats?.large?.url || blog.image.url"
         />
       </div>
     </div>

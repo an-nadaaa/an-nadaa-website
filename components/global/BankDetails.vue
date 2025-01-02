@@ -114,12 +114,12 @@
           </div>
         </div>
 
-        <p class="font-light">
+        <!-- <p class="font-light">
           For any inquiries or further information
           <NuxtLink class="underline text-primary" to="/contact"
             >contact us</NuxtLink
           >
-        </p>
+        </p> -->
       </div>
     </div>
   </div>

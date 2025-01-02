@@ -30,7 +30,7 @@
             <NuxtLink :to="`/blogs/${blog.documentId}`">
               <div class="overflow-hidden h-80">
                 <img
-                  :src="blog.image.formats.medium.url"
+                  :src="blog.image?.formats?.medium?.url || blog.image.url"
                   class="object-cover w-full h-full rounded-xl"
                 />
               </div>

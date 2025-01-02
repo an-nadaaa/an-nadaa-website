@@ -26,7 +26,10 @@
     <p class="max-w-3xl mt-4 font-light text-dark-gray">
       When doing a direct transfer we need our donors to send us an email
       detailing the purpose of the donation and a proof of transfer especially
-      if it's for Zakat purpose. Contact information can be found here
+      if it's for Zakat purpose.
+      <NuxtLink class="underline text-primary" to="/contact"
+        >Contact information can be found here.</NuxtLink
+      >
     </p>
     <BankDetails class="mt-8" />
   </div>
