@@ -29,10 +29,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      functionBaseUrl:
-        process.env.NODE_ENV === "production"
-          ? `${process.env.BASE_URL_PROD}/.netlify/functions`
-          : `${process.env.BASE_URL_DEV}/.netlify/functions`,
       lang: "en-US",
       STRIPE_PK:
         process.env.NODE_ENV === "production"
