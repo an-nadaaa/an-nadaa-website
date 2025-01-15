@@ -149,7 +149,7 @@
         />
 
         <CauseDonateCard
-          class="mt-8 sm:hidden"
+          class="mt-4 lg:hidden"
           :cause="cause"
           :scrollToElement="scrollToElement"
         />
@@ -158,9 +158,8 @@
           {{ causeHtml }}
         </p> -->
         <div
-          :class="` mt-4 relative overflow-hidden pb-24 ${
-            isExpanded ? '' : 'h-[200px]'
-          }`"
+          :class="` mt-4 relative overflow-hidden pb-2
+           ${isExpanded ? '' : 'h-[200px]'}`"
         >
           <div
             class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
@@ -189,7 +188,7 @@
             }`"
           ></div>
 
-          <Button
+          <!-- <Button
             @click="
               () => {
                 isExpanded = !isExpanded
@@ -203,10 +202,10 @@
               :name="isExpanded ? 'lucide:chevron-up' : 'lucide:chevron-down'"
               class="ml-2"
             />
-          </Button>
+          </Button> -->
         </div>
       </div>
-      <div class="hidden sm:block my-0 sm:my-8 lg:my-0 basis-[40%]">
+      <div class="hidden lg:block my-0 sm:my-8 lg:my-0 basis-[40%]">
         <CauseDonateCard :cause="cause" :scrollToElement="scrollToElement" />
       </div>
     </div>
