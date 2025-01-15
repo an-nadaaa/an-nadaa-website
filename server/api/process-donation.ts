@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     if (customers.data.length > 0) {
       customer = customers.data[0]
     } else {
-      const customer = await stripe.customers.create({
+      customer = await stripe.customers.create({
         email,
         name,
         phone,
