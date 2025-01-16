@@ -6,6 +6,7 @@
       :success="transactionDetails?.success || false"
       :is-subscription="isSubscription"
       :is-processing="isProcessing"
+      :is-server-error="isServerError"
     />
   </div>
 </template>
@@ -31,6 +32,7 @@ const transactionDetails = ref<{
   amount?: number | null
   currency?: string | null
 }>()
+const isServerError = ref(false)
 
 onBeforeMount(async () => {
   interval.value = setInterval(async () => {
@@ -44,7 +46,28 @@ onBeforeMount(async () => {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((res) => res.json())
+    })
+      .then((res) => {
+        if (res.ok) return res.json()
+        else {
+          isServerError.value = true
+          transactionDetails.value = {
+            success: false,
+            amount: null,
+            currency: null,
+          }
+          isProcessing.value = false
+        }
+      })
+      .catch((err) => {
+        isServerError.value = true
+        transactionDetails.value = {
+          success: false,
+          amount: null,
+          currency: null,
+        }
+        isProcessing.value = false
+      })
 
     if (details.paymentIntentStatus === "succeeded") {
       transactionDetails.value = {
