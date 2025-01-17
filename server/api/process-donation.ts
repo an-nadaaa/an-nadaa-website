@@ -163,8 +163,10 @@ export default defineEventHandler(async (event) => {
 
       return {
         subscriptionId: subscription.id,
-        clientSecret:
-          subscription?.latest_invoice?.payment_intent?.client_secret,
+        clientSecret: (
+          (subscription?.latest_invoice as Stripe.Invoice)
+            .payment_intent as Stripe.PaymentIntent
+        ).client_secret,
       }
 
       // return {
