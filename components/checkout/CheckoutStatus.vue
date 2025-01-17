@@ -58,8 +58,11 @@
             </template>
           </p>
         </template>
+        <NuxtLink :href="receiptUrl" target="_blank">
+          <Button class="w-full mt-4" variant="white">View receipt</Button>
+        </NuxtLink>
         <NuxtLink to="/">
-          <Button class="w-full mt-4">Goto home page</Button>
+          <Button class="w-full mt-2">Goto home page</Button>
         </NuxtLink>
       </template>
     </Card>
@@ -95,6 +98,10 @@ defineProps({
   },
   isProcessing: {
     type: Boolean,
+    required: true,
+  },
+  receiptUrl: {
+    type: String,
     required: true,
   },
 })

@@ -1,11 +1,18 @@
 <template>
   <div class="container py-8">
-    <div class="w-full">
-      <NuxtLink to="/causes">
-        <Button :variant="'white'">
+    <div class="w-fit">
+      <NuxtLink to="/causes" class="w-fit">
+        <!-- <Button :variant="'white'">
           <Icon :name="'lucide:arrow-left'" class="mr-2" />
           Back to causes</Button
-        >
+        > -->
+        <div class="relative w-fit hover:underline">
+          <Icon
+            :name="'lucide:arrow-left'"
+            class="absolute left-0 mr-1 top-[5px]"
+          />
+          <p class="ml-6 text-lg">Back to causes</p>
+        </div>
       </NuxtLink>
     </div>
     <h1 class="mt-4 font-medium">
@@ -142,7 +149,7 @@
         />
 
         <CauseDonateCard
-          class="mt-8 sm:hidden"
+          class="mt-4 lg:hidden"
           :cause="cause"
           :scrollToElement="scrollToElement"
         />
@@ -151,9 +158,8 @@
           {{ causeHtml }}
         </p> -->
         <div
-          :class="` mt-4 relative overflow-hidden pb-24 ${
-            isExpanded ? '' : 'h-[200px]'
-          }`"
+          :class="` mt-4 relative overflow-hidden pb-2
+           ${isExpanded ? '' : 'h-[200px]'}`"
         >
           <div
             class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
@@ -182,7 +188,7 @@
             }`"
           ></div>
 
-          <Button
+          <!-- <Button
             @click="
               () => {
                 isExpanded = !isExpanded
@@ -196,10 +202,10 @@
               :name="isExpanded ? 'lucide:chevron-up' : 'lucide:chevron-down'"
               class="ml-2"
             />
-          </Button>
+          </Button> -->
         </div>
       </div>
-      <div class="hidden sm:block my-0 sm:my-8 lg:my-0 basis-[40%]">
+      <div class="hidden lg:block my-0 sm:my-8 lg:my-0 basis-[40%]">
         <CauseDonateCard :cause="cause" :scrollToElement="scrollToElement" />
       </div>
     </div>
@@ -210,7 +216,7 @@
         detailing the purpose of the donation and a proof of transfer especially
         if it's for Zakat purpose.
         <NuxtLink class="underline text-primary" :to="localePath('/contact')">
-          Contact information can be found here
+          Contact information can be found here.
         </NuxtLink>
       </p>
       <BankDetails
@@ -269,6 +275,17 @@ const cause = await strapiFetch(
   return res.data.value.data
 })
 
+useHead({
+  title: cause.title,
+  meta: [
+    {
+      hid: "description",
+      name: "description",
+      content: cause.description,
+    },
+  ],
+})
+
 function convertYouTubeLink(link: string): string {
   const regex = /youtu\.be\/([a-zA-Z0-9_-]+)/
   const match = link.match(regex)
@@ -307,7 +324,7 @@ onBeforeMount(() => {
 // const cause = strapiResponse.value.data[0]
 const causeHtml = micromark(cause.body || "")
 
-const isExpanded = ref(false)
+const isExpanded = ref(true)
 
 function scrollToElement() {
   bankInfo.value?.scrollIntoView({ behavior: "smooth" })

@@ -10,12 +10,10 @@
         <NuxtLink class="hover:text-gray-200" :to="localePath('/')"
           >Home</NuxtLink
         >
-        <NuxtLink
-          class="hover:text-gray-200 lg:hidden"
-          :to="localePath('/causes')"
+        <NuxtLink class="hover:text-gray-200" :to="localePath('/causes')"
           >Causes</NuxtLink
         >
-
+        <!-- 
         <div class="items-center hidden h-full pr-0 lg:flex lg:pr-2">
           <HoverCard v-model:open="isCauseOpen" :openDelay="100">
             <HoverCardTrigger>
@@ -56,7 +54,7 @@
               </div>
             </HoverCardContent>
           </HoverCard>
-        </div>
+        </div> -->
 
         <NuxtLink class="hover:text-gray-200" :to="localePath('/blogs')"
           >Blogs</NuxtLink

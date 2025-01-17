@@ -111,15 +111,48 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps({
+  causes: {
+    type: Array<any>,
+    required: true,
+  },
+  scrollToElement: {
+    type: Function,
+    required: false,
+  },
+  onClick: {
+    type: Function,
+    required: false,
+  },
+})
+
 const { currencies, defaultCurrency } = useAppConfig()
 
 const disabled = computed(() => !amount.value || amount.value <= 0)
-const causeSelected = ref("general")
 const currencySelector = ref((defaultCurrency as any).code)
 const frequencySelector = ref("one-time")
 const amount = ref<any>("")
 const route = useRoute()
 const isCheckout = route.fullPath.includes("checkout")
+const isDonatePage = route.path === "/donate"
+const causeSelected = ref("general")
+if (isDonatePage) {
+  if (
+    route.query.id &&
+    props.causes.map((cause) => cause.id).includes(route.query.id as string)
+  ) {
+    causeSelected.value = route.query.id as string
+  }
+  if (route.query.amount) {
+    amount.value = route.query.amount as string
+  }
+  if (
+    route.query.currency &&
+    Object.keys(currencies as any).includes(route.query.currency as string)
+  ) {
+    currencySelector.value = route.query.currency as string
+  }
+}
 
 const urlQueries = computed(
   () =>
@@ -140,21 +173,6 @@ function validateAmount() {
     }
   }
 }
-
-defineProps({
-  causes: {
-    type: Array<any>,
-    required: true,
-  },
-  scrollToElement: {
-    type: Function,
-    required: false,
-  },
-  onClick: {
-    type: Function,
-    required: false,
-  },
-})
 </script>
 
 <style scoped>

@@ -7,10 +7,18 @@ const STRIPE_SK =
 const stripe = new Stripe(STRIPE_SK as string)
 async function getPaymentIntentDetails(paymentIntentId: string) {
   try {
-    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+    const paymentIntent = await stripe.paymentIntents.retrieve(
+      paymentIntentId,
+      {
+        expand: ["latest_charge"],
+      }
+    )
+
+    // console.log(JSON.stringify(paymentIntent))
 
     return {
       paymentIntentStatus: paymentIntent.status, // possible values: succeeded, requires_action, requires_payment_method
+      receiptUrl: (paymentIntent.latest_charge as Stripe.Charge).receipt_url,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency,
     }

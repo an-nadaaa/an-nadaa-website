@@ -6,6 +6,8 @@
       :success="transactionDetails?.success || false"
       :is-subscription="isSubscription"
       :is-processing="isProcessing"
+      :is-server-error="isServerError"
+      :receipt-url="transactionDetails?.receiptUrl || ''"
     />
   </div>
 </template>
@@ -30,7 +32,9 @@ const transactionDetails = ref<{
   success: boolean
   amount?: number | null
   currency?: string | null
+  receiptUrl?: string | null
 }>()
+const isServerError = ref(false)
 
 onBeforeMount(async () => {
   interval.value = setInterval(async () => {
@@ -39,18 +43,49 @@ onBeforeMount(async () => {
       subscriptionStatus: Stripe.Subscription.Status
       amount?: number | null
       currency?: string | null
+      receiptUrl: string
     } = await fetch("/api/transaction-status?id=" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((res) => res.json())
+    })
+      .then((res) => {
+        if (res.ok) return res.json()
+        else {
+          isServerError.value = true
+          transactionDetails.value = {
+            success: false,
+            amount: null,
+            currency: null,
+            receiptUrl: null,
+          }
+          isProcessing.value = false
+        }
+
+        interval.value && clearInterval(interval.value)
+      })
+      .catch((err) => {
+        isServerError.value = true
+        transactionDetails.value = {
+          success: false,
+          amount: null,
+          currency: null,
+          receiptUrl: null,
+        }
+        isProcessing.value = false
+
+        interval.value && clearInterval(interval.value)
+      })
+
+    // console.log(details)
 
     if (details.paymentIntentStatus === "succeeded") {
       transactionDetails.value = {
         success: true,
         amount: details.amount,
         currency: details.currency,
+        receiptUrl: details.receiptUrl || null,
       }
       isProcessing.value = false
     } else if (details.subscriptionStatus === "active") {
@@ -58,6 +93,7 @@ onBeforeMount(async () => {
         success: true,
         amount: details.amount,
         currency: details.currency,
+        receiptUrl: details.receiptUrl || null,
       }
       isProcessing.value = false
     } else if (
@@ -70,6 +106,7 @@ onBeforeMount(async () => {
         success: false,
         amount: details.amount,
         currency: details.currency,
+        receiptUrl: details.receiptUrl || null,
       }
       isProcessing.value = false
     }

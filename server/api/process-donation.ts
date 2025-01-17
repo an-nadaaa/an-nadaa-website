@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     if (customers.data.length > 0) {
       customer = customers.data[0]
     } else {
-      const customer = await stripe.customers.create({
+      customer = await stripe.customers.create({
         email,
         name,
         phone,
@@ -163,8 +163,10 @@ export default defineEventHandler(async (event) => {
 
       return {
         subscriptionId: subscription.id,
-        clientSecret:
-          subscription?.latest_invoice?.payment_intent?.client_secret,
+        clientSecret: (
+          (subscription?.latest_invoice as Stripe.Invoice)
+            .payment_intent as Stripe.PaymentIntent
+        ).client_secret,
       }
 
       // return {
