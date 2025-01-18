@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
     })
 
     let customer
-    let cause
+    let cause: any
     if (customers.data.length > 0) {
       customer = customers.data[0]
     } else {
@@ -130,6 +130,13 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    if (!cause) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Cause not found",
+      })
+    }
+
     if (donationType === "monthly") {
       // todo: enable monthly donations
 
@@ -169,20 +176,8 @@ export default defineEventHandler(async (event) => {
             .payment_intent as Stripe.PaymentIntent
         ).client_secret,
       }
-
-      // return {
-      //   headers,
-      //   statusCode: 200,
-      //   body: JSON.stringify({
-      //     subscriptionId: subscription.id,
-      //     clientSecret:
-      //       subscription.latest_invoice.payment_intent.client_secret,
-      //   }),
-      // }
     } else {
-      // stripe.
       // Process one-time payment
-
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount, // amount in cents
         currency: currency.toLowerCase(),
@@ -191,6 +186,7 @@ export default defineEventHandler(async (event) => {
         metadata: {
           productId,
           causeId,
+          id: cause.id,
           causeTitle: (cause as any).title || "",
         },
         customer: customer.id,
