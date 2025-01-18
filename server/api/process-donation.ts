@@ -54,6 +54,7 @@ export default defineEventHandler(async (event) => {
     })
 
     let customer
+    let cause: any
     if (customers.data.length > 0) {
       customer = customers.data[0]
     } else {
@@ -78,7 +79,7 @@ export default defineEventHandler(async (event) => {
       )
         .then(async (res) => {
           if (res.ok) {
-            let cause = (await res.json()).data
+            cause = (await res.json()).data
             let id = cause.product
             if (!id) {
               throw new Error("Product not found")
@@ -129,6 +130,13 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    if (!cause) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Cause not found",
+      })
+    }
+
     if (donationType === "monthly") {
       // todo: enable monthly donations
 
@@ -168,37 +176,8 @@ export default defineEventHandler(async (event) => {
             .payment_intent as Stripe.PaymentIntent
         ).client_secret,
       }
-
-      // return {
-      //   headers,
-      //   statusCode: 200,
-      //   body: JSON.stringify({
-      //     subscriptionId: subscription.id,
-      //     clientSecret:
-      //       subscription.latest_invoice.payment_intent.client_secret,
-      //   }),
-      // }
     } else {
-      // stripe.
       // Process one-time payment
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: currency.toLowerCase(),
-              product: productId || STRIPE_GENERAL_PRODUCT,
-              unit_amount: amount,
-            },
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        customer: customer.id,
-        success_url: `${BASE_URL}/status`,
-        // cancel_url: `${BASE_URL}/cancel`,
-      })
-
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount, // amount in cents
         currency: currency.toLowerCase(),
@@ -207,6 +186,8 @@ export default defineEventHandler(async (event) => {
         metadata: {
           productId,
           causeId,
+          id: cause.id,
+          causeTitle: (cause as any).title || "",
         },
         customer: customer.id,
         automatic_payment_methods: {
