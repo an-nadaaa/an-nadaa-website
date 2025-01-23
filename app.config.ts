@@ -8,6 +8,7 @@ export default defineAppConfig({
   logo: {
     color: "/img/an-nadaa/annadaa-color.svg",
     white: "/img/an-nadaa/annadaa-white.svg",
+    symbol_color: "/img/an-nadaa/annadaa-symbol_color.svg",
   },
   defaultCurrency: {
     symbol: "$",
