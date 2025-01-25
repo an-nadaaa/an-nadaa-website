@@ -2,10 +2,6 @@
   <div class="container py-8">
     <div class="w-fit">
       <NuxtLink to="/causes" class="w-fit">
-        <!-- <Button :variant="'white'">
-          <Icon :name="'lucide:arrow-left'" class="mr-2" />
-          Back to causes</Button
-        > -->
         <div class="relative w-fit hover:underline">
           <Icon
             :name="'lucide:arrow-left'"
