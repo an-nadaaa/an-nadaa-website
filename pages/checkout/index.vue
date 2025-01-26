@@ -1,9 +1,15 @@
 <template>
   <div class="container grid py-4 sm:py-10 gap-x-8 gap-y-2 sm:grid-cols-2">
     <div class="sm:col-span-2">
-      <Button @click="() => router.back()" :variant="'white'" class="mb-2"
-        ><Icon :name="'lucide:arrow-left'" class="mr-2" />Go back</Button
-      >
+      <NuxtLink class="w-fit" @click="() => router.back()">
+        <div class="relative mb-2 w-fit hover:underline">
+          <Icon
+            :name="'lucide:arrow-left'"
+            class="absolute left-0 mr-1 top-[5px]"
+          />
+          <p class="ml-6 text-lg">Go back</p>
+        </div>
+      </NuxtLink>
     </div>
     <div class="relative order-2 sm:order-1">
       <CheckoutPaymentForm
