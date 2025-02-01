@@ -1,10 +1,12 @@
 <template>
   <div class="flex items-center w-screen h-screen">
     <div class="container max-w-lg">
-      <NuxtImg
-        class="w-10 mx-auto"
-        :src="appConfig.logo.symbol_color"
-      ></NuxtImg>
+      <NuxtLink to="/">
+        <NuxtImg
+          class="w-10 mx-auto"
+          :src="appConfig.logo.symbol_color"
+        ></NuxtImg>
+      </NuxtLink>
       <h2 class="mt-6 text-2xl font-medium text-center sm:text-3xl">
         Log in to your account
       </h2>

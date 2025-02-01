@@ -72,17 +72,23 @@
         >
       </div>
       <div class="items-center hidden space-x-8 sm:flex">
-        <!-- <NuxtLink
+        <NuxtLink
           :to="localePath('/login')"
           class="text-primary hover:text-blue-200"
           >Log in</NuxtLink
-        > -->
+        >
         <NuxtLink :to="localePath('/donate')">
           <Button ref="donateButton">Donate</Button>
         </NuxtLink>
       </div>
 
       <div class="flex items-center sm:hidden">
+        <NuxtLink
+          :to="localePath('/login')"
+          class="mr-4 text-primary hover:text-blue-200"
+        >
+          Log in
+        </NuxtLink>
         <Icon @click="show" class="text-3xl" name="lucide:align-justify" />
       </div>
     </div>
@@ -139,6 +145,13 @@
             </div>
           </template>
         </div>
+        <NuxtLink
+          :to="localePath('/login')"
+          class="text-primary hover:text-blue-200"
+        >
+          Log in
+        </NuxtLink>
+
         <NuxtLink :to="localePath('/donate')" @click="hide">
           <Button class="w-full py-6 my-6 text-lg"> Donate now</Button>
         </NuxtLink>
