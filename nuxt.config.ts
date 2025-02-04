@@ -58,6 +58,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxt/content",
     "@nuxt/image",
+    "@nuxtjs/strapi",
   ],
   postcss: {
     plugins: {
@@ -69,6 +70,19 @@ export default defineNuxtConfig({
     markdown: {
       anchorLinks: false,
     },
+  },
+  strapi: {
+    url: process.env.STRAPI_URL || "http://localhost:1337",
+    prefix: "/api",
+    admin: "/admin",
+    version: "v5",
+    cookie: {
+      path: "/",
+      maxAge: 14 * 24 * 60 * 60,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: true,
+    },
+    cookieName: "strapi_jwt",
   },
   i18n: {
     locales: [

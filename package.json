@@ -20,6 +20,7 @@
     "@nuxt/icon": "^1.4.5",
     "@nuxt/image": "^1.7.1",
     "@nuxtjs/i18n": "^8.5.0",
+    "@nuxtjs/strapi": "2.0.0",
     "@pinia/nuxt": "^0.5.3",
     "@stripe/stripe-js": "^4.9.0",
     "@vee-validate/zod": "^4.13.2",

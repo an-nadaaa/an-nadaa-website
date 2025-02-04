@@ -74,9 +74,9 @@
 
         <div class="space-y-3">
           <Button type="submit" class="w-full"> Sign in </Button>
-          <Button class="w-full gap-2" variant="white">
+          <!-- <Button class="w-full gap-2" variant="white">
             <Icon name="logos:google-icon"></Icon> Sign in with Google
-          </Button>
+          </Button> -->
         </div>
 
         <p class="pt-3 text-sm text-center text-gray-400">
@@ -111,6 +111,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { h } from "vue"
 import * as z from "zod"
 
+const router = useRouter()
+const { login } = useStrapiAuth()
+
 const formSchema = toTypedSchema(
   z.object({
     email: z
@@ -122,11 +125,17 @@ const formSchema = toTypedSchema(
   })
 )
 
-const { handleSubmit } = useForm({
+const form = useForm({
   validationSchema: formSchema,
 })
 
-const onSubmit = handleSubmit((values) => {
+const onSubmit = form.handleSubmit(async (values) => {
   console.log(values)
+
+  try {
+    await login({ identifier: "fazaamal", password: "Testing123" })
+
+    router.push("/authenticated-page")
+  } catch (e) {}
 })
 </script>

@@ -1,4 +1,5 @@
 <template>
+  <Toaster />
   <div class="flex items-center w-screen h-screen">
     <div class="container max-w-lg">
       <NuxtImg
@@ -20,7 +21,7 @@
               <Input
                 class=""
                 type="text"
-                placeholder="Enter your email"
+                placeholder="Enter your name"
                 v-bind="componentField"
               />
             </FormControl>
@@ -59,9 +60,9 @@
 
         <div class="space-y-3">
           <Button type="submit" class="w-full"> Create account </Button>
-          <Button class="w-full gap-2" variant="white">
+          <!-- <Button class="w-full gap-2" variant="white">
             <Icon name="logos:google-icon"></Icon> Sign up with Google
-          </Button>
+          </Button> -->
         </div>
 
         <p class="pt-3 text-sm text-center text-gray-400">
@@ -90,13 +91,16 @@ import {
 import { Input } from "@/components/ui/input"
 import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
-import { Checkbox } from "@/components/ui/checkbox"
-import { h } from "vue"
 import * as z from "zod"
+import { Toaster } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/toast"
 
+const { toast } = useToast()
+const { register } = useStrapiAuth()
+const router = useRouter()
 const formSchema = toTypedSchema(
   z.object({
-    name: z.string().min(1, { message: "Name is required" }),
+    name: z.string().min(1, { message: "name is required" }),
     email: z
       .string()
       .email({ message: "Invalid email" })
@@ -109,7 +113,24 @@ const { handleSubmit } = useForm({
   validationSchema: formSchema,
 })
 
-const onSubmit = handleSubmit((values) => {
-  console.log(values)
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    await register({
+      name: values.name,
+      username: values.email,
+      email: values.email,
+      password: values.password,
+    })
+
+    router.push({ path: "/email-verification", query: { email: values.email } })
+  } catch (e: any) {
+    console.log(e)
+
+    toast({
+      title: "Error creating account",
+      description: e.error.message,
+      variant: "destructive",
+    })
+  }
 })
 </script>

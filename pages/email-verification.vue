@@ -6,11 +6,17 @@
         Check your email
       </h2>
       <p class="mt-3 text-center text-gray-500">
-        We sent a verification link to yahaya@example.com
+        <strong>
+          We sent a verification link to
+          {{ email }}</strong
+        >
+        <br />
       </p>
-
-      <Button class="w-full mt-8">Enter code manually</Button>
-
+      <p class="mt-2 font-light text-center opacity-50">
+        Please check your email and click on the link to verify your email
+        address.
+      </p>
+      <Button @click="openEmailProvider" class="w-full mt-8">Open email</Button>
       <NuxtLink to="/login">
         <div class="relative pt-4 mx-auto w-fit">
           <Icon
@@ -24,26 +30,46 @@
   </div>
 </template>
 <script setup lang="ts">
-const appConfig = useAppConfig()
 definePageMeta({
   layout: "dashboard",
 })
 
 import { Button } from "@/components/ui/button"
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
-import { Checkbox } from "@/components/ui/checkbox"
-import { h } from "vue"
 import * as z from "zod"
+
+const route = useRoute()
+const { email } = route.query as { email: string }
+
+if (!email) {
+  throw createError({
+    statusCode: 500,
+    fatal: true,
+  })
+}
+
+const openEmailProvider = () => {
+  if (!email) return
+
+  const domain = email.split("@")[1].toLowerCase()
+
+  let emailUrl = ""
+
+  if (domain.includes("gmail.com")) {
+    emailUrl = "https://mail.google.com/"
+  } else if (domain.includes("outlook.com") || domain.includes("hotmail.com")) {
+    emailUrl = "https://outlook.live.com/"
+  } else if (domain.includes("yahoo.com")) {
+    emailUrl = "https://mail.yahoo.com/"
+  } else if (domain.includes("icloud.com")) {
+    emailUrl = "https://www.icloud.com/mail"
+  } else {
+    emailUrl = `https://${domain}`
+  }
+
+  window.open(emailUrl, "_blank")
+}
 
 const formSchema = toTypedSchema(
   z.object({
