@@ -4,6 +4,7 @@
   <HomeFeaturedCampaignsSection />
   <HomeAboutUsSection />
   <HomeOurImpactSection />
+  <!-- Todo: fix testimonials error -->
   <HomeTestimonialsSection :testimonials="testimonials" />
   <HomeFAQSection />
 </template>
