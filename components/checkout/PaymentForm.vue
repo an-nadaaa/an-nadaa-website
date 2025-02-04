@@ -119,6 +119,7 @@ import {
 import StripeCardInput from "./StripeCardInput.vue"
 import type { StripeCardElement } from "@stripe/stripe-js"
 import { useStripe } from "~/composables/useStripe"
+import { useToast } from "@/components/ui/toast/use-toast"
 
 type DonationDetails = {
   causeSelected: string
@@ -126,6 +127,7 @@ type DonationDetails = {
   currencySelected: string
   donationFrequency: string
 }
+const { toast } = useToast()
 
 const donationDetails = defineModel<DonationDetails>("donationDetails", {
   type: Object as PropType<DonationDetails>,
@@ -208,8 +210,6 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
   try {
     loading.value = true
 
-    console.log("Form submitted", values)
-
     const { currencySelected, donationFrequency, donateAmount, causeSelected } =
       donationDetails.value
 
@@ -244,7 +244,6 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
         // name: fullName,
       },
     })
-    console.log(paymentMethod)
 
     if (error) {
       throw new Error(error.message)
@@ -323,6 +322,12 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
     }
   } catch (err: any) {
     console.log(err)
+
+    toast({
+      title: "Error processing payment",
+      description: err.message,
+      variant: "destructive",
+    })
 
     // paymentStatus.value = {
     //   type: "error",
