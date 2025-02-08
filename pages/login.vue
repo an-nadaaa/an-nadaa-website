@@ -92,7 +92,7 @@
 <script setup lang="ts">
 const appConfig = useAppConfig()
 definePageMeta({
-  layout: "dashboard",
+  layout: "login",
 })
 
 import { Button } from "@/components/ui/button"
@@ -108,9 +108,11 @@ import { Input } from "@/components/ui/input"
 import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
 import { Checkbox } from "@/components/ui/checkbox"
-import { h } from "vue"
+import { Toaster } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/toast"
 import * as z from "zod"
 
+const { toast } = useToast()
 const router = useRouter()
 const { login } = useStrapiAuth()
 
@@ -130,12 +132,18 @@ const form = useForm({
 })
 
 const onSubmit = form.handleSubmit(async (values) => {
-  console.log(values)
-
   try {
-    await login({ identifier: "fazaamal", password: "Testing123" })
+    await login({ identifier: values.email, password: values.password })
 
-    router.push("/authenticated-page")
-  } catch (e) {}
+    router.push("/dashboard")
+  } catch (e: any) {
+    console.log(e)
+
+    toast({
+      title: "Error logging in",
+      description: e.error.message,
+      variant: "destructive",
+    })
+  }
 })
 </script>

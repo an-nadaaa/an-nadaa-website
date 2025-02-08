@@ -76,7 +76,7 @@
 <script setup lang="ts">
 const appConfig = useAppConfig()
 definePageMeta({
-  layout: "dashboard",
+  layout: "login",
 })
 
 import { Button } from "@/components/ui/button"

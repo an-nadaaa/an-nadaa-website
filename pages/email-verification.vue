@@ -6,10 +6,8 @@
         Check your email
       </h2>
       <p class="mt-3 text-center text-gray-500">
-        <strong>
-          We sent a verification link to
-          {{ email }}</strong
-        >
+        We sent a verification link to <br />
+        <strong> {{ email }}</strong>
         <br />
       </p>
       <p class="mt-2 font-light text-center opacity-50">
@@ -31,7 +29,7 @@
 </template>
 <script setup lang="ts">
 definePageMeta({
-  layout: "dashboard",
+  layout: "login",
 })
 
 import { Button } from "@/components/ui/button"
@@ -82,9 +80,5 @@ const formSchema = toTypedSchema(
 
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
-})
-
-const onSubmit = handleSubmit((values) => {
-  console.log(values)
 })
 </script>
