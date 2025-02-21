@@ -109,7 +109,7 @@ await strapiFetch(
   {
     filters: {
       isActive: true,
-      isPrivate: false,
+      // isPrivate: false,
       environment: process.env.NODE_ENV,
     },
   }
@@ -119,9 +119,12 @@ await strapiFetch(
       return {
         name: cause.title,
         id: cause.documentId,
+        isPrivate: cause.isPrivate,
       }
     })
-    causes.value = [...strapiCauses]
+    causes.value = [...strapiCauses].filter(
+      (cause) => cause.isPrivate === false
+    )
 
     if (id && id !== "general") {
       if (
