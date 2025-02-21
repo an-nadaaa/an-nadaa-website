@@ -122,9 +122,10 @@ await strapiFetch(
         isPrivate: cause.isPrivate,
       }
     })
-    causes.value = [...strapiCauses].filter(
-      (cause) => cause.isPrivate === false
-    )
+    causes.value = [...strapiCauses].filter((cause) => {
+      if (cause.id !== id) return cause.isPrivate === false
+      else return true
+    })
 
     if (id && id !== "general") {
       if (
