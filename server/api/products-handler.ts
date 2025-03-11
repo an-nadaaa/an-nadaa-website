@@ -32,9 +32,6 @@ export default defineEventHandler(async (event) => {
 
   if (event.method === "POST") {
     const entity = await readBody(event)
-
-    console.log("Entity:", entity)
-
     // return
 
     const DEFAULT_PRODUCT_VALUE = "PRODUCT_WILL_BE_CREATED"
