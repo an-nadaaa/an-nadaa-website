@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-8">
+  <div class="container py-4">
     <div class="w-fit">
       <NuxtLink to="/causes" class="w-fit">
         <div class="relative w-fit hover:underline">
@@ -14,7 +14,7 @@
     <h1 class="mt-4 font-medium">
       {{ cause?.title }}
     </h1>
-    <div class="grid mt-8 gap-x-4 lg:flex">
+    <div class="grid mt-4 gap-x-4 lg:flex">
       <div :class="`basis-[60%]`">
         <template v-if="cause.videoPath">
           <div class="overflow-hidden aspect-16/9 rounded-2xl">
