@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import Stripe from "stripe"
 
-const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const id = route.query.id as string
 if (!id) {
@@ -62,8 +61,6 @@ onBeforeMount(async () => {
           }
           isProcessing.value = false
         }
-
-        interval.value && clearInterval(interval.value)
       })
       .catch((err) => {
         isServerError.value = true
@@ -74,11 +71,11 @@ onBeforeMount(async () => {
           receiptUrl: null,
         }
         isProcessing.value = false
-
-        interval.value && clearInterval(interval.value)
       })
 
     // console.log(details)
+
+    interval.value && clearInterval(interval.value)
 
     if (details.paymentIntentStatus === "succeeded") {
       transactionDetails.value = {
