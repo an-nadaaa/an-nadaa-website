@@ -189,7 +189,7 @@ export default defineEventHandler(async (event) => {
         metadata: {
           productId,
           causeId,
-          id: cause.id,
+          id: cause.id || null,
           causeTitle: (cause as any).title || "",
         },
         customer: customer.id,
