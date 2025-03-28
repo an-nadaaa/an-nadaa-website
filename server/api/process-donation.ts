@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
       currency,
     } = body
 
-    let productId
+    let productId = STRIPE_GENERAL_PRODUCT as string
 
     if (!causeId) {
       throw createError({
@@ -80,6 +80,7 @@ export default defineEventHandler(async (event) => {
         .then(async (res) => {
           if (res.ok) {
             cause = (await res.json()).data
+
             let id = cause.product
             if (!id) {
               throw new Error("Product not found")
@@ -130,7 +131,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (!cause) {
+    if (causeId !== "general" && !cause) {
       throw createError({
         statusCode: 404,
         statusMessage: "Cause not found",
@@ -177,6 +178,8 @@ export default defineEventHandler(async (event) => {
         ).client_secret,
       }
     } else {
+      console.log(productId)
+
       // Process one-time payment
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount, // amount in cents
