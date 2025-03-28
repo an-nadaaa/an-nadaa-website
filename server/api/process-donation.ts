@@ -178,8 +178,8 @@ export default defineEventHandler(async (event) => {
         ).client_secret,
       }
     } else {
-      console.log(productId)
-
+      const causeDetails =
+        causeId !== "general" ? { id: cause.id, causeTitle: cause.title } : null
       // Process one-time payment
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount, // amount in cents
@@ -189,8 +189,7 @@ export default defineEventHandler(async (event) => {
         metadata: {
           productId,
           causeId,
-          id: cause.id || null,
-          causeTitle: (cause as any).title || "",
+          ...causeDetails,
         },
         customer: customer.id,
         automatic_payment_methods: {
