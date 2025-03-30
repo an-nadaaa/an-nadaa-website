@@ -181,26 +181,34 @@ export default defineEventHandler(async (event) => {
       const causeDetails =
         causeId !== "general" ? { id: cause.id, causeTitle: cause.title } : null
       // Process one-time payment
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount, // amount in cents
-        currency: currency.toLowerCase(),
-        payment_method: paymentMethodId,
-        // confirm: true,
-        metadata: {
-          productId,
-          causeId,
-          ...causeDetails,
-        },
-        customer: customer.id,
-        automatic_payment_methods: {
-          enabled: true,
-          allow_redirects: "never",
-        },
-      })
+      try {
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: amount, // amount in cents
+          currency: currency.toLowerCase(),
+          payment_method: paymentMethodId,
+          // confirm: true,
+          metadata: {
+            productId,
+            causeId,
+            ...causeDetails,
+          },
+          customer: customer.id,
+          automatic_payment_methods: {
+            enabled: true,
+            allow_redirects: "never",
+          },
+        })
 
-      return {
-        paymentIntentId: paymentIntent.id,
-        clientSecret: paymentIntent.client_secret,
+        return {
+          paymentIntentId: paymentIntent.id,
+          clientSecret: paymentIntent.client_secret,
+        }
+      } catch (error: any) {
+        console.log("ERROR: " + error.message)
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        })
       }
 
       // return {

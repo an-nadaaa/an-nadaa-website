@@ -271,12 +271,13 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
       }),
     })
 
+    if (!response.ok) {
+      const errorData = await response.json() // Parse the JSON response
+      throw new Error(errorData.message || "Something went wrong")
+    }
+
     const result = await response.json()
     const { clientSecret, paymentIntentId, subscriptionId } = result
-
-    if (result.error) {
-      throw new Error(result.error)
-    }
 
     // Handle the payment confirmation based on donation type
     if (donationFrequency === "monthly") {
@@ -321,8 +322,6 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
       })
     }
   } catch (err: any) {
-    console.log(err)
-
     toast({
       title: "Error processing payment",
       description: err.message,
