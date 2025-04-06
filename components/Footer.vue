@@ -127,9 +127,9 @@ const groups = [
     type: "Causes",
     links: [
       { title: "Build a Mosque", path: "/build-a-mosque" },
-      { title: "Build a well", path: "/build-a-well" },
-      { title: "Help the widows", path: "/help-widows" },
-      { title: "Help the orphans", path: "/help-orphans" },
+      { title: "Build a Well", path: "/build-a-well" },
+      { title: "Help the Widows", path: "/help-widows" },
+      { title: "Help the Orphans", path: "/help-orphans" },
     ],
   },
   {
