@@ -44,7 +44,7 @@
           </p>
         </template>
         <template v-else>
-          <div class="flex w-full max-w-[350px] items-center space-x-3">
+          <div class="flex items-center w-full max-w-full space-x-3">
             <Progress
               :model-value="
                 Math.round(
