@@ -1,20 +1,20 @@
 <template>
   <div class="py-4 text-white bg-dark-blue">
     <div class="container flex justify-between">
-      <NuxtLink :href="localePath('/')">
+      <NuxtLink :href="$localePath('/')">
         <img :src="logo" alt="Annadaa" class="w-32" />
       </NuxtLink>
       <div
-        class="items-center hidden sm:space-x-2 md:space-x-4 sm:flex lg:space-x-8"
+        class="hidden items-center sm:space-x-2 md:space-x-4 sm:flex lg:space-x-8"
       >
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/')"
+        <NuxtLink class="hover:text-gray-200" :to="$localePath('/')"
           >Home</NuxtLink
         >
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/causes')"
+        <NuxtLink class="hover:text-gray-200" :to="$localePath('/causes')"
           >Causes</NuxtLink
         >
         <!-- 
-        <div class="items-center hidden h-full pr-0 lg:flex lg:pr-2">
+        <div class="hidden items-center pr-0 h-full lg:flex lg:pr-2">
           <HoverCard v-model:open="isCauseOpen" :openDelay="100">
             <HoverCardTrigger>
               <NuxtLink :to="'/causes'">
@@ -56,35 +56,35 @@
           </HoverCard>
         </div> -->
 
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/blogs')"
+        <NuxtLink class="hover:text-gray-200" :to="$localePath('/blogs')"
           >Blogs</NuxtLink
         >
 
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/about')"
+        <NuxtLink class="hover:text-gray-200" :to="$localePath('/about')"
           >About</NuxtLink
         >
 
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/faq')"
+        <NuxtLink class="hover:text-gray-200" :to="$localePath('/faq')"
           >FAQs</NuxtLink
         >
-        <NuxtLink class="hover:text-gray-200" :to="localePath('/contact')"
+        <NuxtLink class="hover:text-gray-200" :to="$localePath('/contact')"
           >Contact</NuxtLink
         >
       </div>
-      <div class="items-center hidden space-x-8 sm:flex">
+      <div class="hidden items-center space-x-8 sm:flex">
         <NuxtLink
-          :to="localePath('/login')"
+          :to="$localePath('/login')"
           class="text-primary hover:text-blue-200"
           >Log in</NuxtLink
         >
-        <NuxtLink :to="localePath('/donate')">
+        <NuxtLink :to="$localePath('/donate')">
           <Button ref="donateButton">Donate</Button>
         </NuxtLink>
       </div>
 
       <div class="flex items-center sm:hidden">
         <NuxtLink
-          :to="localePath('/login')"
+          :to="$localePath('/login')"
           class="mr-4 text-primary hover:text-blue-200"
         >
           Log in
@@ -98,7 +98,7 @@
       :class="mobileNavigationVisible ? 'translate-x-0' : 'translate-x-full'"
     >
       <div class="flex justify-between py-4">
-        <NuxtLink @click="hide" :href="localePath('/')">
+        <NuxtLink @click="hide" :href="$localePath('/')">
           <img :src="logo" alt="Annadaa" class="w-32" />
         </NuxtLink>
 
@@ -106,15 +106,15 @@
           <Icon @click="hide" class="text-3xl" name="lucide:align-justify" />
         </div>
       </div>
-      <div class="grid grid-cols-1 mt-8 gap-y-6">
+      <div class="grid grid-cols-1 gap-y-6 mt-8">
         <div
           v-for="(link, index) in links"
           :key="index"
           class="w-full text-lg text-white"
         >
           <template v-if="link.title !== 'Causes'">
-            <NuxtLink @click="hide" :to="localePath(link.path)">
-              <div class="text-lg w-max">
+            <NuxtLink @click="hide" :to="$localePath(link.path)">
+              <div class="w-max text-lg">
                 {{ link.title }}
               </div>
             </NuxtLink>
@@ -146,14 +146,14 @@
           </template>
         </div>
         <NuxtLink
-          :to="localePath('/login')"
+          :to="$localePath('/login')"
           class="text-primary hover:text-blue-200"
         >
           Log in
         </NuxtLink>
 
-        <NuxtLink :to="localePath('/donate')" @click="hide">
-          <Button class="w-full py-6 my-6 text-lg"> Donate now</Button>
+        <NuxtLink :to="$localePath('/donate')" @click="hide">
+          <Button class="py-6 my-6 w-full text-lg"> Donate now</Button>
         </NuxtLink>
         <div class="flex space-x-6 text-gray-400">
           <NuxtLink :to="'https://twitter.com'">
@@ -182,8 +182,8 @@
     "
   >
     <p class="text-lg text-center text-white">Donate for the sake of Allah</p>
-    <NuxtLink :to="'/donate'">
-      <Button class="w-full mt-4">Donate now</Button>
+    <NuxtLink :to="$localePath('/donate')">
+      <Button class="mt-4 w-full">Donate now</Button>
     </NuxtLink>
   </div>
   <!-- <NuxtLink :to="'/donate'">
@@ -214,7 +214,6 @@ const { mobileNavigationVisible, showMobileNavigation, hideMobileNavigation } =
 
 const appConfig = useAppConfig()
 const logo = appConfig.logo.white
-const localePath = useLocalePath()
 const route = useRoute()
 const isCheckoutOrDonate = computed(() => {
   return (

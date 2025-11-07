@@ -1,19 +1,19 @@
 <template>
   <NuxtLayout>
     <div
-      class="grid sm:grid-cols-2 py-16 pb-8 container gap-y-12 md:gap-x-16 lg:gap-x-32 items-center"
+      class="container grid gap-y-12 items-center py-16 pb-8 sm:grid-cols-2 md:gap-x-16 lg:gap-x-32"
     >
       <div>
-        <h4 class="text-primary text-lg font-normal">
+        <h4 class="text-lg font-normal text-primary">
           {{ error?.statusCode || "404" }} ERROR
         </h4>
-        <h1 class="font-medium my-2">Page not found</h1>
-        <p class="text-dark-gray font-light">
+        <h1 class="my-2 font-medium">Page not found</h1>
+        <p class="font-light text-dark-gray">
           Sorry, the page you are looking for doesn't exist or has been moved.
           Here are some helpful links:
         </p>
 
-        <div class="grid grid-cols-2 sm:w-fit mt-8 gap-2 sm:gap-0">
+        <div class="grid grid-cols-2 gap-2 mt-8 sm:w-fit sm:gap-0">
           <Button
             @click="
               () => {
@@ -30,7 +30,7 @@
             <Icon name="lucide:arrow-left" class="mr-2" />
             Go back</Button
           >
-          <NuxtLink :to="localePath('/')">
+          <NuxtLink :to="$localePath('/')">
             <Button class="sm:w-fit" :variant="'default'"> Take me home</Button>
           </NuxtLink>
         </div>
@@ -58,7 +58,6 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app"
 
-const localePath = useLocalePath()
 const router = useRouter()
 
 const props = defineProps({

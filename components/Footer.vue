@@ -1,7 +1,7 @@
 <template>
   <div class="w-full bg-light-blue">
     <div class="container grid grid-cols-1 gap-4 py-8 sm:grid-cols-2">
-      <div class="p-8 bg-dark-blue rounded-2xl">
+      <div class="p-8 rounded-2xl bg-dark-blue">
         <h1 class="text-4xl font-normal text-white xl:text-6xl">
           Donate for the
         </h1>
@@ -12,14 +12,14 @@
         <p class="mt-2 font-light text-white">
           Your donation will go to where it is needed the most.
         </p>
-        <NuxtLink to="/donate">
+        <NuxtLink :to="$localePath('/donate')">
           <Button class="px-8 mt-8" ref="donateButton">Donate</Button>
         </NuxtLink>
       </div>
       <div class="rounded-2xl">
         <AspectRatio :ratio="1.4 / 1">
           <Flicking
-            class="w-full h-full overflow-hidden"
+            class="overflow-hidden w-full h-full"
             :options="{ circular: true }"
             :plugins="plugins"
           >
@@ -54,7 +54,7 @@
         class="container grid grid-cols-1 py-8 space-y-8 sm:space-y-0 sm:grid-cols-2 lg:gap-x-8 lg:grid-cols-4"
       >
         <div class="flex flex-col col-span-1 space-y-8">
-          <img class="text-xs font-thin w-36" :src="logo" />
+          <img class="w-36 text-xs font-thin" :src="logo" />
           <p>
             contact@an-nadaa.com <br />
             +234 806 781 4149 <br />
@@ -79,7 +79,7 @@
             <NuxtLink
               v-for="(link, index) in group.links"
               :key="index"
-              :to="localePath(link.path)"
+              :to="$localePath(link.path)"
               class="hover:text-gray-300"
             >
               {{ link.title }}
@@ -116,7 +116,7 @@ useIntersectionObserver(donateButton, ([entry]) => {
 
 const appConfig = useAppConfig()
 const logo = appConfig.logo.white
-const localePath = useLocalePath()
+
 const plugins = [
   new Pagination({ type: "bullet" }),
   new AutoPlay({ duration: 1000 }),

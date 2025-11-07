@@ -1,6 +1,6 @@
 <template>
   <div class="container my-8 sm:my-32">
-    <Card class="max-w-xl px-4 py-16 mx-auto shadow-lg sm:px-32">
+    <Card class="px-4 py-16 mx-auto max-w-xl shadow-lg sm:px-32">
       <template v-if="isProcessing">
         <div>
           <VueSpinnerClock class="mx-auto text-[100px] text-gray-500" />
@@ -15,7 +15,7 @@
       <template v-else>
         <img
           :src="success && !isServerError ? GreenCheck : RedError"
-          class="w-32 mx-auto"
+          class="mx-auto w-32"
         />
         <template v-if="isServerError">
           <h4 class="mt-8 text-2xl font-medium text-center">Server error!</h4>
@@ -59,10 +59,10 @@
           </p>
         </template>
         <NuxtLink :href="receiptUrl" target="_blank">
-          <Button class="w-full mt-4" variant="white">View receipt</Button>
+          <Button class="mt-4 w-full" variant="white">View receipt</Button>
         </NuxtLink>
-        <NuxtLink to="/">
-          <Button class="w-full mt-2">Goto home page</Button>
+        <NuxtLink :to="$localePath('/')">
+          <Button class="mt-2 w-full">Goto home page</Button>
         </NuxtLink>
       </template>
     </Card>

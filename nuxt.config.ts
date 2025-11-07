@@ -85,31 +85,13 @@ export default defineNuxtConfig({
     cookieName: "strapi_jwt",
   },
   i18n: {
-    locales: [
-      {
-        code: "en",
-        language: "en-US",
-        file: "translations/en.js",
-        dir: "ltr",
-        name: "English",
-      },
-      {
-        code: "ar",
-        language: "ar-SA",
-        file: "translations/ar.js",
-        dir: "rtl",
-        name: "العربية",
-      },
-      {
-        code: "ms",
-        language: "ms-MY",
-        file: "translations/ms.js",
-        dir: "ltr",
-        name: "Bahasa Malayu",
-      },
-      // we use the NG postfix because sw is ignored in git ignore for being a convention for service workers
-    ],
     defaultLocale: "en",
+    locales: [
+      { code: "en", name: "English", file: "en.json" },
+      // { code: "ar", name: "العربية", file: "ar.json" },
+      // { code: "ms", name: "Bahasa Malayu", file: "ms.json" },
+      // { code: "sw", name: "Swahili", file: "sw.json" },
+    ],
     defaultDirection: "ltr",
     lazy: true,
     strategy: "prefix_except_default",

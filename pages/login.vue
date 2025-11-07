@@ -1,9 +1,9 @@
 <template>
   <div class="flex items-center w-screen h-screen">
     <div class="container max-w-lg">
-      <NuxtLink to="/">
+      <NuxtLink :to="$localePath('/')">
         <NuxtImg
-          class="w-10 mx-auto"
+          class="mx-auto w-10"
           :src="appConfig.logo.symbol_color"
         ></NuxtImg>
       </NuxtLink>
@@ -14,7 +14,7 @@
         Welcome back! Please enter your details
       </p>
 
-      <form class="w-full mt-6 space-y-4 pb-28" @submit="onSubmit">
+      <form class="pb-28 mt-6 space-y-4 w-full" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
             <FormLabel class="text-slate-600">Email</FormLabel>
@@ -43,8 +43,8 @@
           </FormItem>
         </FormField>
 
-        <div class="flex items-center justify-between">
-          <div class="relative flex items-center">
+        <div class="flex justify-between items-center">
+          <div class="flex relative items-center">
             <FormField
               v-slot="{ value, handleChange }"
               class="space-y-0"
@@ -59,7 +59,7 @@
                     @update:checked="handleChange"
                   />
                 </FormControl>
-                <FormLabel class="ml-6 text-sm font-medium w-max text-dark-blue"
+                <FormLabel class="ml-6 w-max text-sm font-medium text-dark-blue"
                   >Remember me</FormLabel
                 >
               </FormItem>
@@ -74,7 +74,7 @@
 
         <div class="space-y-3">
           <Button type="submit" class="w-full"> Sign in </Button>
-          <!-- <Button class="w-full gap-2" variant="white">
+          <!-- <Button class="gap-2 w-full" variant="white">
             <Icon name="logos:google-icon"></Icon> Sign in with Google
           </Button> -->
         </div>

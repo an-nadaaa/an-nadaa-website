@@ -14,10 +14,10 @@
     <h1 class="mt-4 font-medium">
       {{ cause?.title }}
     </h1>
-    <div class="grid mt-8 gap-x-4 lg:flex">
+    <div class="grid gap-x-4 mt-8 lg:flex">
       <div :class="`basis-[60%]`">
         <template v-if="cause.videoPath">
-          <div class="overflow-hidden aspect-16/9 rounded-2xl">
+          <div class="overflow-hidden rounded-2xl aspect-16/9">
             <!-- <VideoPlayer
               class="w-full h-full"
               :src="cause.videoPath"
@@ -55,7 +55,7 @@
                     lightboxVisible = true
                   }
                 "
-                class="mr-2 overflow-hidden rounded-lg aspect-4/3 hover:cursor-pointer"
+                class="overflow-hidden mr-2 rounded-lg aspect-4/3 hover:cursor-pointer"
               >
                 <img :src="image" class="object-cover w-24 h-full md:w-36" />
               </div>
@@ -71,7 +71,7 @@
               </template>
             </flicking>
 
-            <div class="absolute flex justify-between w-full top-1/2">
+            <div class="flex absolute top-1/2 justify-between w-full">
               <div
                 v-if="images.length > 1"
                 @click="() => flickingElement?.prev()"
@@ -99,7 +99,7 @@
         <template v-else>
           <flicking
             ref="flickingElementBig"
-            class="aspect-16/9 rounded-2xl"
+            class="rounded-2xl aspect-16/9"
             :options="{ circular: true }"
             :plugins="plugins"
           >
@@ -112,14 +112,14 @@
                 }
               "
               :key="index"
-              class="relative flex items-center justify-center w-full overflow-hidden"
+              class="flex overflow-hidden relative justify-center items-center w-full"
             >
               <div class="absolute inset-0">
                 <img :src="image" class="object-cover w-full h-full blur-lg" />
               </div>
               <img
                 :src="image"
-                class="relative z-10 object-contain max-w-full max-h-full"
+                class="object-contain relative z-10 max-w-full max-h-full"
               />
             </div>
             <template #viewport>
@@ -169,7 +169,7 @@
 
           <div
             v-if="cause.importantNote && cause.importantNote.length > 0"
-            class="w-full p-6 py-8 rounded-xl"
+            class="p-6 py-8 w-full rounded-xl"
             :style="{ border: '1px solid #e1e1e1' }"
           >
             <h4 class="font-normal">Important Note</h4>
@@ -190,7 +190,7 @@
                 isExpanded = !isExpanded
               }
             "
-            class="absolute bottom-0 right-0"
+            class="absolute right-0 bottom-0"
             :variant="'white'"
             >{{ isExpanded ? "Show less" : "Read more" }}
 
@@ -205,13 +205,13 @@
         <CauseDonateCard :cause="cause" :scrollToElement="scrollToElement" />
       </div>
     </div>
-    <div ref="bankInfo" class="w-full py-16">
+    <div ref="bankInfo" class="py-16 w-full">
       <h2 class="font-medium">Direct transfers</h2>
       <p class="mt-2 font-normal text-dark-gray">
         When doing a direct transfer we need our donors to send us an email
         detailing the purpose of the donation and a proof of transfer especially
         if it's for Zakat purpose.
-        <NuxtLink class="underline text-primary" :to="localePath('/contact')">
+        <NuxtLink class="underline text-primary" :to="$localePath('/contact')">
           Contact information can be found here.
         </NuxtLink>
       </p>
@@ -237,7 +237,6 @@ import "@egjs/flicking-plugins/dist/arrow.css"
 const strapiFetch = useStrapiFetch()
 const route = useRoute()
 const { id } = route.params
-const localePath = useLocalePath()
 const bankInfo = ref()
 const index = ref(0)
 const currentIndex = ref(0)

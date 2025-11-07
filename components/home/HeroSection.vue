@@ -51,8 +51,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import Plyr from "plyr"
-import "plyr/dist/plyr.css"
 import AspectRatio from "../ui/aspect-ratio/AspectRatio.vue"
 import { useDonateButton } from "~/composables/useDonateButton"
 
@@ -66,12 +64,8 @@ useIntersectionObserver(donateButton, ([entry]) => {
     hideDonateButton()
   }
 })
-// const plyr = ref<any>(null)
-const videoPlayer = ref<any>(null)
 
-onMounted(() => {
-  // plyr.value = new Plyr(document.getElementById("player") as HTMLElement)
-})
+const videoPlayer = ref<any>(null)
 
 function goFullScreen() {
   const videoElement = videoPlayer.value
