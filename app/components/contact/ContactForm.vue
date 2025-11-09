@@ -126,6 +126,8 @@ const form = useForm({
 </script>
 
 <style>
+@reference "~/assets/css/tailwind.css";
+
 label {
   @apply font-normal text-dark-gray;
 }

@@ -20,7 +20,7 @@
       <transition name="blur">
         <div
           v-if="isEditing"
-          class="absolute inset-0 bg-white bg-opacity-50 backdrop-blur-sm"
+          class="absolute inset-0 bg-white bg-opacity-50 backdrop-blur-xs"
         ></div>
       </transition>
     </div>

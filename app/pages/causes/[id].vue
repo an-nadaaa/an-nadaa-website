@@ -79,7 +79,7 @@
               >
                 <Icon
                   name="lucide:arrow-left"
-                  class="h-full w-full text-primary relative -translate-x-[0px]"
+                  class="relative w-full h-full translate-x-0 text-primary"
                 ></Icon>
               </div>
 
@@ -90,7 +90,7 @@
               >
                 <Icon
                   name="lucide:arrow-right"
-                  class="h-full w-full text-primary relative -translate-x-[0px]"
+                  class="relative w-full h-full translate-x-0 text-primary"
                 ></Icon>
               </div>
             </div>
@@ -158,12 +158,12 @@
            ${isExpanded ? '' : 'h-[200px]'}`"
         >
           <div
-            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
+            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-blockquote:prose-p:text-2xl prose-blockquote:prose-p:font-normal prose-blockquote:prose-p:last:text-lg prose-blockquote:prose-p:last:text-dark-gray prose-blockquote:prose-p:last:not-italic prose-blockquote:my-12 prose-p:font-light"
             v-html="causeHtml"
           />
 
           <!-- <ContentRenderer
-            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
+            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-blockquote:prose-p:text-2xl prose-blockquote:prose-p:font-normal prose-blockquote:prose-p:last:text-lg prose-blockquote:prose-p:last:text-dark-gray prose-blockquote:prose-p:last:not-italic prose-blockquote:my-12 prose-p:font-light"
             :value="caus"
           /> -->
 
@@ -179,7 +179,7 @@
           </div>
 
           <div
-            :class="`absolute inset-0 after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-t after:from-white after:to-transparent after:opacity-100 pointer-events-none ${
+            :class="`absolute inset-0 after:content-[''] after:absolute after:inset-0 after:bg-linear-to-t after:from-white after:to-transparent after:opacity-100 pointer-events-none ${
               isExpanded ? 'hidden' : ''
             }`"
           ></div>
@@ -327,6 +327,8 @@ function scrollToElement() {
 </script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 .flicking-arrow-prev {
   @apply text-primary;
 }

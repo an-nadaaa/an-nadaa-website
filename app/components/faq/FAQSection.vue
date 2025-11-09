@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-full pt-12">
     <img
-      class="absolute top-0 right-0 hidden h-60 sm:block -z-0"
+      class="absolute top-0 right-0 hidden h-60 sm:block z-0"
       src="assets/media/img/Line.svg"
     />
     <div class="container mb-16">

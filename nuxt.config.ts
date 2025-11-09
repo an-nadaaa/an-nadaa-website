@@ -1,4 +1,5 @@
 import { vite as vidstack } from "vidstack/plugins"
+import tailwindcss from "@tailwindcss/vite"
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -7,6 +8,7 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
+  css: ["./app/assets/css/tailwind.css"],
   shadcn: {
     prefix: "",
     componentDir: "./app/components/ui", // Change to new directory
@@ -54,7 +56,6 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
     "shadcn-nuxt",
     "@pinia/nuxt", // "shadcn/nuxt",
@@ -66,7 +67,6 @@ export default defineNuxtConfig({
   ],
   postcss: {
     plugins: {
-      tailwindcss: {},
       autoprefixer: {},
     },
   },
@@ -106,6 +106,6 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    plugins: [vidstack()],
+    plugins: [vidstack(), tailwindcss()],
   },
 })

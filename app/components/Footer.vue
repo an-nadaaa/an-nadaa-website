@@ -152,6 +152,8 @@ const groups = [
 ]
 </script>
 <style>
+@reference "~/assets/css/tailwind.css";
+
 .flicking-pagination-bullet {
   @apply bg-gray-300 hover:bg-blue-400;
 }

@@ -3,7 +3,7 @@
     <div class="container py-12 space-y-6">
       <h6 class="font-normal text-center">Trusted by</h6>
       <div
-        class="[&>*]:mx-auto w-full grid grid-cols-2 space-y-12 mt-4 md:grid-cols-3 xl:flex lg:justify-between lg:items-center"
+        class="*:mx-auto w-full grid grid-cols-2 space-y-12 mt-4 md:grid-cols-3 xl:flex lg:justify-between lg:items-center"
       >
         <img
           class="h-8 mt-12 sm:h-12"

@@ -1,6 +1,6 @@
 <template>
   <div class="grid gap-4 sm:grid-cols-2">
-    <div class="p-6 rounded-xl outline outline-1 outline-gray-300">
+    <div class="p-6 rounded-xl outline-solid outline-1 outline-gray-300">
       <div class="grid w-full lg:flex gap-y-4 gap-x-12">
         <div class="w-full">
           <h4 class="font-normal">Nigeria Dollar Account</h4>
@@ -61,7 +61,7 @@
         </div>
       </div>
     </div>
-    <div class="p-6 rounded-xl outline outline-1 outline-gray-300">
+    <div class="p-6 rounded-xl outline-solid outline-1 outline-gray-300">
       <div class="grid w-full lg:flex gap-y-4 gap-x-12">
         <div class="w-full">
           <h4 class="font-normal">Malaysian Ringgit Account</h4>

@@ -34,18 +34,18 @@
     </div>
 
     <div class="px-0 mt-12 lg:px-32 xl:px-44">
-      <div class="border-b-[1px] border-b-gray-200">
+      <div class="border-b border-b-gray-200">
         <div
           v-html="blogHtml"
-          class="mb-12 prose prose-h1:font-normal prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
+          class="mb-12 prose prose-h1:font-normal prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-blockquote:prose-p:text-2xl prose-blockquote:prose-p:font-normal prose-blockquote:prose-p:last:text-lg prose-blockquote:prose-p:last:text-dark-gray prose-blockquote:prose-p:last:not-italic prose-blockquote:my-12 prose-p:font-light"
         ></div>
         <!-- <ContentRenderer
-          class="mb-12 prose prose-h1:font-normal prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-p:prose-blockquote:text-2xl prose-p:prose-blockquote:font-normal last:prose-p:prose-blockquote:text-lg last:prose-p:prose-blockquote:text-dark-gray last:prose-p:prose-blockquote:not-italic prose-blockquote:my-12 prose-p:font-light"
+          class="mb-12 prose prose-h1:font-normal prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-blockquote:prose-p:text-2xl prose-blockquote:prose-p:font-normal prose-blockquote:prose-p:last:text-lg prose-blockquote:prose-p:last:text-dark-gray prose-blockquote:prose-p:last:not-italic prose-blockquote:my-12 prose-p:font-light"
           :value="blog"
         /> -->
       </div>
       <!-- <div
-      class="px-0 mt-12 prose lg:px-44 prose-h1:font-normal prose-h1:mb-2 prose-h1:mt-12 prose-p:mt-0 prose-p:dark-gray prose-p:font-light prose-blockquote:border-l-primary prose-p:prose-blockquote:text-xl prose-p:prose-blockquote:font-normal"
+      class="px-0 mt-12 prose lg:px-44 prose-h1:font-normal prose-h1:mb-2 prose-h1:mt-12 prose-p:mt-0 prose-p:dark-gray prose-p:font-light prose-blockquote:border-l-primary prose-blockquote:prose-p:text-xl prose-blockquote:prose-p:font-normal"
       v-html="body"
     ></div> -->
 

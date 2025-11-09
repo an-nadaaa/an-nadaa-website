@@ -15,7 +15,7 @@
       </template>
     </flicking>
     <div class="container">
-      <div class="grid grid-cols-1 sm:hidden gap-y-4">
+      <div class="grid grid-cols-1 gap-y-4 sm:hidden">
         <TestimonialCard
           class=""
           v-for="(testimonial, index) in testimonials.slice(0, 4)"
@@ -23,7 +23,7 @@
           :testimonial="testimonial"
         ></TestimonialCard>
         <div class="px-0">
-          <Button :variant="'white'" class="w-full py-4">View all</Button>
+          <Button :variant="'white'" class="py-4 w-full">View all</Button>
         </div>
       </div>
     </div>
@@ -92,6 +92,8 @@ const plugins = [new Pagination({ type: "bullet" })]
 </script>
 
 <style>
+@reference "~/assets/css/tailwind.css";
+
 .flicking-pagination-bullet {
   @apply bg-gray-300 hover:bg-blue-400;
 }

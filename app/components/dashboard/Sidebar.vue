@@ -8,7 +8,7 @@
         :src="appConfig.logo.whiteLargeText"
       ></NuxtImg>
     </NuxtLink>
-    <div class="w-full border-gray-600 border-b-[1px] mb-4"></div>
+    <div class="w-full border-gray-600 border-b mb-4"></div>
     <div class="flex flex-col justify-between h-full">
       <div>
         <NuxtLink :to="$localePath('/dashboard')">
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="w-full border-gray-600 border-b-[1px] mb-4"></div>
+    <div class="w-full border-gray-600 border-b mb-4"></div>
   </div>
 </template>
 <script setup lang="ts">

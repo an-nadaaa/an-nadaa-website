@@ -20,6 +20,8 @@ defineProps({
 </script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 .purple {
   @apply bg-purple-100 text-purple-700;
 }

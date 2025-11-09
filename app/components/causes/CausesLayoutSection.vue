@@ -96,7 +96,7 @@
     </div>
 
     <Button
-      class="flex items-center justify-center w-full hover:bg-slate-300 hover:cursor-pointer sm:hidden gap-x-2"
+      class="flex gap-x-2 justify-center items-center w-full hover:bg-slate-300 hover:cursor-pointer sm:hidden"
       :variant="'white'"
       @click="isFilterExpanded = !isFilterExpanded"
     >
@@ -136,7 +136,7 @@
     </div>
     <div
       v-if="causes.length > 0"
-      class="flex justify-between w-full mt-4 gap-x-2"
+      class="flex gap-x-2 justify-between mt-4 w-full"
     >
       <Button
         class="w-full sm:w-44"
@@ -389,6 +389,8 @@ onMounted(() => {
 </script>
 
 <style>
+@reference "~/assets/css/tailwind.css";
+
 .select-label {
   @apply text-sm text-gray-600 mb-2;
 }

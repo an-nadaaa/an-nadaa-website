@@ -94,7 +94,7 @@
     </div>
     <!-- Mobile Navigation -->
     <div
-      class="z-[1000] container fixed w-screen h-screen top-0 sm:hidden bg-dark-blue transition-transform transform"
+      class="z-1000 container fixed w-screen h-screen top-0 sm:hidden bg-dark-blue transition-transform transform"
       :class="mobileNavigationVisible ? 'translate-x-0' : 'translate-x-full'"
     >
       <div class="flex justify-between py-4">
@@ -174,7 +174,7 @@
   </div>
 
   <div
-    class="fixed sm:hidden bottom-0 px-4 py-5 z-[99] w-full bg-dark-blue transition-transform transform"
+    class="fixed sm:hidden bottom-0 px-4 py-5 z-99 w-full bg-dark-blue transition-transform transform"
     :class="
       donateButtonVisible && !isCheckoutOrDonate
         ? 'translate-y-0'
@@ -189,7 +189,7 @@
   <!-- <NuxtLink :to="'/donate'">
     <div
       v-if="!isButtonVisible"
-      class="fixed bottom-0 z-[100] w-full py-3 sm:hidden bg-primary"
+      class="fixed bottom-0 z-100 w-full py-3 sm:hidden bg-primary"
     >
       <p class="text-lg text-center text-white">Donate now</p>
     </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="container py-8">
     <h1 class="">Get in touch to start collaboration/projects with An-Nadaa</h1>
-    <div class="grid mt-8 sm:grid-cols-2 gap-x-8 gap-y-8 sm:gap-y-20">
+    <div class="grid gap-x-8 gap-y-8 mt-8 sm:grid-cols-2 sm:gap-y-20">
       <Card class="p-6 space-y-3 text-foreground">
         <h3 class="font-medium">Emails</h3>
         <p class="font-light text-dark-gray">
@@ -62,11 +62,11 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 h1 {
   @apply font-medium text-4xl text-balance;
 }

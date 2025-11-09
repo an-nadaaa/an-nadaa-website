@@ -2,7 +2,7 @@
   <div class="relative">
     <img
       src="assets/media/img/Line.svg"
-      class="absolute top-0 right-0 hidden h-60 sm:block -z-0"
+      class="absolute top-0 right-0 hidden h-60 sm:block z-0"
     />
 
     <div class="container py-12">

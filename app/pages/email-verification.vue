@@ -18,7 +18,7 @@
       <NuxtLink to="/login">
         <div class="relative pt-4 mx-auto w-fit">
           <Icon
-            class="absolute text-gray-500 left-0 bottom-[1px]"
+            class="absolute text-gray-500 left-0 bottom-px"
             name="lucide:arrow-left"
           />
           <p class="pl-6 text-sm text-center text-gray-500">Back to log in</p>

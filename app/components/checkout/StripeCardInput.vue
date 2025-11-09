@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      :class="`px-3 py-[10px] h-[40px] border border-gray-200 text-primary font-thin rounded-md outline-none animate-none ${
+      :class="`px-3 py-[10px] h-[40px] border border-gray-200 text-primary font-thin rounded-md outline-hidden animate-none ${
         isStripeLoaded ? 'bg-white' : 'bg-slate-300 animate-pulse'
       }`"
       ref="cardElement"
