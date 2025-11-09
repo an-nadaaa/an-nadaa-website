@@ -42,7 +42,7 @@
     "qs": "^6.13.0",
     "radix-vue": "^1.9.4",
     "sanitize-html": "^2.13.0",
-    "shadcn-nuxt": "^0.10.4",
+    "shadcn-nuxt": "https://pkg.pr.new/shadcn-nuxt@1418",
     "stripe": "17.3.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",

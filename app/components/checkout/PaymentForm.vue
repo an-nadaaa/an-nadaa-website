@@ -118,8 +118,8 @@ import {
 
 import StripeCardInput from "./StripeCardInput.vue"
 import type { StripeCardElement } from "@stripe/stripe-js"
-import { useStripe } from "~/composables/useStripe"
-import { useToast } from "~/composables/useToast"
+// import { useStripe } from "~/composables/useStripe"
+// import { useToast } from "~/composables/useToast"
 
 type DonationDetails = {
   causeSelected: string

@@ -225,7 +225,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import BankDetails from "~/components/global/BankDetails.vue"
+// import BankDetails from "~/components/global/BankDetails.vue"
 import "@egjs/flicking-plugins/dist/flicking-plugins.css"
 import VueEasyLightbox from "vue-easy-lightbox"
 import Flicking from "@egjs/vue3-flicking"
@@ -274,7 +274,6 @@ useHead({
   title: cause.title,
   meta: [
     {
-      hid: "description",
       name: "description",
       content: cause.description,
     },

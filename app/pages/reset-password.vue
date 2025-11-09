@@ -13,7 +13,7 @@
           Worry not! A few more clicks to get you back into your account.
         </p>
   
-        <form class="w-full mt-6 space-y-4 pb-28" @submit="onSubmit">
+        <form class="pb-28 mt-6 space-y-4 w-full" @submit="onSubmit">
           <FormField v-slot="{ componentField }" name="password">
             <FormItem>
               <FormControl>
@@ -51,7 +51,7 @@
           <NuxtLink to="/login">
             <div class="relative pt-4 mx-auto w-fit">
               <Icon
-                class="absolute text-gray-500 left-0 bottom-px"
+                class="absolute left-0 bottom-px text-gray-500"
                 name="lucide:arrow-left"
               />
               <p class="pl-6 text-sm text-center text-gray-500">Back to log in</p>
@@ -81,7 +81,6 @@ import { useForm } from "vee-validate"
 import * as z from "zod" 
 import { Toaster } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/toast"
-
 
 const route = useRoute()
 const router = useRouter()

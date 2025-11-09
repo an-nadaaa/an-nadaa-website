@@ -125,7 +125,7 @@
       <NuxtLink
         v-if="!isLoading"
         v-for="(cause, index) in causes"
-        :id="index"
+        :id="index.toString()"
         :to="'/causes/' + cause.documentId"
       >
         <CauseCard
