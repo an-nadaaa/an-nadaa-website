@@ -7,6 +7,10 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
+  shadcn: {
+    prefix: "",
+    componentDir: "./app/components/ui", // Change to new directory
+  },
   future: {
     compatibilityVersion: 4,
   },

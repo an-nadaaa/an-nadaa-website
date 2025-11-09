@@ -4,14 +4,14 @@
   "typescript": true,
   "tsConfigPath": "tsconfig.json",
   "tailwind": {
-    "config": "tailwind.config.js",
-    "css": "assets/css/tailwind.css",
+    "config": "",
+    "css": "~/assets/css/tailwind.css",
     "baseColor": "slate",
     "cssVariables": true
   },
   "framework": "nuxt",
   "aliases": {
-    "components": "components",
+    "components": "~/components",
     "utils": "~/lib/utils"
   }
 }
