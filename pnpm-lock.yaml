@@ -27,8 +27,8 @@ dependencies:
     specifier: 10.2.0
     version: 10.2.0(eslint@9.39.1)(rollup@4.52.5)(vue@3.5.24)
   '@nuxtjs/strapi':
-    specifier: 2.0.0
-    version: 2.0.0
+    specifier: 2.1.0
+    version: 2.1.0
   '@pinia/nuxt':
     specifier: ^0.5.3
     version: 0.5.5(typescript@5.9.3)(vue@3.5.24)
@@ -94,7 +94,7 @@ dependencies:
     version: 2.17.0
   shadcn-nuxt:
     specifier: https://pkg.pr.new/shadcn-nuxt@1418
-    version: '@pkg.pr.new/shadcn-nuxt@1418'
+    version: '@pkg.pr.new/shadcn-nuxt/1418'
   stripe:
     specifier: 17.3.1
     version: 17.3.1
@@ -1774,8 +1774,8 @@ packages:
       - supports-color
     dev: false
 
-  /@nuxtjs/strapi@2.0.0:
-    resolution: {integrity: sha512-6Q34PQd980ruBTaMzVx23V/GP3YeoqWt9NKxVG79d1TJMwpKHCkFqZEN5jI/2csMyncYuzP4ozt2lIi5JYTudA==}
+  /@nuxtjs/strapi@2.1.0:
+    resolution: {integrity: sha512-buRdrc2hJtcY6WEdiMKSQOAEcWGHDhwxrjf6PCJPCe8A6roE5dwgBlCYZ8qbOFg/DJYU8KUjU6nHlm8Anjj33Q==}
     dependencies:
       '@nuxt/kit': 3.20.1
       defu: 6.1.4
@@ -9592,7 +9592,7 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  '@pkg.pr.new/shadcn-nuxt@1418':
+  '@pkg.pr.new/shadcn-nuxt/1418':
     resolution: {tarball: https://pkg.pr.new/shadcn-nuxt@1418}
     name: shadcn-nuxt
     version: 2.2.0

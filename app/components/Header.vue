@@ -217,8 +217,14 @@ const logo = appConfig.logo.white
 const route = useRoute()
 const isCheckoutOrDonate = computed(() => {
   return (
-    ["/checkout", "/donate", "/causes"].includes(route.path) ||
-    /^\/causes\/[a-zA-Z0-9]+$/.test(route.path)
+    [
+      "/checkout",
+      "/donate",
+      "/causes",
+      "/login",
+      "/register",
+      "/forgot-password",
+    ].includes(route.path) || /^\/causes\/[a-zA-Z0-9]+$/.test(route.path)
   )
 })
 

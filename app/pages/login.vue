@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center w-screen h-screen">
+  <div class="flex items-center w-screen">
     <div class="container max-w-lg">
       <NuxtLink :to="$localePath('/')">
         <NuxtImg
@@ -51,10 +51,10 @@
               type="checkbox"
               name="rememberMe"
             >
-              <FormItem class="">
-                <FormControl>
+              <FormItem class="relative">
+                <FormControl class="absolute top-1/2 -translate-y-1/2">
                   <Checkbox
-                    class="absolute border-gray-300 bottom-[3px]"
+                    class="border-gray-300"
                     :checked="value"
                     @update:checked="handleChange"
                   />
@@ -73,7 +73,14 @@
         </div>
 
         <div class="space-y-3">
-          <Button type="submit" class="w-full"> Sign in </Button>
+          <Button
+            type="submit"
+            class="w-full"
+            :isLoading="isLoading"
+            :disabled="isLoading"
+          >
+            Sign in
+          </Button>
           <!-- <Button class="gap-2 w-full" variant="white">
             <Icon name="logos:google-icon"></Icon> Sign in with Google
           </Button> -->
@@ -108,14 +115,13 @@ import { Input } from "@/components/ui/input"
 import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Toaster } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/toast"
 import * as z from "zod"
 
 const { toast } = useToast()
 const router = useRouter()
 const { login } = useStrapiAuth()
-
+const isLoading = ref(false)
 const formSchema = toTypedSchema(
   z.object({
     email: z
@@ -133,6 +139,7 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   try {
+    isLoading.value = true
     await login({ identifier: values.email, password: values.password })
 
     router.push("/dashboard")
@@ -144,6 +151,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       description: e.error.message,
       variant: "destructive",
     })
+    isLoading.value = false
   }
 })
 </script>

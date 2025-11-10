@@ -22,7 +22,7 @@
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-6">
         <NuxtLink
           v-for="(cause, index) in causes.slice(0, 5)"
-          :id="index"
+          :id="index.toString()"
           :to="'/causes/' + cause.documentId"
           :class="`${
             index === 0 || index === 1 ? 'sm:col-span-3' : 'sm:col-span-2'

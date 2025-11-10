@@ -1,9 +1,8 @@
 <template>
-  <Toaster />
-  <div class="flex items-center w-screen h-screen">
+  <div class="flex items-center w-screen">
     <div class="container max-w-lg">
       <NuxtImg
-        class="w-10 mx-auto"
+        class="mx-auto w-10"
         :src="appConfig.logo.symbol_color"
       ></NuxtImg>
       <h2 class="mt-6 text-2xl font-medium text-center sm:text-3xl">
@@ -13,7 +12,7 @@
         Enter your details to create an account
       </p>
 
-      <form class="w-full mt-6 space-y-4 pb-28" @submit="onSubmit">
+      <form class="pb-28 mt-6 space-y-4 w-full" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
             <FormLabel class="text-slate-600">Name*</FormLabel>
@@ -59,8 +58,11 @@
         </FormField>
 
         <div class="space-y-3">
-          <Button type="submit" class="w-full"> Create account </Button>
-          <!-- <Button class="w-full gap-2" variant="white">
+          <Button type="submit" class="w-full" :disabled="isLoading">
+            <template v-if="!isLoading"> Create account </template>
+            <template v-else> <VueSpinnerBars /> </template>
+          </Button>
+          <!-- <Button class="gap-2 w-full" variant="white">
             <Icon name="logos:google-icon"></Icon> Sign up with Google
           </Button> -->
         </div>
@@ -94,7 +96,9 @@ import { useForm } from "vee-validate"
 import * as z from "zod"
 import { Toaster } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/toast"
+import { VueSpinnerBars } from "vue3-spinners"
 
+const isLoading = ref(false)
 const { toast } = useToast()
 const { register } = useStrapiAuth()
 const router = useRouter()
@@ -115,6 +119,7 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
   try {
+    isLoading.value = true
     await register({
       name: values.name,
       username: values.email,
@@ -122,7 +127,7 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
     })
 
-    router.push({ path: "/email-verification", query: { email: values.email } })
+    router.push({ path: "/check-email", query: { email: values.email } })
   } catch (e: any) {
     console.log(e)
 
@@ -131,6 +136,7 @@ const onSubmit = handleSubmit(async (values) => {
       description: e.error.message,
       variant: "destructive",
     })
+    isLoading.value = false
   }
 })
 </script>

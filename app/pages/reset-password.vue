@@ -1,5 +1,5 @@
 <template>
-  <Toaster />
+
     <div class="flex items-center w-screen h-screen">
       <div class="container max-w-lg">
         <img
@@ -79,7 +79,6 @@ import { Input } from "@/components/ui/input"
 import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
 import * as z from "zod" 
-import { Toaster } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/toast"
 
 const route = useRoute()

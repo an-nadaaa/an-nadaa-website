@@ -1,5 +1,5 @@
 <template>
-  <div class="container grid py-4 sm:py-10 gap-x-8 gap-y-2 sm:grid-cols-2">
+  <div class="container grid gap-y-2 gap-x-8 py-4 sm:py-10 sm:grid-cols-2">
     <div class="sm:col-span-2">
       <NuxtLink class="w-fit" @click="() => router.back()">
         <div class="relative mb-2 w-fit hover:underline">
@@ -46,7 +46,7 @@
             Edit</Button
           >
           <h3 class="font-normal">Your donation</h3>
-          <img :src="logo" class="w-32 my-4" />
+          <img :src="logo" class="my-4 w-32" />
 
           <h4 class="font-medium">Donation</h4>
           <p class="font-light text-dark-gray">
@@ -70,8 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStrapiFetch } from "~/composables/useStrapiFetch"
-import DonateCard from "~/components/checkout/DonateCard.vue"
+import DonateCard from "@/components/cause/DonateCard.vue"
 
 const strapiFetch = useStrapiFetch()
 const appConfig = useAppConfig()
