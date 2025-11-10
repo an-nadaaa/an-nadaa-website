@@ -1,6 +1,5 @@
 <template>
-
-    <div class="flex items-center w-screen h-screen">
+    <div class="flex items-center w-screen">
       <div class="container max-w-lg">
         <img
           class="mx-auto w-14"
@@ -45,7 +44,7 @@
 
   
           <div class="space-y-3">
-            <Button type="submit" class="w-full"> Change password </Button>
+            <Button type="submit" class="w-full" :isLoading="isLoading" :disabled="isLoading"> Change password </Button>
           </div>
   
           <NuxtLink to="/login">
@@ -84,12 +83,13 @@ import { useToast } from "@/components/ui/toast"
 const route = useRoute()
 const router = useRouter()
 const { code } = route.query
+const isLoading = ref(false)
 
 if(!code) router.replace('/login')
 const { toast } = useToast()
 const formSchema = toTypedSchema(
   z.object({
-    password: z.string().min(8).regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, "Password must contain at least one letter and one number"),
+    password: z.string().min(8).regex(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/, "Password must contain at least one letter and one number"),
     passwordConfirmation: z.string().min(8)
   }).refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
@@ -105,6 +105,7 @@ const { resetPassword } = useStrapiAuth()
 
 const onSubmit = handleSubmit(async (values) => {
   try{
+    isLoading.value = true
     await resetPassword({ code: code as string, password: values.password, passwordConfirmation: values.passwordConfirmation })
 
     toast({
@@ -114,6 +115,7 @@ const onSubmit = handleSubmit(async (values) => {
 
     router.replace('/login')
   }catch(e:any){
+    isLoading.value = false
     console.log(e)
 
     toast({

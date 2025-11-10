@@ -29,7 +29,7 @@
           </FormField>
   
           <div class="space-y-3">
-            <Button type="submit" class="w-full"> Reset password </Button>
+            <Button type="submit" class="w-full" :isLoading="isLoading" :disabled="isLoading"> Reset password </Button>
           </div>
   
           <NuxtLink to="/login">
@@ -46,7 +46,7 @@
     </div>
   </template>
   <template v-else>
-      <div class="flex items-center w-screen h-screen">
+      <div class="flex items-center w-screen">
     <div class="container max-w-xl">
       <img class="mx-auto w-14" src="assets/media/img/icons/email.svg" />
       <h2 class="mt-6 text-2xl font-medium text-center sm:text-3xl">
@@ -96,6 +96,7 @@ import { useForm } from "vee-validate"
 import * as z from "zod" 
 import { useToast } from "@/components/ui/toast"
 
+const isLoading = ref(false)
 const emailSent = ref(false)
 const email = ref("")
 const { toast } = useToast()
@@ -139,12 +140,13 @@ const openEmailProvider = () => {
 
 const onSubmit = handleSubmit(async (values) => {
   try{
-    console.log(values.email)
+    isLoading.value = true
     await forgotPassword({ email: values.email })
     
     email.value = values.email
     emailSent.value = true
   }catch(e:any){
+    isLoading.value = false
     console.log(e)
 
     toast({
