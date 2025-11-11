@@ -48,6 +48,22 @@ export default defineNuxtConfig({
         process.env.NODE_ENV === "production"
           ? process.env.STRAPI_API_KEY_PROD
           : process.env.STRAPI_API_KEY_DEV,
+      strapi: {
+        url:
+          process.env.NODE_ENV === "production"
+            ? process.env.STRAPI_API_PROD
+            : process.env.STRAPI_API_DEV,
+        prefix: "",
+        admin: "/admin",
+        version: "v5",
+        cookie: {
+          path: "/",
+          maxAge: 14 * 24 * 60 * 60,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: false,
+        },
+        cookieName: "strapi_jwt",
+      },
     },
     STRIPE_SK:
       process.env.NODE_ENV === "production"
@@ -57,13 +73,14 @@ export default defineNuxtConfig({
 
   modules: [
     "@vueuse/nuxt",
-    "shadcn-nuxt",
-    "@pinia/nuxt", // "shadcn/nuxt",
+    "shadcn-nuxt", // "shadcn/nuxt",
+    "@pinia/nuxt",
     "@nuxt/icon",
     "@nuxtjs/i18n",
     "@nuxt/content",
     "@nuxt/image",
     "@nuxtjs/strapi",
+    "nuxt-auth-utils",
   ],
   postcss: {
     plugins: {
@@ -76,8 +93,11 @@ export default defineNuxtConfig({
     },
   },
   strapi: {
-    url: process.env.STRAPI_URL || "http://localhost:1337",
-    prefix: "/api",
+    url:
+      process.env.NODE_ENV === "production"
+        ? process.env.STRAPI_API_PROD
+        : process.env.STRAPI_API_DEV,
+    prefix: "",
     admin: "/admin",
     version: "v5",
     cookie: {
@@ -97,7 +117,7 @@ export default defineNuxtConfig({
       // { code: "sw", name: "Swahili", file: "sw.json" },
     ],
     defaultDirection: "ltr",
-    lazy: true,
+    // lazy: true,
     strategy: "prefix_except_default",
   },
   vue: {

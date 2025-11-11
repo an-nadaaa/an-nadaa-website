@@ -37,7 +37,6 @@ useHead({
   title: cause.title,
   meta: [
     {
-      hid: "description",
       name: "description",
       content: cause.description,
     },

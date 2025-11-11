@@ -38,6 +38,7 @@
     "mdast-util-to-markdown": "^2.1.0",
     "micromark": "^4.0.0",
     "nuxt": "^4.2.1",
+    "nuxt-auth-utils": "0.5.25",
     "pluralize": "^8.0.0",
     "qs": "^6.13.0",
     "radix-vue": "^1.9.4",

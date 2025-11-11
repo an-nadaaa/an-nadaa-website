@@ -24,7 +24,7 @@
     </div>
 
     <div class="lg:px-16">
-      <div class="w-full overflow-hidden h-96 rounded-2xl">
+      <div class="overflow-hidden w-full h-96 rounded-2xl">
         <NuxtImg
           class="object-cover w-full h-full"
           :alt="blog?.title"
@@ -50,33 +50,33 @@
     ></div> -->
 
       <div
-        class="flex flex-col justify-between w-full mt-4 gap-y-3 sm:flex-row"
+        class="flex flex-col gap-y-3 justify-between mt-4 w-full sm:flex-row"
       >
         <p class="text-dark-gray">Share this post</p>
 
         <div class="flex gap-x-2">
-          <Button :variant="'white'" @click="handleCopyLink">
+          <Button :variant="'outline'" @click="handleCopyLink">
             <Icon v-if="!copyClicked" name="lucide:copy" class="mr-2" />
             {{ copyClicked ? "Copied!" : "Copy link" }}
           </Button>
           <Button
             @click="handleTwitterClick"
             class="p-1 text-dark-gray"
-            :variant="'white'"
+            :variant="'outline'"
           >
             <Icon name="bxl:twitter" class="w-6" />
           </Button>
           <Button
             @click="handleFacebookClick"
             class="p-1 text-dark-gray"
-            :variant="'white'"
+            :variant="'outline'"
           >
             <Icon name="bxl:facebook-circle" class="w-6" />
           </Button>
           <Button
             @click="handleLinkedinClick"
             class="p-1 text-dark-gray"
-            :variant="'white'"
+            :variant="'outline'"
           >
             <Icon name="bxl:linkedin-square" class="w-6" />
           </Button>

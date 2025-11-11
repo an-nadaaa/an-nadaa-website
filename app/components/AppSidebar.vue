@@ -112,9 +112,12 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 
+// const { logout } = useStrapiAuth()
+const { clear, user: userSession } = useUserSession()
+const user = computed(() => userSession.value.user)
 const route = useRoute()
 const router = useRouter()
-const user = useStrapiUser()
+// const user = useStrapiUser()
 const appConfig = useAppConfig()
 
 // Navigation items
@@ -184,8 +187,7 @@ const isActive = (url: string) => {
 
 // Handle logout
 const handleLogout = async () => {
-  // TODO: Implement logout functionality
-  // For now, redirect to login
+  clear()
   await router.push("/login")
 }
 </script>

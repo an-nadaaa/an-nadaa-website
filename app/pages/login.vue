@@ -140,15 +140,36 @@ const form = useForm({
 const onSubmit = form.handleSubmit(async (values) => {
   try {
     isLoading.value = true
-    await login({ identifier: values.email, password: values.password })
 
-    router.push("/dashboard")
+    await $fetch("/api/login", {
+      method: "POST",
+      body: {
+        email: values.email,
+        password: values.password,
+      },
+    }).then((res) => {
+      console.log("login successful")
+      router.push("/dashboard")
+    })
+    // Manually set the cookie using the proper config as strapi nuxt plugin is not logging in properly
+    // It will call login endpoint successfully but not setting the cookie
+    // const tokenCookie = useCookie("strapi_jwt", {
+    //   path: "/",
+    //   maxAge: 14 * 24 * 60 * 60,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: true,
+    // })
+    // tokenCookie.value = jwt as string
+
+    // const { setUser } = useStrapiAuth()
+    // setUser(user as any)
   } catch (e: any) {
-    console.log(e)
-
     toast({
       title: "Error logging in",
-      description: e.error.message,
+      description:
+        e?.status === 401
+          ? "Wrong email or password"
+          : e?.message || "An unknown error occurred",
       variant: "destructive",
     })
     isLoading.value = false
