@@ -118,9 +118,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/toast"
 import * as z from "zod"
 
+const { loggedIn, fetch: refreshSession } = useUserSession()
+if (loggedIn.value) {
+  navigateTo("/dashboard")
+}
 const { toast } = useToast()
-const router = useRouter()
-const { login } = useStrapiAuth()
 const isLoading = ref(false)
 const formSchema = toTypedSchema(
   z.object({
@@ -147,22 +149,10 @@ const onSubmit = form.handleSubmit(async (values) => {
         email: values.email,
         password: values.password,
       },
-    }).then((res) => {
-      console.log("login successful")
-      router.push("/dashboard")
+    }).then(async (res) => {
+      await refreshSession()
+      navigateTo("/dashboard")
     })
-    // Manually set the cookie using the proper config as strapi nuxt plugin is not logging in properly
-    // It will call login endpoint successfully but not setting the cookie
-    // const tokenCookie = useCookie("strapi_jwt", {
-    //   path: "/",
-    //   maxAge: 14 * 24 * 60 * 60,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: true,
-    // })
-    // tokenCookie.value = jwt as string
-
-    // const { setUser } = useStrapiAuth()
-    // setUser(user as any)
   } catch (e: any) {
     toast({
       title: "Error logging in",

@@ -189,6 +189,8 @@ definePageMeta({
 const { user, loggedIn } = useUserSession()
 
 if (!loggedIn.value) {
+  console.log("not logged in, redirecting to login")
+
   navigateTo("/login")
 }
 

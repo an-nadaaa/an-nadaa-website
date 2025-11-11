@@ -1,4 +1,5 @@
 <template>
+  {{ loggedIn }}
   <Sidebar class="text-white">
     <SidebarHeader>
       <NuxtLink
@@ -113,8 +114,16 @@ import {
 } from "@/components/ui/sidebar"
 
 // const { logout } = useStrapiAuth()
-const { clear, user: userSession } = useUserSession()
-const user = computed(() => userSession.value.user)
+const {
+  clear: logout,
+  user: userSession,
+  loggedIn,
+  fetch: refreshSession,
+} = useUserSession()
+const user = computed(() => {
+  if (!userSession.value) return null
+  userSession.value.user
+})
 const route = useRoute()
 const router = useRouter()
 // const user = useStrapiUser()
@@ -155,29 +164,32 @@ const utilityItems = [
 
 // Get user initials for avatar
 const userInitials = computed(() => {
-  if (!user.value) return "U"
-  const name = user.value.username || user.value.email || ""
-  const parts = name.split(" ")
-  if (parts.length >= 2) {
-    const first = parts[0]?.[0]
-    const second = parts[1]?.[0]
-    if (first && second) {
-      return (first + second).toUpperCase()
-    }
-  }
-  return name[0]?.toUpperCase() || "U"
+  return "U"
+  // if (!user.value) return "U"
+  // const name = user.value.user?.username || user.value.user?.email || ""
+  // const parts = name.split(" ")
+  // if (parts.length >= 2) {
+  //   const first = parts[0]?.[0]
+  //   const second = parts[1]?.[0]
+  //   if (first && second) {
+  //     return (first + second).toUpperCase()
+  //   }
+  // }
+  // return name[0]?.toUpperCase() || "U"
 })
 
 // Get user display name
 const userDisplayName = computed(() => {
-  if (!user.value) return "User"
-  return user.value.username || user.value.email?.split("@")[0] || "User"
+  return "User"
+  // if (!user.value) return "User"
+  // return user.value.username || user.value.email?.split("@")[0] || "User"
 })
 
 // Get user email
 const userEmail = computed(() => {
-  if (!user.value) return ""
-  return user.value.email || ""
+  return "user@example.com"
+  // if (!user.value) return ""
+  // return user.value.email || ""
 })
 
 // Check if route is active
@@ -187,7 +199,8 @@ const isActive = (url: string) => {
 
 // Handle logout
 const handleLogout = async () => {
-  clear()
-  await router.push("/login")
+  await logout()
+  await refreshSession()
+  navigateTo("/login")
 }
 </script>
