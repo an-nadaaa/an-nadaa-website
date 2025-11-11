@@ -1,13 +1,34 @@
-<template>
-  <div class="flex">
-    <Sidebar />
-    <div class="ml-[250px] flex-1 p-8">
-      <slot />
-    </div>
-  </div>
-</template>
 <script setup lang="ts">
-import Sidebar from "@/components/dashboard/Sidebar.vue"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import AppSidebar from "@/components/AppSidebar.vue"
+import SidebarStateSync from "@/components/SidebarStateSync.vue"
+import { useSidebarState } from "@/composables/useSidebarState"
+
+const { isCollapsed } = useSidebarState()
 </script>
 
-<style></style>
+<template>
+  <SidebarProvider>
+    <AppSidebar />
+    <SidebarStateSync />
+    <main class="flex flex-col flex-1 min-h-screen">
+      <div class="flex-1">
+        <div class="py-4 mb-4 w-full bg-white drop-shadow-sm">
+          <div
+            class="container flex gap-4 items-center"
+            :class="{ 'mx-auto': isCollapsed }"
+          >
+            <SidebarTrigger />
+          </div>
+        </div>
+        <!-- <div class="container flex-1 px-4 mx-auto w-full"> -->
+        <div
+          class="container px-8 pb-8 w-full"
+          :class="{ 'mx-auto': isCollapsed }"
+        >
+          <slot />
+        </div>
+      </div>
+    </main>
+  </SidebarProvider>
+</template>
