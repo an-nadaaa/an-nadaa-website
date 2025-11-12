@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
   if (event.method === "POST") {
     const body = await readBody(event)
     const runtimeConfig = useRuntimeConfig()
+    const { user: userSession } = await getUserSession(event)
 
     // Netlify Function (process-donation.js)
     const STRIPE_SK =
@@ -187,6 +188,7 @@ export default defineEventHandler(async (event) => {
           productId,
           causeId,
           id: cause.id,
+          userId: userSession?.user?.id,
           causeTitle: (cause as any).title || "",
         },
         customer: customer.id,

@@ -53,7 +53,7 @@
             {{
               causeSelected === "general"
                 ? "General Donation"
-                : causes.find((cause) => {
+                : causes.find((cause: any) => {
                     return causeSelected === cause.id
                   })?.name || "ERROR FINDING CAUSE"
             }}

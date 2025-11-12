@@ -59,7 +59,7 @@
           </p>
         </template>
         <NuxtLink :href="receiptUrl" target="_blank">
-          <Button class="mt-4 w-full" variant="white">View receipt</Button>
+          <Button class="mt-4 w-full" variant="outline">View receipt</Button>
         </NuxtLink>
         <NuxtLink :to="$localePath('/')">
           <Button class="mt-2 w-full">Goto home page</Button>

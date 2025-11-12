@@ -90,9 +90,13 @@
             </p>
           </div>
         </div>
-        <Button type="submit" :disabled="loading" class="mt-4 w-full">
-          <template v-if="!loading"> Donate </template>
-          <template v-else> <VueSpinnerBars /> </template>
+        <Button
+          type="submit"
+          :isLoading="loading"
+          :disabled="loading"
+          class="mt-4 w-full"
+        >
+          Donate
         </Button>
       </form>
     </CardContent>
@@ -100,10 +104,8 @@
 </template>
 
 <script setup lang="ts">
-import { VueSpinnerBars } from "vue3-spinners"
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card"
 import { Input } from "~/components/ui/input"
-import { Button } from "~/components/ui/button"
 import { useForm } from "vee-validate"
 import { toTypedSchema } from "@vee-validate/zod"
 import parsePhoneNumber from "libphonenumber-js"
@@ -128,6 +130,7 @@ type DonationDetails = {
   donationFrequency: string
 }
 const { toast } = useToast()
+const { user, loggedIn } = useUserSession()
 
 const donationDetails = defineModel<DonationDetails>("donationDetails", {
   type: Object as PropType<DonationDetails>,
@@ -169,36 +172,6 @@ const formSchema = toTypedSchema(
         }
       )
       .optional(),
-    // cardNumber: z.string().length(16, {
-    //   message: "Invalid card number",
-    // }),
-    // expiryDate: z
-    //   .string()
-    //   .regex(/^\d{2}\/\d{2}$/, {
-    //     message: "Please ensure it is in the format MM/YY",
-    //   })
-    //   .refine(
-    //     (value) => {
-    //       const [month, year] = value.split("/") as [string, string]
-    //       const expiryYear = parseInt(year, 10)
-    //       const expiryMonth = parseInt(month, 10)
-    //       return (
-    //         expiryYear > currentYear ||
-    //         (expiryYear === currentYear && expiryMonth >= currentMonth)
-    //       )
-    //     },
-    //     {
-    //       message: "Card has expired",
-    //     }
-    //   ),
-    // cvc: z
-    //   .string()
-    //   .length(3, {
-    //     message: "CVC must be 3 characters long",
-    //   })
-    //   .regex(/^\d+$/, {
-    //     message: "CVC must be a number",
-    //   }),
   })
 )
 

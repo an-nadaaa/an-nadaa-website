@@ -1,7 +1,7 @@
 <template>
   <div class="fixed right-0 bottom-0 bg-white">
     <p>is logged in {{ loggedIn }}</p>
-    <p>user {{ user?.user?.username }}</p>
+    <p>user {{ user?.user?.id }}</p>
     <p>token {{ user?.token?.slice(0, 20) }}...</p>
   </div>
 
