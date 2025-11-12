@@ -1,5 +1,4 @@
 <template>
-  {{ loggedIn }}
   <Sidebar class="text-white">
     <SidebarHeader>
       <NuxtLink
@@ -21,7 +20,7 @@
             <SidebarMenuItem v-for="item in navItems" :key="item.title">
               <NuxtLink :to="$localePath(item.url)">
                 <div
-                  class="flex gap-2 items-center px-2 py-4 rounded-md"
+                  class="flex gap-2 items-center px-2 py-4 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   :class="{ 'bg-sidebar-accent': isActive(item.url) }"
                 >
                   <component :is="item.icon" />
@@ -34,6 +33,13 @@
                 :is-active="isActive(item.url)"
               > -->
               <!-- </SidebarMenuButton> -->
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <NuxtLink :to="$localePath('/causes')">
+                <Button class="w-full font-light hover:cursor-pointer"
+                  >Donate now</Button
+                >
+              </NuxtLink>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
@@ -117,7 +123,6 @@ import {
 const {
   clear: logout,
   user: userSession,
-  loggedIn,
   fetch: refreshSession,
 } = useUserSession()
 const user = computed(() => {

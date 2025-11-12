@@ -55,7 +55,7 @@
       ></Input>
       <div class="absolute top-0 right-0">
         <Select v-model="currencySelector" class="">
-          <SelectTrigger class="border-l-0 rounded-l-none">
+          <SelectTrigger class="rounded-l-none border-l-0">
             <SelectValue />
           </SelectTrigger>
           <SelectContent class="">
@@ -83,15 +83,15 @@
       </NuxtLink>
       <Button
         @click="() => scrollToElement()"
-        variant="white"
-        class="w-full mt-2"
+        variant="outline"
+        class="mt-2 w-full font-light"
         >Donate to An-Nadaa bank account</Button
       >
     </div>
 
     <p
       @click="share"
-      class="flex items-center justify-center mt-4 font-light hover:cursor-pointer hover:underline"
+      class="flex justify-center items-center mt-4 font-light hover:cursor-pointer hover:underline"
     >
       <Icon name="lucide:share-2" class="mr-2"></Icon> Share with family and
       friends

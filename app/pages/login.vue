@@ -118,10 +118,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/toast"
 import * as z from "zod"
 
-const { loggedIn, fetch: refreshSession } = useUserSession()
-if (loggedIn.value) {
-  navigateTo("/dashboard")
-}
+const { fetch: refreshSession } = useUserSession()
 const { toast } = useToast()
 const isLoading = ref(false)
 const formSchema = toTypedSchema(

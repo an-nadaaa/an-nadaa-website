@@ -73,9 +73,9 @@
       </div>
       <div class="hidden items-center space-x-8 sm:flex">
         <NuxtLink
-          :to="$localePath('/login')"
+          :to="loggedIn ? $localePath('/dashboard') : $localePath('/login')"
           class="text-primary hover:text-blue-200"
-          >Log in</NuxtLink
+          >{{ loggedIn ? "Open Dashboard" : "Log in" }}</NuxtLink
         >
         <NuxtLink :to="$localePath('/donate')">
           <Button ref="donateButton">Donate</Button>
@@ -84,17 +84,17 @@
 
       <div class="flex items-center sm:hidden">
         <NuxtLink
-          :to="$localePath('/login')"
+          :to="loggedIn ? $localePath('/dashboard') : $localePath('/login')"
           class="mr-4 text-primary hover:text-blue-200"
         >
-          Log in
+          {{ loggedIn ? "Open Dashboard" : "Log in" }}
         </NuxtLink>
         <Icon @click="show" class="text-3xl" name="lucide:align-justify" />
       </div>
     </div>
     <!-- Mobile Navigation -->
     <div
-      class="z-1000 container fixed w-screen h-screen top-0 sm:hidden bg-dark-blue transition-transform transform"
+      class="container fixed top-0 w-screen h-screen transition-transform transform z-1000 sm:hidden bg-dark-blue"
       :class="mobileNavigationVisible ? 'translate-x-0' : 'translate-x-full'"
     >
       <div class="flex justify-between py-4">
@@ -146,10 +146,10 @@
           </template>
         </div>
         <NuxtLink
-          :to="$localePath('/login')"
+          :to="loggedIn ? $localePath('/dashboard') : $localePath('/login')"
           class="text-primary hover:text-blue-200"
         >
-          Log in
+          {{ loggedIn ? "Open Dashboard" : "Log in" }}
         </NuxtLink>
 
         <NuxtLink :to="$localePath('/donate')" @click="hide">
@@ -174,7 +174,7 @@
   </div>
 
   <div
-    class="fixed sm:hidden bottom-0 px-4 py-5 z-99 w-full bg-dark-blue transition-transform transform"
+    class="fixed bottom-0 px-4 py-5 w-full transition-transform transform sm:hidden z-99 bg-dark-blue"
     :class="
       donateButtonVisible && !isCheckoutOrDonate
         ? 'translate-y-0'
@@ -189,7 +189,7 @@
   <!-- <NuxtLink :to="'/donate'">
     <div
       v-if="!isButtonVisible"
-      class="fixed bottom-0 z-100 w-full py-3 sm:hidden bg-primary"
+      class="fixed bottom-0 py-3 w-full z-100 sm:hidden bg-primary"
     >
       <p class="text-lg text-center text-white">Donate now</p>
     </div>
@@ -206,9 +206,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 
-const isCauseOpen = ref(false)
-const isMobileCauseOpen = ref(false)
 const donateButton = ref(null)
+const { loggedIn } = useUserSession()
 const { mobileNavigationVisible, showMobileNavigation, hideMobileNavigation } =
   useMobileNavigation()
 

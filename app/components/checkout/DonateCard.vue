@@ -57,7 +57,7 @@
         ></Input>
         <div class="absolute top-0 right-0">
           <Select v-model="currencySelected" class="">
-            <SelectTrigger class="border-l-0 rounded-l-none">
+            <SelectTrigger class="rounded-l-none border-l-0">
               <SelectValue />
             </SelectTrigger>
             <SelectContent class="">
@@ -102,8 +102,8 @@
               }
             }
           "
-          variant="white"
-          class="w-full mt-2"
+          variant="outline"
+          class="mt-2 w-full font-light"
           >Donate to An-Nadaa bank account</Button
         >
       </div>

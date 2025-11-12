@@ -186,13 +186,7 @@ definePageMeta({
   layout: "dashboard",
 })
 
-const { user, loggedIn } = useUserSession()
-
-if (!loggedIn.value) {
-  console.log("not logged in, redirecting to login")
-
-  navigateTo("/login")
-}
+const { user } = useUserSession()
 
 const timeframeAlts = {
   "12months": "12 months",
