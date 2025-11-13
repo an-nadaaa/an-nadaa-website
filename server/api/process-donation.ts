@@ -1,32 +1,124 @@
 import Stripe from "stripe"
 
+const runtimeConfig = useRuntimeConfig()
+// Netlify Function (process-donation.js)
+const STRIPE_SK =
+  process.env.NODE_ENV === "production"
+    ? process.env.STRIPE_SK_PROD
+    : process.env.STRIPE_SK_DEV
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.BASE_URL_PROD
+    : process.env.BASE_URL_DEV
+const STRIPE_GENERAL_PRODUCT =
+  process.env.NODE_ENV === "production"
+    ? process.env.STRIPE_GENERAL_PRODUCT_ID_PROD
+    : process.env.STRIPE_GENERAL_PRODUCT_ID_DEV
+const STRAPI_BASE_URL = runtimeConfig.public.STRAPI_API
+const STRAPI_API_KEY = runtimeConfig.public.STRAPI_API_KEY
+
+const stripe = new Stripe(STRIPE_SK as string)
+
+async function createOneTimeDonation(
+  customerId: string,
+  donationAmount: number,
+  metadata: any = {},
+  productId = STRIPE_GENERAL_PRODUCT as string,
+  currency = "usd"
+) {
+  // Create a one-time price for this donation
+  const price = await stripe.prices.create({
+    product: productId,
+    unit_amount: donationAmount * 100, // Convert dollars to cents
+    currency: currency,
+    nickname: `One-time donation: $${donationAmount}`,
+  })
+
+  // Create a payment intent
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: donationAmount * 100,
+    currency: currency,
+    customer: customerId,
+    payment_method_types: ["card"],
+    description: `One-time donation of $${donationAmount}`,
+    metadata,
+  })
+
+  console.log(`✅ Payment Intent created for $${donationAmount}`)
+
+  return {
+    clientSecret: paymentIntent.client_secret as string,
+    paymentIntentId: paymentIntent.id,
+    amount: donationAmount,
+    priceId: price.id,
+  }
+}
+
+async function createMonthlyDonation(
+  customerId: string,
+  donationAmount: number,
+  metadata: any = {},
+  productId = STRIPE_GENERAL_PRODUCT as string,
+  currency = "usd"
+) {
+  // Create a unique price for this customer's chosen amount
+  const price = await stripe.prices.create({
+    product: productId,
+    unit_amount: donationAmount * 100,
+    currency: currency,
+    recurring: {
+      interval: "month",
+    },
+    nickname: `Custom ${donationAmount} USD/month`,
+  })
+
+  // Create subscription with the custom price
+  const subscription = await stripe.subscriptions.create({
+    customer: customerId,
+    items: [{ price: price.id }],
+    payment_behavior: "default_incomplete",
+    payment_settings: {
+      payment_method_types: ["card"],
+      save_default_payment_method: "on_subscription",
+    },
+    metadata,
+    expand: ["latest_invoice.payment_intent"],
+  })
+
+  console.log(`✅ Subscription created for $${donationAmount}/month`)
+
+  if (!subscription.latest_invoice) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Unable to create subscription",
+    })
+  }
+
+  if (!(subscription.latest_invoice as Stripe.Invoice).payment_intent) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Unable to create subscription",
+    })
+  }
+  // Extract the client secret from the payment intent
+  const paymentIntent = (subscription.latest_invoice as Stripe.Invoice)
+    .payment_intent as Stripe.PaymentIntent
+
+  return {
+    subscriptionId: subscription.id,
+    clientSecret: paymentIntent.client_secret,
+  }
+}
+
 export default defineEventHandler(async (event) => {
   if (event.method === "POST") {
     const body = await readBody(event)
-    const runtimeConfig = useRuntimeConfig()
     const { user: userSession } = await getUserSession(event)
 
-    // Netlify Function (process-donation.js)
-    const STRIPE_SK =
-      process.env.NODE_ENV === "production"
-        ? process.env.STRIPE_SK_PROD
-        : process.env.STRIPE_SK_DEV
-    const BASE_URL =
-      process.env.NODE_ENV === "production"
-        ? process.env.BASE_URL_PROD
-        : process.env.BASE_URL_DEV
-    const STRIPE_GENERAL_PRODUCT =
-      process.env.NODE_ENV === "production"
-        ? process.env.STRIPE_GENERAL_PRODUCT_ID_PROD
-        : process.env.STRIPE_GENERAL_PRODUCT_ID_DEV
-    const STRAPI_BASE_URL = runtimeConfig.public.STRAPI_API
-    const STRAPI_API_KEY = runtimeConfig.public.STRAPI_API_KEY
-
-    const stripe = new Stripe(STRIPE_SK as string),
-      headers = {
-        "Access-Control-Allow-Origin": BASE_URL, // Allow requests from our Strapi frontend
-        "Access-Control-Allow-Headers": "Content-Type",
-      }
+    const headers = {
+      "Access-Control-Allow-Origin": BASE_URL, // Allow requests from our Strapi frontend
+      "Access-Control-Allow-Headers": "Content-Type",
+    }
 
     const {
       paymentMethodId,
@@ -39,14 +131,9 @@ export default defineEventHandler(async (event) => {
       currency,
     } = body
 
-    let productId
+    console.log("body", body)
 
-    if (!causeId) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: "Cause ID is required",
-      })
-    }
+    let productId
 
     // Create or retrieve customer
     const customers = await stripe.customers.list({
@@ -131,86 +218,45 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (!cause) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "Cause not found",
-      })
-    }
-
     if (donationType === "monthly") {
-      // todo: enable monthly donations
-
-      return {
-        headers,
-        statusCode: 400,
-        body: JSON.stringify({ error: "Monthly donations are disabled" }),
-      }
-
-      // Create subscription
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [
-          {
-            price_data: {
-              currency: currency.toLowerCase(),
-              product: productId || STRIPE_GENERAL_PRODUCT,
-              unit_amount: amount,
-              recurring: {
-                interval: "month",
-              },
-            },
-          },
-        ],
-        payment_behavior: "default_incomplete",
-        payment_settings: {
-          payment_method_types: ["card"],
-          save_default_payment_method: "on_subscription",
+      const subscription = await createMonthlyDonation(
+        customer.id,
+        amount / 100,
+        {
+          productId: productId || STRIPE_GENERAL_PRODUCT,
+          causeId, // This is the document id
+          id: cause?.id, // This is the strapi int id
+          userId: userSession?.user?.id,
+          causeTitle: cause?.title || "GENERAL DONATION",
         },
-        expand: ["latest_invoice.payment_intent"],
-      })
+        productId || STRIPE_GENERAL_PRODUCT,
+        currency.toLowerCase()
+      )
 
       return {
-        subscriptionId: subscription.id,
-        clientSecret: (
-          (subscription?.latest_invoice as Stripe.Invoice)
-            .payment_intent as Stripe.PaymentIntent
-        ).client_secret,
+        subscriptionId: subscription.subscriptionId,
+        clientSecret: subscription.clientSecret,
       }
     } else {
       // Process one-time payment
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount, // amount in cents
-        currency: currency.toLowerCase(),
-        payment_method: paymentMethodId,
-        // confirm: true,
-        metadata: {
-          productId,
-          causeId,
-          id: cause.id,
+      const paymentIntent = await createOneTimeDonation(
+        customer.id,
+        amount / 100,
+        {
+          productId: productId || STRIPE_GENERAL_PRODUCT,
+          causeId, // This is the document id
+          id: cause?.id, // This is the strapi int id
           userId: userSession?.user?.id,
-          causeTitle: (cause as any).title || "",
+          causeTitle: cause?.title || "GENERAL DONATION",
         },
-        customer: customer.id,
-        automatic_payment_methods: {
-          enabled: true,
-          allow_redirects: "never",
-        },
-      })
+        productId || STRIPE_GENERAL_PRODUCT,
+        currency.toLowerCase()
+      )
 
       return {
-        paymentIntentId: paymentIntent.id,
-        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.paymentIntentId,
+        clientSecret: paymentIntent.clientSecret,
       }
-
-      // return {
-      //   headers,
-      //   statusCode: 200,
-      //   body: JSON.stringify({
-      //     paymentIntentId: paymentIntent.id,
-      //     clientSecret: paymentIntent.client_secret,
-      //   }),
-      // }
     }
   }
   // How to get method

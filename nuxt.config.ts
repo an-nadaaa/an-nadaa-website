@@ -97,6 +97,10 @@ export default defineNuxtConfig({
       process.env.NODE_ENV === "production"
         ? process.env.STRAPI_API_PROD
         : process.env.STRAPI_API_DEV,
+    token:
+      process.env.NODE_ENV === "production"
+        ? process.env.STRAPI_API_KEY_PROD
+        : process.env.STRAPI_API_KEY_DEV,
     prefix: "",
     admin: "/admin",
     version: "v5",

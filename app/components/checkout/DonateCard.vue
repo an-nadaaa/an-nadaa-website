@@ -1,5 +1,5 @@
 <template>
-  <Card class="pt-4">
+  <Card class="pt-4 outline-none">
     <CardContent>
       <h3 class="font-normal">Donation details</h3>
       <p class="font-light text-dark-gray">
@@ -7,17 +7,7 @@
       </p>
       <Tabs v-model="donationFrequency" default-value="one-time" class="mt-4">
         <TabsList class="w-full">
-          <TabsTrigger
-            value="monthly"
-            class="relative w-full pointer-events-none"
-          >
-            Monthly
-            <p
-              class="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-[15px] p-[2px] text-xs text-white border border-gray-200 rounded-sm bg-slate-300"
-            >
-              Coming soon
-            </p>
-          </TabsTrigger>
+          <TabsTrigger value="monthly" class="w-full"> Monthly </TabsTrigger>
           <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -132,7 +122,6 @@ const donationFrequency = defineModel("donationFrequency", {
   required: true,
 })
 
-// const amount = ref<any>("")
 const route = useRoute()
 const isCheckout = route.fullPath.includes("checkout")
 

@@ -20,7 +20,7 @@
       <transition name="blur">
         <div
           v-if="isEditing"
-          class="absolute inset-0 bg-white bg-opacity-50 backdrop-blur-xs"
+          class="flex absolute inset-0 z-10 justify-center items-center bg-opacity-50 backdrop-blur-xs"
         ></div>
       </transition>
     </div>
@@ -40,7 +40,7 @@
           <Button
             @click="isEditing = true"
             class="absolute top-0 right-0 mr-4"
-            variant="white"
+            variant="outline"
           >
             <Icon name="lucide:pen" class="mr-2" />
             Edit</Button
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import DonateCard from "@/components/cause/DonateCard.vue"
+import DonateCard from "@/components/checkout/DonateCard.vue"
 
 const strapiFetch = useStrapiFetch()
 const appConfig = useAppConfig()

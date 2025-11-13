@@ -29,19 +29,12 @@
     <p class="font-thin text-dark-gray">
       Your donation will make a difference no matter how little
     </p>
+    {{ toggleIndex }}
     <Tabs class="mt-4" v-model="toggleIndex" default-value="one-time">
       <TabsList class="w-full">
         <!-- todo: remove the coming soon block -->
-        <TabsTrigger
-          value="monthly"
-          class="relative w-full pointer-events-none"
-        >
+        <TabsTrigger value="monthly" class="relative w-full">
           Monthly
-          <p
-            class="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-[15px] p-[2px] text-xs text-white border border-gray-200 rounded-sm bg-slate-300"
-          >
-            Coming soon
-          </p>
         </TabsTrigger>
         <TabsTrigger value="one-time" class="w-full"> One-time </TabsTrigger>
       </TabsList>

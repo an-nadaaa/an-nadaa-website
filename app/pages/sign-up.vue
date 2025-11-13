@@ -13,14 +13,14 @@
       </p>
 
       <form class="pb-28 mt-6 space-y-4 w-full" @submit="onSubmit">
-        <FormField v-slot="{ componentField }" name="name">
+        <FormField v-slot="{ componentField }" name="username">
           <FormItem>
-            <FormLabel class="text-slate-600">Name*</FormLabel>
+            <FormLabel class="text-slate-600">Username*</FormLabel>
             <FormControl>
               <Input
                 class=""
                 type="text"
-                placeholder="Enter your name"
+                placeholder="Enter your username"
                 v-bind="componentField"
               />
             </FormControl>
@@ -104,7 +104,7 @@ const { register } = useStrapiAuth()
 const router = useRouter()
 const formSchema = toTypedSchema(
   z.object({
-    name: z.string().min(1, { message: "name is required" }),
+    username: z.string().min(1, { message: "Username is required" }),
     email: z
       .string()
       .email({ message: "Invalid email" })
@@ -121,9 +121,8 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     isLoading.value = true
     await register({
-      name: values.name,
-      username: values.email,
-      email: values.email,
+      username: values.username.toLocaleLowerCase(),
+      email: values.email.toLocaleLowerCase(),
       password: values.password,
     })
 

@@ -245,6 +245,7 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
     })
 
     const result = await response.json()
+
     const { clientSecret, paymentIntentId, subscriptionId } = result
 
     if (result.error) {
@@ -261,8 +262,6 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
       if (res.error) {
         throw new Error(res.error.message)
       }
-
-      console.log("Success", res)
 
       router.push({
         path: "/checkout/status",
@@ -284,8 +283,6 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
         throw new Error(res.error.message)
       }
 
-      console.log("Success", res)
-
       router.push({
         path: "/checkout/status",
         query: {
@@ -295,19 +292,13 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
     }
   } catch (err: any) {
     console.log(err)
+    loading.value = false
 
     toast({
       title: "Error processing payment",
-      description: err.message,
+      description: err,
       variant: "destructive",
     })
-
-    // paymentStatus.value = {
-    //   type: "error",
-    //   message: err.message,
-    // }
-  } finally {
-    loading.value = false
   }
 })
 

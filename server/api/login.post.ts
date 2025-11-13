@@ -5,7 +5,7 @@ const bodySchema = z.object({
   password: z.string().min(4),
 })
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event: any) => {
   const { email, password } = await readValidatedBody(event, bodySchema.parse)
 
   const runtimeConfig = useRuntimeConfig()

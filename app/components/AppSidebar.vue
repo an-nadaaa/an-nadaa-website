@@ -120,15 +120,8 @@ import {
 } from "@/components/ui/sidebar"
 
 // const { logout } = useStrapiAuth()
-const {
-  clear: logout,
-  user: userSession,
-  fetch: refreshSession,
-} = useUserSession()
-const user = computed(() => {
-  if (!userSession.value) return null
-  userSession.value.user
-})
+const { clear: logout, user, fetch: refreshSession } = useUserSession()
+
 const route = useRoute()
 const router = useRouter()
 // const user = useStrapiUser()
@@ -185,14 +178,14 @@ const userInitials = computed(() => {
 
 // Get user display name
 const userDisplayName = computed(() => {
-  return "User"
+  return user.value?.user.username
   // if (!user.value) return "User"
   // return user.value.username || user.value.email?.split("@")[0] || "User"
 })
 
 // Get user email
 const userEmail = computed(() => {
-  return "user@example.com"
+  return user.value?.user.email
   // if (!user.value) return ""
   // return user.value.email || ""
 })

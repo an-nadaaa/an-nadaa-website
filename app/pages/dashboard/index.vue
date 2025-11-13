@@ -8,7 +8,13 @@
     >
       <div>
         <h1 class="text-2xl font-medium sm:text-3xl">
-          As-salamu alaykum, {{ user?.username || "User" }}
+          As-Salamu'Alaikum,
+          {{
+            user?.user.username
+              ? user.user.username.charAt(0).toUpperCase() +
+                user.user.username.slice(1)
+              : ""
+          }}
         </h1>
         <p class="mt-1 text-sm text-gray-400 sm:text-base">
           See all donations you have made so far
@@ -18,7 +24,9 @@
         <Button variant="outline" class="w-full sm:w-auto">
           <Icon name="lucide:cloud-download" class="mr-2" />Export Donations
         </Button>
-        <Button class="w-full sm:w-auto">Donate</Button>
+        <NuxtLink :to="$localePath('/causes')">
+          <Button class="w-full sm:w-auto">Donate</Button>
+        </NuxtLink>
       </div>
     </div>
 
