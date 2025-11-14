@@ -65,6 +65,8 @@
     "@iconify-json/lucide": "^1.1.207",
     "@iconify-json/solar": "^1.2.2",
     "@iconify-json/tabler": "^1.2.16",
+    "@strapi/strapi": "^5.31.0",
+    "@strapi/types": "^5.31.0",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.14",
     "@types/qs": "^6.9.16",

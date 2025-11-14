@@ -20,7 +20,7 @@
             <SidebarMenuItem v-for="item in navItems" :key="item.title">
               <NuxtLink :to="$localePath(item.url)">
                 <div
-                  class="flex gap-2 items-center px-2 py-4 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  class="flex gap-2 items-center px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   :class="{ 'bg-sidebar-accent': isActive(item.url) }"
                 >
                   <component :is="item.icon" />
@@ -162,18 +162,7 @@ const utilityItems = [
 
 // Get user initials for avatar
 const userInitials = computed(() => {
-  return "U"
-  // if (!user.value) return "U"
-  // const name = user.value.user?.username || user.value.user?.email || ""
-  // const parts = name.split(" ")
-  // if (parts.length >= 2) {
-  //   const first = parts[0]?.[0]
-  //   const second = parts[1]?.[0]
-  //   if (first && second) {
-  //     return (first + second).toUpperCase()
-  //   }
-  // }
-  // return name[0]?.toUpperCase() || "U"
+  return user.value?.user.username[0]?.toUpperCase() || "U"
 })
 
 // Get user display name

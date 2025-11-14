@@ -24,7 +24,9 @@
       <div class="pt-2 pb-6">
         <div class="flex space-x-2">
           <p
-            v-for="(category, index) in cause.categories.map((category:any) => category.title)"
+            v-for="(category, index) in cause.categories.map(
+              (category: any) => category.title
+            )"
             :key="index"
             class="px-2 py-1 text-xs text-gray-600 bg-gray-100 rounded-full w-fit"
           >
@@ -69,7 +71,7 @@
           </p>
         </template>
       </div>
-      <div class="absolute flex mt-4 space-x-2 overflow-x-hidden bottom-4">
+      <div class="flex overflow-x-hidden absolute bottom-4 mt-4 space-x-2">
         <p
           :class="`text-xs text-gray-600 py-1 px-2  w-fit rounded-full ${
             cause.causeStatus === 'Funded'
@@ -94,7 +96,7 @@
 
 <script setup lang="ts">
 import Progress from "../ui/progress/Progress.vue"
-import type { ApiCauseCause } from "~/types/contentTypes"
+import type { ApiCauseCause } from "~~/types/strapi/contentTypes"
 import placeholderImg from "~/assets/media/img/placeholder.png"
 
 const route = useRoute()

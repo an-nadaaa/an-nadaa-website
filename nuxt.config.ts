@@ -69,6 +69,10 @@ export default defineNuxtConfig({
       process.env.NODE_ENV === "production"
         ? process.env.STRIPE_SK_PROD
         : process.env.STRIPE_SK_DEV,
+    STRAPI_API_KEY_BACKEND:
+      process.env.NODE_ENV === "production"
+        ? process.env.STRAPI_API_KEY_BACKEND_PROD
+        : process.env.STRAPI_API_KEY_BACKEND_DEV,
   },
 
   modules: [

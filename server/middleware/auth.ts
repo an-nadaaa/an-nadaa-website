@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
   if (event.path.startsWith("/api/dashboard")) {
     // This will throw an error if the user is not logged in
     const { user } = await requireUserSession(event)
+
     const { token } = user
     // To logout
     // await clearUserSession(event)
@@ -25,6 +26,8 @@ export default defineEventHandler(async (event) => {
         statusMessage: "Invalid session",
       })
     }
+
+    return
   }
 
   return

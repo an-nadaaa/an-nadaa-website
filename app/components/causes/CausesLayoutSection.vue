@@ -97,7 +97,7 @@
 
     <Button
       class="flex gap-x-2 justify-center items-center w-full hover:bg-slate-300 hover:cursor-pointer sm:hidden"
-      :variant="'white'"
+      variant="outline"
       @click="isFilterExpanded = !isFilterExpanded"
     >
       <p class="text-dark-gray">
@@ -142,7 +142,7 @@
         class="w-full sm:w-44"
         @click="handlePreviousPage"
         :disabled="previousDisabled"
-        :variant="'white'"
+        variant="outline"
       >
         <Icon name="lucide:arrow-left" class="mr-2" /> Previous
       </Button>
@@ -151,7 +151,7 @@
         class="w-full sm:w-44"
         :disabled="nextDisabled"
         @click="handleNextPage"
-        :variant="'white'"
+        variant="outline"
       >
         Next <Icon class="ml-2" name="lucide:arrow-right" />
       </Button>
