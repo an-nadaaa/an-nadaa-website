@@ -23,7 +23,7 @@ const { isCollapsed } = useSidebarState()
         </div>
         <!-- <div class="container flex-1 px-4 mx-auto w-full"> -->
         <div
-          class="container px-8 pb-8 w-full sm:pt-4"
+          class="container overflow-x-hidden px-8 pb-8 w-full max-w-screen sm:pt-4"
           :class="{ 'mx-auto': isCollapsed }"
         >
           <slot />

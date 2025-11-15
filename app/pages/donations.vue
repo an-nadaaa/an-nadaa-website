@@ -1,6 +1,5 @@
 <template>
-  {{ donations }}
-  <div class="space-y-6">
+  <div class="space-y-6 max-w-full">
     <!-- Header Section -->
     <div
       class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start"
@@ -8,17 +7,17 @@
       <div>
         <h1 class="text-xl font-light">Total Donations</h1>
         <p class="mt-2 text-3xl font-medium sm:text-4xl">
-          {{ formatCurrency(totalDonations) }}
+          {{ formatCurrency(donationStats?.totalAmountUSD ?? 0) }}
         </p>
       </div>
       <div class="flex flex-col gap-2 sm:flex-row">
-        <Button variant="outline" class="w-full sm:w-auto">
+        <!-- <Button variant="outline" class="w-full sm:w-auto">
           <Icon name="lucide:download" class="mr-2 w-4 h-4" />
           Export Donations
         </Button>
         <NuxtLink :to="$localePath('/causes')">
           <Button class="w-full sm:w-auto">Donate</Button>
-        </NuxtLink>
+        </NuxtLink> -->
       </div>
     </div>
 
@@ -39,7 +38,7 @@
 
     <!-- Donation History Section -->
     <div class="space-y-4">
-      <div
+      <!-- <div
         class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center"
       >
         <h2 class="text-xl font-medium">Donation history</h2>
@@ -67,11 +66,11 @@
             Apply filter
           </Button>
         </div>
-      </div>
+      </div> -->
 
       <!-- Table -->
-      <div class="overflow-x-auto">
-        <Table class="outline-none">
+      <div class="overflow-x-auto w-full">
+        <Table>
           <TableHeader>
             <TableRow class="[&>th]:text-sm [&>th]:font-medium">
               <TableHead class="min-w-[200px]">Campaign</TableHead>
@@ -84,38 +83,45 @@
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="donation in paginatedDonations" :key="donation.id">
+            <TableRow v-for="donation in donations?.data" :key="donation.id">
               <TableCell>
                 <div class="flex flex-col">
+                  <p v-if="!donation.cause" class="font-light">
+                    General Donation
+                  </p>
                   <NuxtLink
-                    :to="`/causes/${donation.causeId}`"
-                    class="font-light hover:underline"
+                    v-else
+                    :to="`/causes/${donation.cause?.documentId}`"
+                    class="font-light hover:underline text-primary"
                   >
-                    {{ donation.campaign }}
+                    {{ donation.cause?.title }}
                   </NuxtLink>
                 </div>
               </TableCell>
               <TableCell>
                 <span class="font-light text-gray-500">
-                  {{ formatCurrency(donation.amount) }}
+                  {{ formatCurrency(donation.amount as number) }}
                 </span>
               </TableCell>
               <TableCell>
                 <div class="flex gap-2 items-center">
-                  <Progress
-                    :model-value="donation.campaignProgress"
-                    class="w-20 h-2 sm:w-32 [&_div]:bg-[#149ec7]"
-                  />
-                  <span
-                    class="hidden text-xs font-medium text-muted-foreground sm:inline"
+                  <Badge
+                    v-if="donation.cause"
+                    :variant="
+                      donation.cause?.isActive
+                        ? 'campaign-funded'
+                        : 'campaign-ongoing'
+                    "
+                    class="px-2"
+                    showCircle
                   >
-                    {{ donation.campaignProgress }}%
-                  </span>
+                    {{ donation.cause?.isActive ? "Active" : "Inactive" }}
+                  </Badge>
                 </div>
               </TableCell>
               <TableCell>
                 <span class="font-light text-gray-500">{{
-                  formatDate(donation.date)
+                  formatDate(donation.createdAt as string)
                 }}</span>
               </TableCell>
               <TableCell>
@@ -130,7 +136,11 @@
                 </Badge> -->
               </TableCell>
               <TableCell>
-                <span class="font-light">{{ donation.paymentMethod }}</span>
+                <!-- Todo: Change this for other payment methods -->
+                <span class="font-light">{{
+                  (donation.source as string).charAt(0).toUpperCase() +
+                  (donation.source as string).slice(1)
+                }}</span>
               </TableCell>
               <TableCell>
                 <!-- <DropdownMenu>
@@ -195,6 +205,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import type { APIResponseCollection } from "@@/types/strapi/types"
+import type {
+  ApiCauseCause,
+  ApiDonationDonation,
+} from "@@/types/strapi/contentTypes"
 
 definePageMeta({
   layout: "dashboard",
@@ -218,9 +233,27 @@ interface Donation {
   paymentStatus: "Success" | "Failed" | "Refunded" | "Pending"
   paymentMethod: string
 }
+const {
+  data: donations,
+  pending,
+  error,
+} = await useAsyncData<
+  APIResponseCollection<"api::donation.donation"> & {
+    data: (ApiDonationDonation & { cause: any | null })[]
+  }
+>("donations", () => {
+  return $fetch("/api/dashboard/donations", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => {
+    return res.data as any
+  })
+})
 
-const { data: donations } = await useAsyncData("donations", async () => {
-  return await $fetch("/api/dashboard/donations", {
+const { data: donationStats } = await useAsyncData("donation-stats", () => {
+  return $fetch("/api/dashboard/donation-stats", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -383,8 +416,9 @@ const areaPath = computed(() => {
 
 // Total donations
 const totalDonations = computed(() => {
+  return 9999
   // return donations.value.reduce((sum, d) => sum + d.amount, 0)
-  return 0
+  // return 0
 })
 
 // Pagination
