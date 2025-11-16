@@ -9,8 +9,8 @@ const donationStatsQuerySchema = z.object({
   // You can add more parameters as required for stats endpoints
   // timeframe: z.string().optional(),
   // projectId: z.string().optional(),
-  startDate: z.number().optional(),
-  endDate: z.number().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
   currency: z.string().optional(),
   source: z.string().optional(),
   donationStatus: z.string().optional(),
@@ -22,7 +22,7 @@ const donationStatsQuerySchema = z.object({
 export default defineEventHandler(async (event: any) => {
   const { user } = await requireUserSession(event)
   // const queryParams = getQuery(event)
-  // const q = await readValidatedBody(event, donationStatsQuerySchema.parse)
+  const q = await getValidatedQuery(event, donationStatsQuerySchema.parse)
 
   const query = {
     populate: "*", // populate the relation
@@ -32,8 +32,19 @@ export default defineEventHandler(async (event: any) => {
           $eq: user.user.documentId,
         },
       },
+      createdAt:
+        q.startDate || q.endDate
+          ? {
+              $gte: q.startDate
+                ? new Date(q.startDate).toISOString()
+                : undefined,
+              $lte: q.endDate ? new Date(q.endDate).toISOString() : undefined,
+            }
+          : undefined,
     },
   }
+
+  console.log(query)
 
   const donations = await fetch(
     `${useRuntimeConfig().public.STRAPI_API}/donations?${qs.stringify(query)}`,

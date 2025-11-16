@@ -1,13 +1,29 @@
 import { APIResponseCollection } from "../../../types/strapi/types"
 import { ApiDonationDonation } from "../../../types/strapi/contentTypes"
 import qs from "qs"
+import z from "zod"
+
+const donationsQuerySchema = z.object({
+  page: z.string().optional(),
+  pageSize: z.string().optional(),
+})
 
 export default defineEventHandler(async (event: any) => {
   const { user } = await requireUserSession(event)
+  const queryParams = await getValidatedQuery(event, donationsQuerySchema.parse)
+  const { page = "1", pageSize = "20" } = queryParams
 
   const query = qs.stringify(
     {
-      populate: "*", // populate the relation
+      populate: {
+        users_permissions_user: true,
+        cause: {
+          populate: "*",
+        },
+        // cause: {
+        //   populate: ["cause.campaign", "cause.project"],
+        // },
+      }, // populate the relation
       filters: {
         users_permissions_user: {
           documentId: {
@@ -17,8 +33,8 @@ export default defineEventHandler(async (event: any) => {
       },
       sort: ["createdAt:desc"],
       pagination: {
-        page: 1,
-        pageSize: 20,
+        page: parseInt(page),
+        pageSize: parseInt(pageSize),
       },
     },
     { encodeValuesOnly: true }
@@ -48,6 +64,8 @@ export default defineEventHandler(async (event: any) => {
         data: ApiDonationDonation[]
       }
     })
+
+  console.log(donations)
 
   return {
     data: donations,

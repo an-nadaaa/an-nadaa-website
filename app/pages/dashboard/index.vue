@@ -1,4 +1,6 @@
 <template>
+  {{ startDate }}
+  {{ donationStats }}
   <!-- {{ user.token || "no user details" }} -->
   <!-- {{ token || "no token details" }} -->
   <div class="space-y-6">
@@ -65,12 +67,17 @@
           >
         </CardHeader>
         <CardContent>
-          <div class="space-y-1">
-            <p class="text-3xl font-semibold">$0</p>
+          <div v-if="!loadingDonationStats" class="space-y-1">
+            <p class="text-3xl font-semibold">
+              {{ formatCurrency(donationStats?.totalAmountUSD ?? 0) }}
+            </p>
             <p class="text-sm text-orange-500">
               ↑ 0% vs last
               {{ timeframeAlts[timeframe as keyof typeof timeframeAlts] }}
             </p>
+          </div>
+          <div v-else>
+            <Skeleton class="w-24 h-12"></Skeleton>
           </div>
         </CardContent>
       </Card>
@@ -83,12 +90,17 @@
           >
         </CardHeader>
         <CardContent>
-          <div class="space-y-1">
-            <p class="text-3xl font-semibold">0</p>
+          <div v-if="!loadingDonationStats" class="space-y-1">
+            <p class="text-3xl font-semibold">
+              {{ donationStats?.totalDonations ?? 0 }}
+            </p>
             <p class="text-sm text-orange-500">
               ↑ 0% vs last
               {{ timeframeAlts[timeframe as keyof typeof timeframeAlts] }}
             </p>
+          </div>
+          <div v-else>
+            <Skeleton class="w-24 h-12"></Skeleton>
           </div>
         </CardContent>
       </Card>
@@ -178,7 +190,9 @@
               <p class="text-base font-medium">You haven't made donation yet</p>
               <p class="text-sm text-gray-500">Come back later</p>
             </div>
-            <Button class="mt-4">Donate now</Button>
+            <NuxtLink :to="$localePath('/causes')">
+              <Button class="mt-4">Donate now</Button>
+            </NuxtLink>
           </div>
         </CardContent>
       </Card>
@@ -190,6 +204,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
+const { formatCurrency } = useMoneyFormat()
 definePageMeta({
   layout: "dashboard",
 })
@@ -205,6 +220,49 @@ const timeframeAlts = {
 // const { fetchUser } = useStrapiAuth()
 const timeframe = ref("30days")
 const breakdownView = ref<"campaigns" | "locations">("campaigns")
+
+const startDate = computed(() => {
+  if (timeframe.value === "12months") {
+    return new Date(
+      new Date().setFullYear(new Date().getFullYear() - 1)
+    ).toISOString()
+  } else if (timeframe.value === "30days") {
+    return new Date(new Date().setDate(new Date().getDate() - 30)).toISOString()
+  } else if (timeframe.value === "7days") {
+    return new Date(new Date().setDate(new Date().getDate() - 7)).toISOString()
+  } else if (timeframe.value === "1day") {
+    return new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()
+  }
+
+  return undefined
+})
+
+const {
+  data: donationStats,
+  pending: loadingDonationStats,
+  refresh: refreshDonationStats,
+} = await useAsyncData(
+  "donation-stats",
+  () => {
+    return $fetch("/api/dashboard/donation-stats", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      query: {
+        startDate: startDate.value,
+      },
+    })
+  },
+  {
+    lazy: true,
+    server: false,
+  }
+)
+
+watch(timeframe, () => {
+  refreshDonationStats()
+})
 
 // const user = await fetchUser()
 // const user = useStrapiUser()

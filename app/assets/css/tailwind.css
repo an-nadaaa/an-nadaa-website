@@ -196,7 +196,7 @@
   }
 
   body {
-    @apply overflow-hidden bg-background text-foreground max-w-screen;
+    @apply overflow-x-hidden bg-background text-foreground max-w-screen;
   }
 
   .container {

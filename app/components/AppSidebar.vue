@@ -139,11 +139,11 @@ const navItems = [
     url: "/donations",
     icon: Layers,
   },
-  {
-    title: "Updates",
-    url: "/updates",
-    icon: Bell,
-  },
+  // {
+  //   title: "Updates",
+  //   url: "/updates",
+  //   icon: Bell,
+  // },
 ]
 
 // Utility items

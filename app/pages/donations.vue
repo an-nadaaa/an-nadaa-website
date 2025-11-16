@@ -1,4 +1,5 @@
 <template>
+  {{ error }}
   <div class="space-y-6 max-w-full">
     <!-- Header Section -->
     <div
@@ -6,7 +7,8 @@
     >
       <div>
         <h1 class="text-xl font-light">Total Donations</h1>
-        <p class="mt-2 text-3xl font-medium sm:text-4xl">
+        <Skeleton v-if="loadingDonationStats" class="w-24 h-12"></Skeleton>
+        <p v-else class="mt-2 text-3xl font-medium sm:text-4xl">
           {{ formatCurrency(donationStats?.totalAmountUSD ?? 0) }}
         </p>
       </div>
@@ -14,10 +16,10 @@
         <!-- <Button variant="outline" class="w-full sm:w-auto">
           <Icon name="lucide:download" class="mr-2 w-4 h-4" />
           Export Donations
-        </Button>
+        </Button> -->
         <NuxtLink :to="$localePath('/causes')">
           <Button class="w-full sm:w-auto">Donate</Button>
-        </NuxtLink> -->
+        </NuxtLink>
       </div>
     </div>
 
@@ -68,14 +70,26 @@
         </div>
       </div> -->
 
+      <VueSpinnerBars
+        v-if="loadingDonations"
+        class="mx-auto my-48 text-5xl text-primary"
+      />
+
       <!-- Table -->
-      <div class="overflow-x-auto w-full">
-        <Table>
+      <div
+        v-if="
+          !loadingDonations &&
+          donations?.data?.length &&
+          donations?.data?.length > 0
+        "
+        class="overflow-x-auto w-full"
+      >
+        <Table class="border-b-[0.1px] border-gray-100">
           <TableHeader>
             <TableRow class="[&>th]:text-sm [&>th]:font-medium">
               <TableHead class="min-w-[200px]">Campaign</TableHead>
-              <TableHead class="min-w-[100px]">Amount</TableHead>
-              <TableHead class="min-w-[150px]">Campaign status</TableHead>
+              <TableHead class="min-w-[50px]">Amount</TableHead>
+              <TableHead class="min-w-[150px]">Cause progress</TableHead>
               <TableHead class="min-w-[120px]">Date</TableHead>
               <TableHead class="min-w-[120px]">Payment Status</TableHead>
               <TableHead class="min-w-[120px]">Payment method</TableHead>
@@ -104,9 +118,62 @@
                 </span>
               </TableCell>
               <TableCell>
-                <div class="flex gap-2 items-center">
-                  <Badge
-                    v-if="donation.cause"
+                <div
+                  v-if="donation.cause?.causeType === 'campaign'"
+                  class="flex gap-3 items-center"
+                >
+                  <Progress
+                    class="[&>div]:bg-primary h-2"
+                    :model-value="
+                      Math.max(
+                        Math.round(
+                          (parseFloat(donation.cause?.raisedAmount) /
+                            parseFloat(
+                              donation.cause?.goalDetails[0].goalAmount
+                            )) *
+                            100
+                        ),
+                        3
+                      )
+                    "
+                  />
+                  <p>
+                    {{
+                      Math.round(
+                        (parseFloat(donation.cause?.raisedAmount) /
+                          parseFloat(
+                            donation.cause?.goalDetails[0].goalAmount
+                          )) *
+                          100
+                      )
+                    }}%
+                  </p>
+                </div>
+                <Badge
+                  v-else-if="donation.cause"
+                  :variant="
+                    donation.cause?.isActive
+                      ? 'campaign-funded'
+                      : 'campaign-ongoing'
+                  "
+                  class="px-2"
+                  showCircle
+                >
+                  {{ donation.cause?.isActive ? "Active" : "Inactive" }}
+                </Badge>
+
+                <!-- {{ donation.cause.causeType }} -->
+                <!-- {{
+                  Math.round(
+                    (parseFloat(donation.cause?.raisedAmount) /
+                      parseFloat(donation.cause?.goalDetails[0].goalAmount)) *
+                      100
+                  )
+                }}
+                {{ donation.cause?.goalDetails[0].goalAmount }} -->
+                <!-- <div class="flex gap-2 items-center"> 
+                   <Badge
+                    v-if="donation.cause.causeType === 'project'"
                     :variant="
                       donation.cause?.isActive
                         ? 'campaign-funded'
@@ -117,7 +184,31 @@
                   >
                     {{ donation.cause?.isActive ? "Active" : "Inactive" }}
                   </Badge>
-                </div>
+                  <div v-else class="flex gap-2 items-center">
+                    <Progress
+                      :model-value="
+                        Math.max(
+                          parseFloat(donation.cause?.raisedAmount) /
+                            parseFloat(
+                              donation.cause?.goalDetails[0].goalAmount
+                            ),
+                          5
+                        )
+                      "
+                    />
+                    <p>
+                      {{
+                        Math.round(
+                          (parseFloat(donation.cause?.raisedAmount) /
+                            parseFloat(
+                              donation.cause?.goalDetails[0].goalAmount
+                            )) *
+                            100
+                        )
+                      }}%
+                    </p>
+                  </div>
+                </div> -->
               </TableCell>
               <TableCell>
                 <span class="font-light text-gray-500">{{
@@ -165,18 +256,112 @@
           </TableBody>
         </Table>
       </div>
+      <div
+        v-else-if="
+          !loadingDonations &&
+          donations?.data?.length &&
+          donations?.data?.length === 0
+        "
+      >
+        <div class="flex flex-col justify-center items-center py-8 space-y-4">
+          <!-- Empty State Illustration -->
+          <img src="/img/designing-a-website.png" class="w-32 h-32" />
+          <!-- <div
+              class="flex justify-center items-center w-32 h-32 bg-gray-100 rounded-lg"
+            >
+              <Icon name="lucide:tablet" class="w-16 h-16 text-gray-400" />
+            </div> -->
+          <div class="space-y-2 text-center">
+            <p class="text-base font-medium">You haven't made donation yet</p>
+            <p class="text-sm text-gray-500">Come back later</p>
+          </div>
+          <NuxtLink :to="$localePath('/causes')">
+            <Button class="mt-4">Donate now</Button>
+          </NuxtLink>
+        </div>
+      </div>
 
-      <!-- Todo: Pagination -->
+      <!-- Pagination -->
+      <div
+        v-if="
+          donations?.meta?.pagination &&
+          donations.meta.pagination.pageCount > 0 &&
+          !loadingDonations
+        "
+        class="flex justify-between items-center w-full"
+      >
+        <!-- Previous Button -->
+        <button
+          :disabled="!canGoToPrevious"
+          :class="[
+            'flex gap-2 items-center text-sm',
+            canGoToPrevious
+              ? 'text-gray-500 cursor-pointer hover:underline hover:text-gray-700'
+              : 'text-gray-300 cursor-not-allowed',
+          ]"
+          @click="goToPreviousPage"
+        >
+          <Icon name="lucide:arrow-left" class="w-4 h-4" />
+          <span class="hidden sm:inline">Previous</span>
+        </button>
+
+        <!-- Desktop: Page Numbers -->
+        <div class="hidden gap-1 items-center md:flex">
+          <template v-for="pageNum in visiblePages" :key="pageNum">
+            <button
+              v-if="pageNum !== 'ellipsis'"
+              :class="[
+                'px-3 py-1.5 text-sm rounded-md transition-colors',
+                pageNum === currentPage
+                  ? 'bg-gray-200 text-gray-800 font-medium shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100',
+              ]"
+              @click="goToPage(pageNum as number)"
+            >
+              {{ pageNum }}
+            </button>
+            <span v-else class="px-2 text-gray-500">...</span>
+          </template>
+        </div>
+
+        <!-- Mobile: Page Input -->
+        <div class="flex gap-2 items-center md:hidden">
+          <span class="text-sm text-gray-500">Page</span>
+          <input
+            v-model.number="pageInput"
+            type="number"
+            :min="1"
+            :max="totalPages"
+            class="px-2 py-1 w-12 text-sm text-center rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent no-spinner"
+            @keyup.enter="goToPageFromInput"
+            @blur="goToPageFromInput"
+            style="appearance: textfield; -moz-appearance: textfield"
+          />
+          <span class="text-sm text-gray-500">of {{ totalPages }}</span>
+        </div>
+
+        <!-- Next Button -->
+        <button
+          :disabled="!canGoToNext"
+          :class="[
+            'flex gap-2 items-center text-sm',
+            canGoToNext
+              ? 'text-gray-500 cursor-pointer hover:underline hover:text-gray-700'
+              : 'text-gray-300 cursor-not-allowed',
+          ]"
+          @click="goToNextPage"
+        >
+          <span class="hidden sm:inline">Next</span>
+          <Icon name="lucide:arrow-right" class="w-4 h-4" />
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card"
+import { computed, ref, watch } from "vue"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -219,6 +404,10 @@ const { user } = useUserSession()
 const { formatCurrency } = useMoneyFormat()
 const { formateDayMonthYear } = useDateFormatter()
 
+// Pagination
+const pageSize = ref(20)
+const currentPage = ref(1)
+
 // Timeframe state
 const timeframe = ref("12months")
 
@@ -233,33 +422,67 @@ interface Donation {
   paymentStatus: "Success" | "Failed" | "Refunded" | "Pending"
   paymentMethod: string
 }
+
 const {
   data: donations,
-  pending,
+  pending: loadingDonations,
   error,
+  refresh: refreshDonations,
 } = await useAsyncData<
   APIResponseCollection<"api::donation.donation"> & {
     data: (ApiDonationDonation & { cause: any | null })[]
   }
->("donations", () => {
-  return $fetch("/api/dashboard/donations", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => {
-    return res.data as any
-  })
+>(
+  "donations",
+  () => {
+    return $fetch("/api/dashboard/donations", {
+      method: "GET",
+      query: {
+        page: currentPage.value,
+        pageSize: pageSize.value,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      return res.data as any
+    })
+  },
+  {
+    lazy: true,
+    server: false,
+  }
+)
+
+// Watch for page changes and refresh data
+watch([currentPage, pageSize], () => {
+  refreshDonations()
 })
 
-const { data: donationStats } = await useAsyncData("donation-stats", () => {
-  return $fetch("/api/dashboard/donation-stats", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
+// const donations = ref<{
+//   data: any[]
+//   meta: Record<string, any>
+// }>({
+//   data: [],
+//   meta: {},
+// })
+
+const { data: donationStats, pending: loadingDonationStats } =
+  await useAsyncData(
+    "donation-stats",
+    () => {
+      return $fetch("/api/dashboard/donation-stats", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
     },
-  })
-})
+    {
+      lazy: true,
+      server: false,
+    }
+  )
 
 // const donations = ref<Donation[]>([
 //   {
@@ -421,55 +644,12 @@ const totalDonations = computed(() => {
   // return 0
 })
 
-// Pagination
-const itemsPerPage = ref(10)
-const currentPage = ref(1)
-const totalPages = computed(
-  () =>
-    // Math.ceil(donations.value.length / itemsPerPage.value)
-    0
-)
-
-const paginatedDonations = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value
-  const end = start + itemsPerPage.value
-  // return donations.value.slice(start, end)
-  return []
-})
-
-const visiblePages = computed(() => {
-  const pages: (number | "ellipsis")[] = []
-  const total = totalPages.value
-  const current = currentPage.value
-
-  if (total <= 10) {
-    for (let i = 1; i <= total; i++) {
-      pages.push(i)
-    }
-  } else {
-    if (current <= 4) {
-      for (let i = 1; i <= 5; i++) pages.push(i)
-      pages.push("ellipsis")
-      pages.push(total - 1)
-      pages.push(total)
-    } else if (current >= total - 3) {
-      pages.push(1)
-      pages.push(2)
-      pages.push("ellipsis")
-      for (let i = total - 4; i <= total; i++) pages.push(i)
-    } else {
-      pages.push(1)
-      pages.push(2)
-      pages.push("ellipsis")
-      for (let i = current - 1; i <= current + 1; i++) pages.push(i)
-      pages.push("ellipsis")
-      pages.push(total - 1)
-      pages.push(total)
-    }
-  }
-
-  return pages
-})
+// const paginatedDonations = computed(() => {
+//   const start = (currentPage.value - 1) * itemsPerPage.value
+//   const end = start + itemsPerPage.value
+//   // return donations.value.slice(start, end)
+//   return []
+// })
 
 // Helpers
 function formatDate(date: string) {
@@ -509,4 +689,106 @@ function getStatusDotClass(status: Donation["paymentStatus"]) {
 }
 
 const datePickerOpen = ref(false)
+
+// Pagination computed properties
+const totalPages = computed(() => {
+  return donations.value?.meta?.pagination?.pageCount ?? 0
+})
+
+const canGoToPrevious = computed(() => {
+  return currentPage.value > 1
+})
+
+const canGoToNext = computed(() => {
+  return currentPage.value < totalPages.value
+})
+
+// Page input for mobile
+const pageInput = ref(1)
+
+// Watch currentPage to update pageInput
+watch(
+  currentPage,
+  (newPage) => {
+    pageInput.value = newPage
+  },
+  { immediate: true }
+)
+
+// Generate visible page numbers
+const visiblePages = computed(() => {
+  const pages: (number | "ellipsis")[] = []
+  const total = totalPages.value
+  const current = currentPage.value
+
+  if (total <= 7) {
+    // Show all pages if 7 or fewer
+    for (let i = 1; i <= total; i++) {
+      pages.push(i)
+    }
+  } else {
+    // Always show first 3 pages
+    pages.push(1, 2, 3)
+
+    if (current <= 4) {
+      // Current page is in first 3 or page 4
+      if (current === 4) {
+        pages.push(4, "ellipsis")
+      } else {
+        pages.push("ellipsis")
+      }
+    } else if (current >= total - 2) {
+      // Current page is in last 3
+      pages.push("ellipsis")
+    } else {
+      // Current page is in the middle (5 to total-3)
+      pages.push("ellipsis", current, "ellipsis")
+    }
+
+    // Always show last 3 pages
+    pages.push(total - 2, total - 1, total)
+  }
+
+  return pages
+})
+
+// Pagination functions
+function goToPage(page: number) {
+  if (page >= 1 && page <= totalPages.value && page !== currentPage.value) {
+    currentPage.value = page
+  }
+}
+
+function goToPreviousPage() {
+  if (canGoToPrevious.value) {
+    currentPage.value = currentPage.value - 1
+  }
+}
+
+function goToNextPage() {
+  if (canGoToNext.value) {
+    currentPage.value = currentPage.value + 1
+  }
+}
+
+function goToPageFromInput() {
+  const page = Number(pageInput.value)
+  if (page >= 1 && page <= totalPages.value) {
+    goToPage(page)
+  } else {
+    // Reset to current page if invalid
+    pageInput.value = currentPage.value
+  }
+}
 </script>
+
+<style>
+input.no-spinner::-webkit-outer-spin-button,
+input.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input.no-spinner {
+  -moz-appearance: textfield;
+}
+</style>
