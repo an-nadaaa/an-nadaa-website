@@ -65,8 +65,6 @@ export default defineEventHandler(async (event: any) => {
       }
     })
 
-  console.log(donations)
-
   return {
     data: donations,
     success: true,

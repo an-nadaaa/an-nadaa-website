@@ -44,8 +44,6 @@ export default defineEventHandler(async (event: any) => {
     },
   }
 
-  console.log(query)
-
   const donations = await fetch(
     `${useRuntimeConfig().public.STRAPI_API}/donations?${qs.stringify(query)}`,
     {

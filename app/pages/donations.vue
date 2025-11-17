@@ -114,7 +114,12 @@
               </TableCell>
               <TableCell>
                 <span class="font-light text-gray-500">
-                  {{ formatCurrency(donation.amount as number) }}
+                  {{
+                    formatCurrency(
+                      donation.amount as number,
+                      (donation.currency as string).toUpperCase()
+                    )
+                  }}
                 </span>
               </TableCell>
               <TableCell>

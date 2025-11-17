@@ -1,8 +1,5 @@
 <template>
-  {{ startDate }}
-  {{ donationStats }}
-  <!-- {{ user.token || "no user details" }} -->
-  <!-- {{ token || "no token details" }} -->
+  {{ monthlySubscriptions }}
   <div class="space-y-6">
     <!-- Header Section -->
     <div
@@ -23,9 +20,9 @@
         </p>
       </div>
       <div class="flex flex-col gap-2 sm:flex-row sm:space-x-3">
-        <Button variant="outline" class="w-full sm:w-auto">
+        <!-- <Button variant="outline" class="w-full sm:w-auto">
           <Icon name="lucide:cloud-download" class="mr-2" />Export Donations
-        </Button>
+        </Button> -->
         <NuxtLink :to="$localePath('/causes')">
           <Button class="w-full sm:w-auto">Donate</Button>
         </NuxtLink>
@@ -52,9 +49,9 @@
           >
         </TabsList>
       </Tabs>
-      <Button variant="outline" class="w-full sm:w-auto">
+      <!-- <Button variant="outline" class="w-full sm:w-auto">
         <Icon name="lucide:calendar" class="mr-2" />Select dates
-      </Button>
+      </Button> -->
     </div>
 
     <!-- Summary Cards -->
@@ -170,7 +167,7 @@
         <CardHeader>
           <div class="flex justify-between items-center">
             <CardTitle class="text-base font-medium"
-              >Top 5 Donations made</CardTitle
+              >Your Monthly Donations</CardTitle
             >
             <Button variant="ghost" size="icon" class="w-8 h-8">
               <Icon name="lucide:more-vertical" class="w-4 h-4" />
@@ -187,8 +184,10 @@
               <Icon name="lucide:tablet" class="w-16 h-16 text-gray-400" />
             </div> -->
             <div class="space-y-2 text-center">
-              <p class="text-base font-medium">You haven't made donation yet</p>
-              <p class="text-sm text-gray-500">Come back later</p>
+              <p class="text-base font-medium">
+                You haven't subscribed to any monthly donations yet
+              </p>
+              <p class="text-sm text-gray-500">Invest in your akhirah</p>
             </div>
             <NuxtLink :to="$localePath('/causes')">
               <Button class="mt-4">Donate now</Button>
@@ -252,6 +251,23 @@ const {
       query: {
         startDate: startDate.value,
       },
+    })
+  },
+  {
+    lazy: true,
+    server: false,
+  }
+)
+
+const {
+  data: monthlySubscriptions,
+  pending: loadingMonthlySubscriptions,
+  refresh: refreshMonthlySubscriptions,
+} = await useAsyncData(
+  "monthly-subscriptions",
+  () => {
+    return $fetch("/api/dashboard/monthly-donations", {
+      method: "GET",
     })
   },
   {
