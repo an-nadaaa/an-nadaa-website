@@ -25,7 +25,11 @@ export default defineEventHandler(async (event: any) => {
   const q = await getValidatedQuery(event, donationStatsQuerySchema.parse)
 
   const query = {
-    populate: "*", // populate the relation
+    populate: {
+      cause: {
+        populate: "*",
+      },
+    }, // populate the relation
     filters: {
       users_permissions_user: {
         documentId: {
@@ -79,16 +83,116 @@ export default defineEventHandler(async (event: any) => {
     }
   })
 
-  const stats = {
-    totalDonations: donations.data.length,
-    totalAmountUSD: donations.data.reduce((acc, donation) => {
-      return acc + (donation.amountUSD as number)
-    }, 0),
-    totalAmountMYR:
-      donations.data.reduce((acc, donation) => {
-        return acc + (donation.amountUSD as number)
-      }, 0) * conversionRates["MYR"],
+  // Initialize aggregation maps
+  const categoryStats = new Map<
+    string,
+    {
+      categoryId: number
+      categoryDocumentId: string
+      categoryTitle: string
+      totalAmountUSD: number
+      totalAmountMYR: number
+      donationCount: number
+    }
+  >()
+
+  const countryStats = new Map<
+    string,
+    {
+      countryCode: string
+      countryName: string
+      totalAmountUSD: number
+      totalAmountMYR: number
+      donationCount: number
+    }
+  >()
+
+  // Process each donation
+  for (const donation of donations.data) {
+    const amountUSD = (donation.amountUSD as number) || 0
+    const currency = (donation.currency as string)?.toLowerCase()
+    // For MYR: use original amount if currency is MYR, otherwise convert USD to MYR
+    const amountMYR =
+      currency === "myr"
+        ? (donation.amount as number) || 0
+        : amountUSD * conversionRates["MYR"]
+
+    const cause = donation.cause as any
+
+    // Skip donations without a cause
+    if (!cause) continue
+
+    // Process categories
+    if (cause.categories && Array.isArray(cause.categories)) {
+      for (const category of cause.categories) {
+        const categoryKey = `${category.id}`
+        const existing = categoryStats.get(categoryKey)
+
+        if (existing) {
+          existing.totalAmountUSD += amountUSD
+          existing.totalAmountMYR += amountMYR
+          existing.donationCount += 1
+        } else {
+          categoryStats.set(categoryKey, {
+            categoryId: category.id,
+            categoryDocumentId: category.documentId,
+            categoryTitle: category.title,
+            totalAmountUSD: amountUSD,
+            totalAmountMYR: amountMYR,
+            donationCount: 1,
+          })
+        }
+      }
+    }
+
+    // Process locations/countries
+    if (cause.locations && Array.isArray(cause.locations)) {
+      for (const location of cause.locations) {
+        const countryKey = location.countryCode || location.countryName
+        const existing = countryStats.get(countryKey)
+
+        if (existing) {
+          existing.totalAmountUSD += amountUSD
+          existing.totalAmountMYR += amountMYR
+          existing.donationCount += 1
+        } else {
+          countryStats.set(countryKey, {
+            countryCode: location.countryCode,
+            countryName: location.countryName,
+            totalAmountUSD: amountUSD,
+            totalAmountMYR: amountMYR,
+            donationCount: 1,
+          })
+        }
+      }
+    }
   }
 
-  return stats
+  // Convert maps to arrays
+  const statsByCategory = Array.from(categoryStats.values())
+  const statsByCountry = Array.from(countryStats.values())
+
+  // Calculate overall totals
+  const totalDonations = donations.data.length
+  const totalAmountUSD = donations.data.reduce((acc, donation) => {
+    return acc + ((donation.amountUSD as number) || 0)
+  }, 0)
+  const totalAmountMYR = donations.data.reduce((acc, donation) => {
+    const currency = (donation.currency as string)?.toLowerCase()
+    const amountUSD = (donation.amountUSD as number) || 0
+    return (
+      acc +
+      (currency === "myr"
+        ? (donation.amount as number) || 0
+        : amountUSD * conversionRates["MYR"])
+    )
+  }, 0)
+
+  return {
+    totalDonations,
+    totalAmountUSD,
+    totalAmountMYR,
+    byCategory: statsByCategory,
+    byCountry: statsByCountry,
+  }
 })

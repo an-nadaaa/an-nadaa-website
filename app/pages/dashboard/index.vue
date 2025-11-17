@@ -115,48 +115,31 @@
               <Button
                 variant="ghost"
                 size="sm"
-                :class="breakdownView === 'campaigns' ? 'bg-gray-100' : ''"
-                @click="breakdownView = 'campaigns'"
+                :class="breakdownView === 'category' ? 'bg-gray-100' : ''"
+                @click="breakdownView = 'category'"
                 class="px-2 h-7 text-xs"
               >
-                By campaigns
+                By category
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                :class="breakdownView === 'locations' ? 'bg-gray-100' : ''"
-                @click="breakdownView = 'locations'"
+                :class="breakdownView === 'country' ? 'bg-gray-100' : ''"
+                @click="breakdownView = 'country'"
                 class="px-2 h-7 text-xs"
               >
-                By locations
+                By location
               </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <div class="flex flex-col justify-center items-center py-8">
-            <!-- Simple Donut Chart Placeholder -->
-            <div class="relative w-48 h-48 sm:w-56 sm:h-56">
-              <svg
-                class="w-full h-full transform -rotate-90"
-                viewBox="0 0 100 100"
-              >
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#e5e7eb"
-                  stroke-width="8"
-                />
-              </svg>
-              <div
-                class="flex absolute inset-0 flex-col justify-center items-center"
-              >
-                <p class="text-2xl font-semibold">0</p>
-                <p class="text-sm text-gray-500">Donations</p>
-              </div>
-            </div>
+            <PieChart
+              v-if="donationStats && !loadingDonationStats"
+              :data="donationStats as DonationData"
+              :group-by="breakdownView"
+            />
           </div>
         </CardContent>
       </Card>
@@ -268,9 +251,9 @@ import { Button } from "@/components/ui/button"
 import type { StripeTransactionMetadata } from "@@/server/api/process-donation.post"
 import type Stripe from "stripe"
 import { useDateFormat } from "@vueuse/core"
+import type { DonationData } from "@/components/PieChart.vue"
 
 const { formatCurrency } = useMoneyFormat()
-
 const formatDate = (date: string | number | Date) => {
   return useDateFormat(date, "DD/MM/YYYY").value
 }
@@ -289,7 +272,7 @@ const timeframeAlts = {
 }
 // const { fetchUser } = useStrapiAuth()
 const timeframe = ref("30days")
-const breakdownView = ref<"campaigns" | "locations">("campaigns")
+const breakdownView = ref<"category" | "country">("category")
 
 const startDate = computed(() => {
   if (timeframe.value === "12months") {
@@ -355,16 +338,4 @@ const {
 watch(timeframe, () => {
   refreshDonationStats()
 })
-
-// const user = await fetchUser()
-// const user = useStrapiUser()
-
-// const user = useStrapiUser()
-// const token = useStrapiToken()
-
-// watchEffect(() => {
-//   if (user.value == null) {
-//     return navigateTo("/login")
-//   }
-// })
 </script>

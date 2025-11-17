@@ -25,6 +25,8 @@
     "@strapi/client": "^1.5.0",
     "@stripe/stripe-js": "^4.9.0",
     "@tailwindcss/vite": "^4.1.17",
+    "@unovis/ts": "^1.6.2",
+    "@unovis/vue": "^1.6.2",
     "@vee-validate/zod": "^4.13.2",
     "@vue-stripe/vue-stripe": "^4.5.0",
     "@vue/devtools-api": "6.6.3",
