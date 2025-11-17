@@ -87,7 +87,7 @@
         <Table class="border-b-[0.1px] border-gray-100">
           <TableHeader>
             <TableRow class="[&>th]:text-sm [&>th]:font-medium">
-              <TableHead class="min-w-[200px]">Campaign</TableHead>
+              <TableHead class="min-w-[200px]">Cause</TableHead>
               <TableHead class="min-w-[50px]">Amount</TableHead>
               <TableHead class="min-w-[150px]">Cause progress</TableHead>
               <TableHead class="min-w-[120px]">Date</TableHead>

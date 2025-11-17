@@ -1,5 +1,4 @@
 <template>
-  {{ monthlySubscriptions }}
   <div class="space-y-6">
     <!-- Header Section -->
     <div
@@ -174,7 +173,7 @@
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent v-if="monthlyDonations?.data?.length === 0">
           <div class="flex flex-col justify-center items-center py-8 space-y-4">
             <!-- Empty State Illustration -->
             <img src="/img/designing-a-website.png" class="w-32 h-32" />
@@ -194,6 +193,70 @@
             </NuxtLink>
           </div>
         </CardContent>
+        <CardContent
+          v-else-if="
+            monthlyDonations?.data?.length && monthlyDonations?.data?.length > 0
+          "
+        >
+          <div class="grid grid-cols-1">
+            <div
+              v-for="monthlyDonation in monthlyDonations?.data.slice(0, 5)"
+              class="flex overflow-hidden gap-2 justify-between items-center py-5 border-b border-gray-200"
+            >
+              <div class="flex flex-col grow">
+                <h3
+                  class="text-base font-normal truncate"
+                  style="max-width: 100%"
+                >
+                  {{ monthlyDonation.metadata.causeTitle }}
+                </h3>
+                <p class="text-xs font-light text-gray-400">
+                  Next payment on
+                  {{ formatDate(monthlyDonation.current_period_end * 1000) }}
+                </p>
+              </div>
+              <div class="flex flex-col items-end">
+                <p class="text-sm font-medium text-green-500">
+                  {{
+                    formatCurrency(
+                      ((
+                        monthlyDonation.items.data[0] as Stripe.SubscriptionItem
+                      ).plan.amount as number) / 100,
+                      (
+                        monthlyDonation.items.data[0] as Stripe.SubscriptionItem
+                      ).plan.currency?.toUpperCase()
+                    )
+                  }}
+                  /month
+                </p>
+              </div>
+            </div>
+            <NuxtLink :to="$localePath('/donations')">
+              <p
+                class="font-medium text-sm mt-4 text-right text-[#166588] hover:underline cursor-pointer"
+              >
+                Show all monthly donations
+              </p>
+            </NuxtLink>
+          </div>
+        </CardContent>
+        <CardContent v-else>
+          <div class="grid grid-cols-1">
+            <div
+              v-for="i in 4"
+              :key="i"
+              class="flex overflow-hidden gap-2 justify-between items-center py-5 border-b border-gray-200"
+            >
+              <div class="flex flex-col space-y-2 grow">
+                <Skeleton class="w-3/4 h-4"></Skeleton>
+                <Skeleton class="w-1/2 h-3"></Skeleton>
+              </div>
+              <div class="flex flex-col items-end space-y-2">
+                <Skeleton class="w-20 h-4"></Skeleton>
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     </div>
   </div>
@@ -202,8 +265,16 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import type { StripeTransactionMetadata } from "@@/server/api/process-donation.post"
+import type Stripe from "stripe"
+import { useDateFormat } from "@vueuse/core"
 
 const { formatCurrency } = useMoneyFormat()
+
+const formatDate = (date: string | number | Date) => {
+  return useDateFormat(date, "DD/MM/YYYY").value
+}
+
 definePageMeta({
   layout: "dashboard",
 })
@@ -241,7 +312,7 @@ const {
   pending: loadingDonationStats,
   refresh: refreshDonationStats,
 } = await useAsyncData(
-  "donation-stats",
+  "donation-stats-" + Date.now(),
   () => {
     return $fetch("/api/dashboard/donation-stats", {
       method: "GET",
@@ -260,12 +331,17 @@ const {
 )
 
 const {
-  data: monthlySubscriptions,
-  pending: loadingMonthlySubscriptions,
-  refresh: refreshMonthlySubscriptions,
+  data: monthlyDonations,
+  pending: loadingMonthlyDonations,
+  refresh: refreshMonthlyDonations,
 } = await useAsyncData(
-  "monthly-subscriptions",
-  () => {
+  "monthly-subscriptions-" + Date.now(),
+  (): Promise<{
+    data: (Stripe.Subscription & {
+      metadata: StripeTransactionMetadata
+    })[]
+    success: boolean
+  }> => {
     return $fetch("/api/dashboard/monthly-donations", {
       method: "GET",
     })

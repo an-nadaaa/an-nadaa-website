@@ -135,7 +135,7 @@ const navItems = [
     icon: BarChart3,
   },
   {
-    title: "Donation History",
+    title: "My Donations",
     url: "/donations",
     icon: Layers,
   },
