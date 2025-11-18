@@ -14,7 +14,7 @@
         </div>
 
         <NuxtLink to="/causes">
-          <Button class="hidden sm:block" :variant="'white'">View all</Button>
+          <Button class="hidden sm:block" :variant="'outline'">View all</Button>
         </NuxtLink>
       </div>
 
@@ -42,7 +42,7 @@
       </div>
 
       <NuxtLink to="/causes">
-        <Button class="w-full mt-6 sm:hidden" :variant="'white'"
+        <Button class="mt-6 w-full sm:hidden" :variant="'outline'"
           >View all</Button
         >
       </NuxtLink>

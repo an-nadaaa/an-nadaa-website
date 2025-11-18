@@ -21,12 +21,11 @@ export const badgeVariants = cva(
         "payment-pending":
           "bg-yellow-100 text-yellow-600 border-none font-medium",
         "payment-refunded": "bg-gray-100 text-gray-600 border-none font-medium",
-        "campaign-funded":
-          "bg-green-100 text-green-600 border-none font-medium",
+        "campaign-funded": "bg-red-100 text-red-600 border-none font-medium",
         "campaign-ongoing":
-          "bg-yellow-100 text-yellow-600 border-none font-medium",
+          "bg-green-100 text-green-600 border-none font-medium",
         "campaign-completed":
-          "bg-gray-100 text-gray-600 border-none font-medium",
+          "bg-yellow-100 text-yellow-600 border-none font-medium",
         "campaign-cancelled": "bg-red-100 text-red-600 border-none font-medium",
         "campaign-on-hold": "bg-gray-100 text-gray-600 border-none font-medium",
         "campaign-paused": "bg-gray-100 text-gray-600 border-none font-medium",

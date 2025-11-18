@@ -46,7 +46,7 @@
           </p>
         </template>
         <template v-else>
-          <div class="flex w-full max-w-[350px] items-center space-x-3">
+          <div class="flex items-center space-x-3 w-full">
             <Progress
               :model-value="
                 Math.round(
@@ -72,16 +72,17 @@
         </template>
       </div>
       <div class="flex overflow-x-hidden absolute bottom-4 mt-4 space-x-2">
-        <p
-          v-if="cause.causeStatus"
-          :class="`text-xs text-gray-600 py-1 px-2  w-fit rounded-full ${
+        <Badge
+          :variant="
             cause.causeStatus === 'Funded'
-              ? 'bg-green-100 text-green-600'
-              : 'bg-red-100 text-red-600'
-          }`"
+              ? 'campaign-funded'
+              : 'campaign-ongoing'
+          "
+          class="px-2"
         >
-          {{ cause.causeStatus }}
-        </p>
+          {{ cause.causeStatus === "Funded" ? "Funded" : "Ongoing" }}
+        </Badge>
+
         <p
           v-for="(tag, index) in cause.tags"
           :key="index"

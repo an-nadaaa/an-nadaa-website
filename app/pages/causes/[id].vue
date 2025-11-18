@@ -143,16 +143,10 @@
           :index="currentIndex"
           @hide="onHide"
         />
+        <div class="mt-4 lg:hidden">
+          <CauseDonateCard :cause="cause" :scrollToElement="scrollToElement" />
+        </div>
 
-        <CauseDonateCard
-          class="mt-4 lg:hidden"
-          :cause="cause"
-          :scrollToElement="scrollToElement"
-        />
-
-        <!-- <p>
-          {{ causeHtml }}
-        </p> -->
         <div
           :class="` mt-4 relative overflow-hidden pb-2
            ${isExpanded ? '' : 'h-[200px]'}`"
