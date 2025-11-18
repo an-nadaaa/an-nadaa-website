@@ -102,7 +102,7 @@
                   :key="donation.id"
                 >
                   <TableCell>
-                    <div class="flex flex-col">
+                    <div class="flex gap-2">
                       <p
                         v-if="
                           !donation.causeTitle || donation.causeTitle === ''
@@ -121,6 +121,19 @@
                       <p v-else class="font-light">
                         {{ donation.causeTitle }}
                       </p>
+                      <div
+                        v-if="donation.donationType === 'monthly'"
+                        class="inline-block relative group"
+                      >
+                        <Badge class="text-[10px] w-fit">
+                          <Icon name="lucide:repeat" class="w-2 h-2" />
+                        </Badge>
+                        <div
+                          class="hidden absolute left-1/2 z-10 px-2 py-1 mt-2 min-w-max text-xs text-white whitespace-nowrap bg-gray-900 rounded transition -translate-x-1/2 group-hover:block"
+                        >
+                          Recurring payment
+                        </div>
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>

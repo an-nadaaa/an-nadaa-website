@@ -4,6 +4,7 @@
       <NuxtLink
         :to="$localePath('/')"
         class="flex gap-2 items-center px-2 py-3"
+        @click="handleLinkClick"
       >
         <NuxtImg
           :src="(appConfig.logo as any).whiteLargeText"
@@ -13,12 +14,12 @@
       </NuxtLink>
     </SidebarHeader>
     <!-- <SidebarSeparator /> -->
-    <SidebarContent>
+    <SidebarContent class="text-white">
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu class="space-y-2">
             <SidebarMenuItem v-for="item in navItems" :key="item.title">
-              <NuxtLink :to="$localePath(item.url)">
+              <NuxtLink :to="$localePath(item.url)" @click="handleLinkClick">
                 <div
                   class="flex gap-2 items-center px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   :class="{ 'bg-sidebar-accent': isActive(item.url) }"
@@ -35,7 +36,7 @@
               <!-- </SidebarMenuButton> -->
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <NuxtLink :to="$localePath('/causes')">
+              <NuxtLink :to="$localePath('/causes')" @click="handleLinkClick">
                 <Button class="w-full font-light hover:cursor-pointer"
                   >Donate now</Button
                 >
@@ -54,7 +55,7 @@
                 :data-active="isActive(item.url)"
                 :is-active="isActive(item.url)"
               >
-                <NuxtLink :to="$localePath(item.url)">
+                <NuxtLink :to="$localePath(item.url)" @click="handleLinkClick">
                   <component :is="item.icon" />
                   <span>{{ item.title }}</span>
                 </NuxtLink>
@@ -118,6 +119,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 // const { logout } = useStrapiAuth()
@@ -127,7 +129,7 @@ const route = useRoute()
 const router = useRouter()
 // const user = useStrapiUser()
 const appConfig = useAppConfig()
-
+const { setOpenMobile, isMobile } = useSidebar()
 // Navigation items
 const navItems = [
   {
@@ -183,6 +185,13 @@ const userEmail = computed(() => {
 // Check if route is active
 const isActive = (url: string) => {
   return route.path === url || route.path.startsWith(url + "/")
+}
+
+// Handle link click - close sidebar on mobile
+const handleLinkClick = () => {
+  if (isMobile.value) {
+    setOpenMobile(false)
+  }
 }
 
 // Handle logout

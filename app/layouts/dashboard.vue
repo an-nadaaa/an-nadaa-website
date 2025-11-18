@@ -13,7 +13,7 @@ const { isCollapsed } = useSidebarState()
     <SidebarStateSync />
     <main class="flex flex-col flex-1 min-h-screen">
       <div class="flex-1">
-        <div class="py-4 mb-4 w-full bg-white drop-shadow-sm sm:hidden">
+        <div class="py-4 mb-4 w-full bg-white drop-shadow-sm md:hidden">
           <div
             class="container flex gap-4 items-center"
             :class="{ 'mx-auto': isCollapsed }"
