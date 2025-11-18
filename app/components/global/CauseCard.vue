@@ -73,6 +73,7 @@
       </div>
       <div class="flex overflow-x-hidden absolute bottom-4 mt-4 space-x-2">
         <p
+          v-if="cause.causeStatus"
           :class="`text-xs text-gray-600 py-1 px-2  w-fit rounded-full ${
             cause.causeStatus === 'Funded'
               ? 'bg-green-100 text-green-600'

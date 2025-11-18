@@ -714,12 +714,13 @@ export interface ApiDonationDonation extends Struct.CollectionTypeSchema {
     singularName: 'donation';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     amount: Schema.Attribute.Decimal;
     amountUSD: Schema.Attribute.Decimal;
     cause: Schema.Attribute.Relation<'oneToOne', 'api::cause.cause'>;
+    causeTitle: Schema.Attribute.String;
     conversionRate: Schema.Attribute.Decimal;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

@@ -25,7 +25,7 @@
               }
             "
             class="sm:w-fit"
-            :variant="'white'"
+            :variant="'outline'"
           >
             <Icon name="lucide:arrow-left" class="mr-2" />
             Go back</Button

@@ -29,7 +29,6 @@
     <p class="font-thin text-dark-gray">
       Your donation will make a difference no matter how little
     </p>
-    {{ toggleIndex }}
     <Tabs class="mt-4" v-model="toggleIndex" default-value="one-time">
       <TabsList class="w-full">
         <!-- todo: remove the coming soon block -->
@@ -54,7 +53,9 @@
           <SelectContent class="">
             <SelectGroup class="">
               <SelectItem
-                v-for="(currency, index) in Object.values(currencies as Record<string,any>)"
+                v-for="(currency, index) in Object.values(
+                  currencies as Record<string, any>
+                )"
                 :key="index"
                 :value="currency.code"
               >

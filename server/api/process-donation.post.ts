@@ -64,7 +64,7 @@ export type StripeTransactionMetadata = {
   productId: string
   causeId: string // This is the strapi cause document id
   id: number // This is the strapi cause int id
-  userId?: number // This is the strapi user int id
+  userId?: string // This is the strapi user document id
   causeTitle: string
   causeThumbnailUrl: string
 }
@@ -265,7 +265,7 @@ export default defineEventHandler(async (event) => {
     productId: productId || STRIPE_GENERAL_PRODUCT,
     causeId, // This is the strapi cause document id
     id: cause?.id, // This is the strapi cause int id
-    userId: userSession?.user?.user?.id, // This is the strapi user int id
+    userId: userSession?.user?.user?.documentId, // This is the strapi user int id
     causeTitle: cause?.title || "General Donation",
     causeThumbnailUrl: cause?.thumbnail?.formats?.thumbnail?.url,
   }

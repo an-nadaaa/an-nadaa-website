@@ -6,7 +6,7 @@
     >
       <div>
         <h1 class="text-2xl font-medium sm:text-3xl">
-          As-Salamu'Alaikum,
+          As-Salamu Alaikum,
           {{
             user?.user.username
               ? user.user.username.charAt(0).toUpperCase() +

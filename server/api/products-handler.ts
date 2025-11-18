@@ -1,28 +1,47 @@
 import Stripe from "stripe"
+
 // this function creates a new product and returns the product
 const STRIPE_SK_DEV = process.env.STRIPE_SK_DEV
 const STRIPE_SK_PROD = process.env.STRIPE_SK_PROD
 const STRIPE_SK =
   process.env.NODE_ENV === "production" ? STRIPE_SK_PROD : STRIPE_SK_DEV
-const BASE_URL =
-  process.env.CONTEXT === "production"
-    ? process.env.BASE_URL
-    : "http://localhost:1337"
-const headers = {
-  "Access-Control-Allow-Origin": BASE_URL,
-  "Access-Control-Allow-Headers": "Content-Type",
-}
+const STRIPE_GENERAL_PRODUCT =
+  process.env.NODE_ENV === "production"
+    ? process.env.STRIPE_GENERAL_PRODUCT_ID_PROD
+    : process.env.STRIPE_GENERAL_PRODUCT_ID_DEV
 const stripe = new Stripe(STRIPE_SK as string)
 
-export default defineEventHandler(async (event) => {
-  // CORS
-  // if (event.method === "OPTIONS") {
-  //   return {
-  //     statusCode: 200,
-  //     headers,
-  //   }
-  // }
+async function deleteProductWithPrices(productId: string) {
+  try {
+    // 1. Get all prices for this product
+    const prices = await stripe.prices.list({
+      product: productId,
+      limit: 100,
+    })
 
+    // 2. Archive each price. It is not possible to completely delete a price through stripe API so we archive it instead.
+    for (const price of prices.data) {
+      await stripe.prices.update(price.id, {
+        active: false,
+      })
+      console.log("Price archived:", price.id)
+    }
+
+    // 3. Now archive the product. It is not possible to completely delete a product through stripe API so we archive it instead.
+    const product = await stripe.products.update(productId, {
+      active: false,
+    })
+
+    console.log("Product archived:", product.id)
+
+    return product
+  } catch (error) {
+    console.error("Error:", error)
+    throw error
+  }
+}
+
+export default defineEventHandler(async (event) => {
   if (event.method === "GET" || event.method === "PUT") {
     throw createError({
       statusCode: 405,
@@ -33,24 +52,7 @@ export default defineEventHandler(async (event) => {
   if (event.method === "POST") {
     const entity = await readBody(event)
 
-    console.log("Entity:", entity)
-
-    // return
-
     const DEFAULT_PRODUCT_VALUE = "PRODUCT_WILL_BE_CREATED"
-
-    // if (entity.product !== DEFAULT_PRODUCT_VALUE && entity.product) {
-    //   // if product is already created
-    //   console.log(entity.product)
-
-    //   return {
-    //     statusCode: 400,
-    //     headers,
-    //     body: JSON.stringify({
-    //       message: "Product field already populated",
-    //     }),
-    //   }
-    // }
     let product
 
     try {
@@ -88,27 +90,12 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    console.log("Product:", product)
-
     return product
-    // return {
-    //   statusCode: 200,
-    //   headers,
-    //   body: JSON.stringify(product),
-    // }
   }
 
   if (event.method === "DELETE") {
-    console.log("Delete Product")
-
+    console.log("Delete product")
     const entity = await readBody(event)
-    const ENV = entity.environment
-    const STRIPE_GENERAL_PRODUCT =
-      ENV === "production"
-        ? process.env.STRIPE_GENERAL_PRODUCT_ID_PROD
-        : process.env.STRIPE_GENERAL_PRODUCT_ID_DEV
-    const STRIPE_SK = ENV === "production" ? STRIPE_SK_PROD : STRIPE_SK_DEV
-    const stripe = require("stripe")(STRIPE_SK)
 
     if (entity.product === STRIPE_GENERAL_PRODUCT) {
       throw createError({
@@ -118,16 +105,15 @@ export default defineEventHandler(async (event) => {
     }
 
     if (!entity.product) {
-      return {
-        message: "No product ID provided so no product was deleted",
-        // statusCode: 200,
-        // headers,
-        // body: JSON.stringify(product),
-      }
+      throw createError({
+        statusCode: 400,
+        statusMessage: "No product ID provided so no product was deleted",
+      })
     }
+
     let product
     try {
-      product = await stripe.products.del(entity.product)
+      product = await deleteProductWithPrices(entity.product)
     } catch (error) {
       console.error("Error Deleting Product:", error)
       throw createError({
@@ -136,13 +122,7 @@ export default defineEventHandler(async (event) => {
         data: error,
       })
     }
-    // console.log("Product Deleted:", product)
 
     return product
-    // return {
-    //   statusCode: 200,
-    //   headers,
-    //   body: JSON.stringify(product),
-    // }
   }
 })

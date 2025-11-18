@@ -1,5 +1,4 @@
 <template>
-  {{ error }}
   <div class="space-y-6 max-w-full">
     <!-- Header Section -->
     <div
@@ -70,10 +69,10 @@
         </div>
       </div> -->
 
-      <VueSpinnerBars
+      <!-- <VueSpinnerBars
         v-if="loadingDonations"
         class="mx-auto my-48 text-5xl text-primary"
-      />
+      /> -->
 
       <!-- Table -->
       <div
@@ -100,16 +99,22 @@
             <TableRow v-for="donation in donations?.data" :key="donation.id">
               <TableCell>
                 <div class="flex flex-col">
-                  <p v-if="!donation.cause" class="font-light">
+                  <p
+                    v-if="!donation.causeTitle || donation.causeTitle === ''"
+                    class="font-light"
+                  >
                     General Donation
                   </p>
                   <NuxtLink
-                    v-else
+                    v-else-if="donation.cause"
                     :to="`/causes/${donation.cause?.documentId}`"
                     class="font-light hover:underline text-primary"
                   >
                     {{ donation.cause?.title }}
                   </NuxtLink>
+                  <p v-else class="font-light">
+                    {{ donation.causeTitle }}
+                  </p>
                 </div>
               </TableCell>
               <TableCell>
@@ -438,7 +443,7 @@ const {
     data: (ApiDonationDonation & { cause: any | null })[]
   }
 >(
-  "donations",
+  "donations-" + Date.now(),
   () => {
     return $fetch("/api/dashboard/donations", {
       method: "GET",
