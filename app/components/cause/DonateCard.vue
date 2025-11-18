@@ -91,20 +91,52 @@
       friends
     </p>
   </Card>
+
+  <!-- Login Required Dialog for Monthly Donations -->
+  <Dialog v-model:open="loginDialogOpen">
+    <DialogContent class="sm:max-w-[425px] max-w-11/12 rounded-lg">
+      <DialogHeader>
+        <DialogTitle>Login Required</DialogTitle>
+        <DialogDescription>
+          You must be logged in to set up monthly donations. Please sign up if
+          you don't have an account, or log in to continue.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter class="gap-2 rounded-b-lg">
+        <DialogClose as-child>
+          <Button variant="outline">Cancel</Button>
+        </DialogClose>
+        <Button as-child>
+          <NuxtLink to="/login">Log In</NuxtLink>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Input from "../ui/input/Input.vue"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
+const { loggedIn } = useUserSession()
 const { currencies, defaultCurrency } = useAppConfig()
 const route = useRoute()
 const { formatCurrency } = useMoneyFormat()
 const amount = ref()
 const currencySelector = ref((defaultCurrency as any).code)
 const props = defineProps(["cause", "scrollToElement"])
-const toggleIndex = ref("one-time")
+const toggleIndex = ref<"one-time" | "monthly">("one-time")
 const url = ref("")
+const loginDialogOpen = ref(false)
 
 const disabled = computed(() => !amount.value || amount.value <= 0)
 const urlQueries = computed(
@@ -144,6 +176,15 @@ function share() {
 
 onMounted(() => {
   url.value = window.location.href
+})
+
+// Watch for toggle changes - if user switches to monthly and is not logged in, show dialog
+watch(toggleIndex, (newValue) => {
+  if (newValue === "monthly" && !loggedIn.value) {
+    loginDialogOpen.value = true
+    // Reset toggle back to one-time since they can't proceed with monthly
+    toggleIndex.value = "one-time"
+  }
 })
 </script>
 

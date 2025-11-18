@@ -53,7 +53,9 @@
             <SelectContent class="">
               <SelectGroup class="">
                 <SelectItem
-                  v-for="(currency, index) in Object.values(currencies as Record<string,any>)"
+                  v-for="(currency, index) in Object.values(
+                    currencies as Record<string, any>
+                  )"
                   :key="index"
                   :value="currency.code"
                 >
@@ -98,9 +100,41 @@
       </div>
     </CardContent>
   </Card>
+
+  <!-- Login Required Dialog for Monthly Donations -->
+  <Dialog v-model:open="loginDialogOpen">
+    <DialogContent class="sm:max-w-[425px] max-w-11/12 rounded-lg">
+      <DialogHeader>
+        <DialogTitle>Login Required</DialogTitle>
+        <DialogDescription>
+          You must be logged in to set up monthly donations. Please sign up if
+          you don't have an account, or log in to continue.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter class="gap-2 rounded-b-lg">
+        <DialogClose as-child>
+          <Button variant="outline">Cancel</Button>
+        </DialogClose>
+        <Button as-child>
+          <NuxtLink to="/login">Log In</NuxtLink>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+
+const { loggedIn } = useUserSession()
 const props = defineProps({
   causes: {
     type: Array<any>,
@@ -117,10 +151,10 @@ const props = defineProps({
 })
 
 const { currencies, defaultCurrency } = useAppConfig()
-
+const loginDialogOpen = ref(false)
 const disabled = computed(() => !amount.value || amount.value <= 0)
 const currencySelector = ref((defaultCurrency as any).code)
-const frequencySelector = ref("one-time")
+const frequencySelector = ref<"one-time" | "monthly">("one-time")
 const amount = ref<any>("")
 const route = useRoute()
 const isCheckout = route.fullPath.includes("checkout")
@@ -163,6 +197,14 @@ function validateAmount() {
     }
   }
 }
+
+watch(frequencySelector, (newValue) => {
+  if (newValue === "monthly" && !loggedIn.value) {
+    loginDialogOpen.value = true
+    // Reset toggle back to one-time since they can't proceed with monthly
+    frequencySelector.value = "one-time"
+  }
+})
 </script>
 
 <style scoped>

@@ -53,7 +53,9 @@
             <SelectContent class="">
               <SelectGroup class="">
                 <SelectItem
-                  v-for="(currency, index) in Object.values(currencies as Record<string,any>)"
+                  v-for="(currency, index) in Object.values(
+                    currencies as Record<string, any>
+                  )"
                   :key="index"
                   :value="currency.code"
                 >
@@ -99,11 +101,42 @@
       </div>
     </CardContent>
   </Card>
+
+  <!-- Login Required Dialog for Monthly Donations -->
+  <Dialog v-model:open="loginDialogOpen">
+    <DialogContent class="sm:max-w-[425px] max-w-11/12 rounded-lg">
+      <DialogHeader>
+        <DialogTitle>Login Required</DialogTitle>
+        <DialogDescription>
+          You must be logged in to set up monthly donations. Please sign up if
+          you don't have an account, or log in to continue.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter class="gap-2 rounded-b-lg">
+        <DialogClose as-child>
+          <Button variant="outline">Cancel</Button>
+        </DialogClose>
+        <Button as-child>
+          <NuxtLink to="/login">Log In</NuxtLink>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-const { currencies } = useAppConfig()
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
+const { currencies } = useAppConfig()
+const { loggedIn } = useUserSession()
 const disabled = computed(() => !amount.value || parseFloat(amount.value) <= 0)
 const causeSelected = defineModel("causeSelected", {
   type: String,
@@ -124,7 +157,7 @@ const donationFrequency = defineModel("donationFrequency", {
 
 const route = useRoute()
 const isCheckout = route.fullPath.includes("checkout")
-
+const loginDialogOpen = ref(false)
 const urlQueries = computed(
   () =>
     new URLSearchParams({
@@ -144,6 +177,13 @@ function validateAmount() {
   }
 }
 
+watch(donationFrequency, (newValue) => {
+  if (newValue === "monthly" && !loggedIn.value) {
+    loginDialogOpen.value = true
+    // Reset toggle back to one-time since they can't proceed with monthly
+    donationFrequency.value = "one-time"
+  }
+})
 defineProps({
   causes: {
     type: Array<any>,
