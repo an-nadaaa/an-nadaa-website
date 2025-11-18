@@ -93,7 +93,7 @@
                   <TableHead class="min-w-[120px]">Date</TableHead>
                   <TableHead class="min-w-[120px]">Payment Status</TableHead>
                   <TableHead class="min-w-[120px]">Payment method</TableHead>
-                  <TableHead class="w-[50px]"></TableHead>
+                  <TableHead class="w-[50px]">Invoice</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -263,6 +263,19 @@
                     }}</span>
                   </TableCell>
                   <TableCell>
+                    <a
+                      :class="[
+                        !donation.invoiceUrl && 'opacity-50',
+                        !donation.invoiceUrl
+                          ? 'cursor-not-allowed'
+                          : 'cursor-pointer',
+                        donation.invoiceUrl ? 'hover:text-primary' : '',
+                      ]"
+                      :href="donation.invoiceUrl"
+                      target="_blank"
+                    >
+                      <Icon name="lucide:file-text" class="w-4 h-4" />
+                    </a>
                     <!-- <DropdownMenu>
                       <DropdownMenuTrigger as-child>
                         <Button variant="ghost" size="icon" class="w-8 h-8">

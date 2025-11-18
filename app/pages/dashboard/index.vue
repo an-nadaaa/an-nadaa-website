@@ -197,6 +197,7 @@
         class="lg:col-span-2"
         :hide-show-all-link="false"
         :hide-dropdown-menu="true"
+        :limit="5"
       />
     </div>
   </div>

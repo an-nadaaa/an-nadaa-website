@@ -34,7 +34,7 @@
     >
       <div class="grid grid-cols-1">
         <div
-          v-for="monthlyDonation in monthlyDonations?.data"
+          v-for="monthlyDonation in monthlyDonations?.data?.slice(0, limit)"
           :key="monthlyDonation.id"
           class="flex overflow-hidden gap-2 justify-between items-center py-5 border-b border-gray-200"
         >
@@ -206,11 +206,13 @@ import { useToast } from "@/components/ui/toast"
 interface Props {
   hideDropdownMenu?: boolean
   hideShowAllLink?: boolean
+  limit?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   hideDropdownMenu: false,
   hideShowAllLink: false,
+  limit: undefined,
 })
 
 const { toast } = useToast()

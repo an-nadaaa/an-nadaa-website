@@ -733,6 +733,7 @@ export interface ApiDonationDonation extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'one-time'>;
     email: Schema.Attribute.String;
+    invoiceUrl: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
