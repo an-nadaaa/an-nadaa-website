@@ -108,7 +108,9 @@ export default defineEventHandler(async (event: any) => {
   >()
 
   // Process each donation
-  for (const donation of donations.data) {
+  for (const donation of donations.data.filter(
+    (donation) => donation.donationStatus === "success"
+  )) {
     const amountUSD = (donation.amountUSD as number) || 0
     const currency = (donation.currency as string)?.toLowerCase()
     // For MYR: use original amount if currency is MYR, otherwise convert USD to MYR
