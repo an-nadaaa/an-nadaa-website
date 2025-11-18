@@ -1,4 +1,5 @@
 import { vite as vidstack } from "vidstack/plugins"
+import tailwindcss from "@tailwindcss/vite"
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -6,6 +7,11 @@ export default defineNuxtConfig({
     head: {
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
+  },
+  css: ["./app/assets/css/tailwind.css"],
+  shadcn: {
+    prefix: "",
+    componentDir: "./app/components/ui", // Change to new directory
   },
   future: {
     compatibilityVersion: 4,
@@ -42,26 +48,46 @@ export default defineNuxtConfig({
         process.env.NODE_ENV === "production"
           ? process.env.STRAPI_API_KEY_PROD
           : process.env.STRAPI_API_KEY_DEV,
+      strapi: {
+        url:
+          process.env.NODE_ENV === "production"
+            ? process.env.STRAPI_API_PROD
+            : process.env.STRAPI_API_DEV,
+        prefix: "",
+        admin: "/admin",
+        version: "v5",
+        cookie: {
+          path: "/",
+          maxAge: 14 * 24 * 60 * 60,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: false,
+        },
+        cookieName: "strapi_jwt",
+      },
     },
     STRIPE_SK:
       process.env.NODE_ENV === "production"
         ? process.env.STRIPE_SK_PROD
         : process.env.STRIPE_SK_DEV,
+    STRAPI_API_KEY_BACKEND:
+      process.env.NODE_ENV === "production"
+        ? process.env.STRAPI_API_KEY_BACKEND_PROD
+        : process.env.STRAPI_API_KEY_BACKEND_DEV,
   },
 
   modules: [
-    "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
-    "shadcn-nuxt",
-    "@pinia/nuxt", // "shadcn/nuxt",
+    "shadcn-nuxt", // "shadcn/nuxt",
+    "@pinia/nuxt",
     "@nuxt/icon",
     "@nuxtjs/i18n",
     "@nuxt/content",
     "@nuxt/image",
+    "@nuxtjs/strapi",
+    "nuxt-auth-utils",
   ],
   postcss: {
     plugins: {
-      tailwindcss: {},
       autoprefixer: {},
     },
   },
@@ -70,37 +96,36 @@ export default defineNuxtConfig({
       anchorLinks: false,
     },
   },
-  i18n: {
-    bundle: {
-      optimizeTranslationDirective: false,
+  strapi: {
+    url:
+      process.env.NODE_ENV === "production"
+        ? process.env.STRAPI_API_PROD
+        : process.env.STRAPI_API_DEV,
+    token:
+      process.env.NODE_ENV === "production"
+        ? process.env.STRAPI_API_KEY_PROD
+        : process.env.STRAPI_API_KEY_DEV,
+    prefix: "",
+    admin: "/admin",
+    version: "v5",
+    cookie: {
+      path: "/",
+      maxAge: 14 * 24 * 60 * 60,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: true,
     },
-    locales: [
-      {
-        code: "en",
-        language: "en-US",
-        file: "translations/en.js",
-        dir: "ltr",
-        name: "English",
-      },
-      {
-        code: "ar",
-        language: "ar-SA",
-        file: "translations/ar.js",
-        dir: "rtl",
-        name: "العربية",
-      },
-      {
-        code: "ms",
-        language: "ms-MY",
-        file: "translations/ms.js",
-        dir: "ltr",
-        name: "Bahasa Malayu",
-      },
-      // we use the NG postfix because sw is ignored in git ignore for being a convention for service workers
-    ],
+    cookieName: "strapi_jwt",
+  },
+  i18n: {
     defaultLocale: "en",
+    locales: [
+      { code: "en", name: "English", file: "en.json" },
+      // { code: "ar", name: "العربية", file: "ar.json" },
+      // { code: "ms", name: "Bahasa Malayu", file: "ms.json" },
+      // { code: "sw", name: "Swahili", file: "sw.json" },
+    ],
     defaultDirection: "ltr",
-    lazy: true,
+    // lazy: true,
     strategy: "prefix_except_default",
   },
   vue: {
@@ -109,6 +134,6 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    plugins: [vidstack()],
+    plugins: [vidstack(), tailwindcss()],
   },
 })
