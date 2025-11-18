@@ -61,13 +61,4 @@ export default defineEventHandler(async (event: any) => {
     data: monthlySubscriptions,
     success: true,
   }
-
-  // const query = await getValidatedQuery(event, monthlyDonationsQuerySchema.parse)
-  // const { page = "1", pageSize = "20" } = query
-
-  // const query = qs.stringify(
-  //   {
-  //     populate: "*",
-  //   },
-  // )
 })

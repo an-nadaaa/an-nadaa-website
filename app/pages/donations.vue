@@ -308,7 +308,7 @@
               donations.meta.pagination.pageCount > 0 &&
               !loadingDonations
             "
-            class="flex justify-between items-center w-full"
+            class="flex justify-between items-center mt-4 w-full"
           >
             <!-- Previous Button -->
             <button
@@ -457,22 +457,48 @@
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <div class="flex flex-col grow">
+                  <div
+                    class="flex flex-col grow"
+                    :class="{
+                      'opacity-50':
+                        monthlyDonation.status === 'active' &&
+                        monthlyDonation.pause_collection,
+                    }"
+                  >
                     <h3
                       class="text-base font-normal truncate"
                       style="max-width: 100%"
                     >
                       {{ monthlyDonation.metadata.causeTitle }}
                     </h3>
-                    <p class="text-xs font-light text-gray-400">
+                    <p
+                      v-if="
+                        monthlyDonation.status === 'active' &&
+                        !monthlyDonation.pause_collection
+                      "
+                      class="text-xs font-light text-gray-400"
+                    >
                       Next payment on
                       {{
                         formatDate(monthlyDonation.current_period_end * 1000)
                       }}
                     </p>
+                    <p v-else class="text-xs font-light text-gray-400">
+                      Paused
+                    </p>
                   </div>
                   <div class="flex flex-col items-end">
-                    <p class="text-sm font-medium text-green-500">
+                    <p
+                      class="text-sm font-medium"
+                      :class="{
+                        'text-gray-500':
+                          monthlyDonation.status === 'active' &&
+                          monthlyDonation.pause_collection,
+                        'text-green-500':
+                          monthlyDonation.status === 'active' &&
+                          !monthlyDonation.pause_collection,
+                      }"
+                    >
                       {{
                         formatCurrency(
                           ((
@@ -515,14 +541,14 @@
 
     <!-- Confirmation Dialog -->
     <Dialog v-model:open="dialogOpen">
-      <DialogContent class="sm:max-w-[425px]">
+      <DialogContent class="sm:max-w-[425px] max-w-11/12 rounded-lg">
         <DialogHeader>
           <DialogTitle>{{ getDialogTitle() }}</DialogTitle>
           <DialogDescription>
             {{ getDialogDescription() }}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter class="gap-2 rounded-b-lg">
           <DialogClose as-child>
             <Button variant="outline" :disabled="isProcessing"> Cancel </Button>
           </DialogClose>
@@ -576,11 +602,13 @@ import type {
   ApiCauseCause,
   ApiDonationDonation,
 } from "@@/types/strapi/contentTypes"
+import { useToast } from "@/components/ui/toast"
 
 definePageMeta({
   layout: "dashboard",
 })
 
+const { toast } = useToast()
 const { formatCurrency } = useMoneyFormat()
 const { formateDayMonthYear } = useDateFormatter()
 
@@ -590,18 +618,6 @@ const currentPage = ref(1)
 
 // Timeframe state
 const timeframe = ref("12months")
-
-// Mock donation data
-interface Donation {
-  id: number
-  campaign: string
-  causeId: number
-  amount: number
-  campaignProgress: number
-  date: string
-  paymentStatus: "Success" | "Failed" | "Refunded" | "Pending"
-  paymentMethod: string
-}
 
 const {
   data: donations,
@@ -638,14 +654,6 @@ const {
 watch([currentPage, pageSize], () => {
   refreshDonations()
 })
-
-// const donations = ref<{
-//   data: any[]
-//   meta: Record<string, any>
-// }>({
-//   data: [],
-//   meta: {},
-// })
 
 const {
   data: monthlyDonations,
@@ -771,38 +779,6 @@ function formatDate(date: any) {
   return formateDayMonthYear(date, "MMMM D, YYYY")
 }
 
-function getStatusVariant(
-  status: Donation["paymentStatus"]
-): "default" | "success" | "destructive" | "warning" | "outline" {
-  switch (status) {
-    case "Success":
-      return "success"
-    case "Failed":
-      return "destructive"
-    case "Refunded":
-      return "default"
-    case "Pending":
-      return "warning"
-    default:
-      return "outline"
-  }
-}
-
-function getStatusDotClass(status: Donation["paymentStatus"]) {
-  switch (status) {
-    case "Success":
-      return "bg-green-500"
-    case "Failed":
-      return "bg-red-500"
-    case "Refunded":
-      return "bg-blue-500"
-    case "Pending":
-      return "bg-orange-500"
-    default:
-      return "bg-gray-500"
-  }
-}
-
 const datePickerOpen = ref(false)
 
 // Pagination computed properties
@@ -924,21 +900,31 @@ async function handleSubscriptionAction() {
   try {
     await $fetch("/api/dashboard/subscription", {
       method: "POST",
-      query: {
-        subscriptionId: selectedSubscriptionId.value,
-        action: dialogAction.value,
-      },
       headers: {
         "Content-Type": "application/json",
       },
+      body: {
+        subscriptionId: selectedSubscriptionId.value,
+        action: dialogAction.value,
+      },
     })
 
+    toast({
+      title: "Subscription updated",
+      description: "Your subscription has been updated successfully",
+      variant: "default",
+    })
     // Refresh monthly donations after action
     await refreshMonthlyDonations()
     closeDialog()
   } catch (error) {
     console.error("Error managing subscription:", error)
     // You might want to show a toast notification here
+    toast({
+      title: "Error updating subscription",
+      description: "An error occurred while updating your subscription",
+      variant: "destructive",
+    })
   } finally {
     isProcessing.value = false
   }
