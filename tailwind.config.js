@@ -5,7 +5,6 @@ const config = {
   darkMode: ["class"],
   safelist: ["dark"],
   prefix: "",
-
   theme: {
     container: {
       center: true,
@@ -23,7 +22,6 @@ const config = {
       },
       aspectRatio: {
         "2/3": "2 / 3",
-
         "3/2": "3 / 2",
         "3/4": "3 / 4",
         "4/3": "4 / 3",
