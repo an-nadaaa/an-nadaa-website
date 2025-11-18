@@ -3,7 +3,7 @@
     <CardHeader>
       <div class="flex justify-between items-center">
         <CardTitle class="text-base font-medium"
-          >Ongoing Monthly Donations</CardTitle
+          >Your Monthly Donations</CardTitle
         >
       </div>
     </CardHeader>
@@ -122,6 +122,16 @@
             </p>
           </div>
         </div>
+        <NuxtLink
+          v-if="!hideShowAllLink"
+          :to="$localePath('/dashboard/donations')"
+        >
+          <p
+            class="font-medium text-sm mt-4 text-right text-[#166588] hover:underline cursor-pointer"
+          >
+            Show all monthly donations
+          </p>
+        </NuxtLink>
       </div>
     </CardContent>
     <CardContent v-else>
@@ -195,10 +205,12 @@ import { useToast } from "@/components/ui/toast"
 
 interface Props {
   hideDropdownMenu?: boolean
+  hideShowAllLink?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   hideDropdownMenu: false,
+  hideShowAllLink: false,
 })
 
 const { toast } = useToast()

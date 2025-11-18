@@ -139,7 +139,7 @@ const navItems = [
   },
   {
     title: "My Donations",
-    url: "/donations",
+    url: "/dashboard/donations",
     icon: Layers,
   },
   // {
@@ -184,6 +184,10 @@ const userEmail = computed(() => {
 
 // Check if route is active
 const isActive = (url: string) => {
+  if (url === "/dashboard") {
+    // active only for exact match or /dashboard (not for subroutes)
+    return route.path === "/dashboard"
+  }
   return route.path === url || route.path.startsWith(url + "/")
 }
 

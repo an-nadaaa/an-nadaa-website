@@ -1,3 +1,4 @@
+import type { User } from "#auth-utils"
 import { jwtDecode } from "jwt-decode"
 // App middleware is not auto applied to all routes, must be manually applied
 // in the definePageMeta
@@ -35,7 +36,11 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     await logout()
     return navigateTo("/login")
   } else {
-    const { token } = user.value
+    if (!user.value) {
+      await logout()
+      return navigateTo("/login")
+    }
+    const { token } = user.value as User
 
     try {
       const decoded = jwtDecode<{ exp: number }>(token)
