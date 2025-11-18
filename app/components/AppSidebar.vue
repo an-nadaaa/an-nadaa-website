@@ -105,6 +105,7 @@ import {
   HelpCircle,
   Settings,
   LogOut,
+  Mail,
 } from "lucide-vue-next"
 import {
   Sidebar,
@@ -149,9 +150,9 @@ const navItems = [
 // Utility items
 const utilityItems = [
   {
-    title: "Support",
-    url: "/support",
-    icon: HelpCircle,
+    title: "Contact Us",
+    url: "/contact",
+    icon: Mail,
   },
   {
     title: "Settings",

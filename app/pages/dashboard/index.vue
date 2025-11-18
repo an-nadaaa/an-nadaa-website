@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <!-- Header Section -->
     <div
-      class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center"
+      class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start"
     >
       <div>
         <h1 class="text-2xl font-medium sm:text-3xl">
@@ -63,14 +63,39 @@
           >
         </CardHeader>
         <CardContent>
-          <div v-if="!loadingDonationStats" class="space-y-1">
+          <div v-if="!loadingDonationStats" class="relative space-y-1">
             <p class="text-3xl font-semibold">
               {{ formatCurrency(donationStats?.totalAmountUSD ?? 0) }}
             </p>
-            <p class="text-sm text-orange-500">
-              ↑ 0% vs last
+            <Badge
+              :variant="
+                donationStats?.percentageChange?.totalAmountUSD === 0
+                  ? 'payment-pending'
+                  : donationStats?.percentageChange?.totalAmountUSD &&
+                      donationStats?.percentageChange?.totalAmountUSD > 0
+                    ? 'payment-success'
+                    : 'payment-failed'
+              "
+              class="absolute right-0 bottom-0"
+            >
+              <span
+                v-if="
+                  donationStats?.percentageChange?.totalAmountUSD &&
+                  donationStats?.percentageChange?.totalAmountUSD > 0
+                "
+                >↑</span
+              >
+              <span
+                v-else-if="
+                  donationStats?.percentageChange?.totalAmountUSD &&
+                  donationStats?.percentageChange?.totalAmountUSD < 0
+                "
+                >↓</span
+              >
+              {{ donationStats?.percentageChange?.totalAmountUSD ?? 0 }}% vs
+              last
               {{ timeframeAlts[timeframe as keyof typeof timeframeAlts] }}
-            </p>
+            </Badge>
           </div>
           <div v-else>
             <Skeleton class="w-24 h-12"></Skeleton>
@@ -86,14 +111,38 @@
           >
         </CardHeader>
         <CardContent>
-          <div v-if="!loadingDonationStats" class="space-y-1">
+          <div v-if="!loadingDonationStats" class="relative space-y-1">
             <p class="text-3xl font-semibold">
               {{ donationStats?.totalDonations ?? 0 }}
             </p>
-            <p class="text-sm text-orange-500">
-              ↑ 0% vs last
+            <Badge
+              :variant="
+                donationStats?.percentageChange?.totalDonations === 0
+                  ? 'payment-pending'
+                  : donationStats?.percentageChange?.totalDonations &&
+                      donationStats?.percentageChange?.totalDonations > 0
+                    ? 'payment-success'
+                    : 'payment-failed'
+              "
+              class="absolute right-0 bottom-0"
+            >
+              <span
+                v-if="
+                  donationStats?.percentageChange?.totalDonations &&
+                  donationStats?.percentageChange?.totalDonations > 0
+                "
+                >↑</span
+              >
+              <span
+                v-else-if="
+                  donationStats?.percentageChange?.totalDonations &&
+                  donationStats?.percentageChange?.totalDonations < 0
+                "
+                >↓</span
+              >
+              {{ donationStats?.percentageChange?.totalDonations }}% vs last
               {{ timeframeAlts[timeframe as keyof typeof timeframeAlts] }}
-            </p>
+            </Badge>
           </div>
           <div v-else>
             <Skeleton class="w-24 h-12"></Skeleton>
@@ -144,16 +193,12 @@
         </CardContent>
       </Card>
 
-      <!-- Top 5 Donations made Card -->
       <Card class="lg:col-span-2">
         <CardHeader>
           <div class="flex justify-between items-center">
             <CardTitle class="text-base font-medium"
               >Your Monthly Donations</CardTitle
             >
-            <Button variant="ghost" size="icon" class="w-8 h-8">
-              <Icon name="lucide:more-vertical" class="w-4 h-4" />
-            </Button>
           </div>
         </CardHeader>
         <CardContent v-if="monthlyDonations?.data?.length === 0">
