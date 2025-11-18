@@ -154,11 +154,11 @@ const utilityItems = [
     url: "/contact",
     icon: Mail,
   },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Settings",
+  //   url: "/settings",
+  //   icon: Settings,
+  // },
 ]
 
 // Get user initials for avatar

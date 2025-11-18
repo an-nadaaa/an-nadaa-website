@@ -73,299 +73,471 @@
         v-if="loadingDonations"
         class="mx-auto my-48 text-5xl text-primary"
       /> -->
-
-      <!-- Table -->
-      <div
-        v-if="
-          !loadingDonations &&
-          donations?.data?.length &&
-          donations?.data?.length > 0
-        "
-        class="overflow-x-auto w-full"
-      >
-        <Table class="border-b-[0.1px] border-gray-100">
-          <TableHeader>
-            <TableRow class="[&>th]:text-sm [&>th]:font-medium">
-              <TableHead class="min-w-[200px]">Cause</TableHead>
-              <TableHead class="min-w-[50px]">Amount</TableHead>
-              <TableHead class="min-w-[150px]">Cause progress</TableHead>
-              <TableHead class="min-w-[120px]">Date</TableHead>
-              <TableHead class="min-w-[120px]">Payment Status</TableHead>
-              <TableHead class="min-w-[120px]">Payment method</TableHead>
-              <TableHead class="w-[50px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow v-for="donation in donations?.data" :key="donation.id">
-              <TableCell>
-                <div class="flex flex-col">
-                  <p
-                    v-if="!donation.causeTitle || donation.causeTitle === ''"
-                    class="font-light"
-                  >
-                    General Donation
-                  </p>
-                  <NuxtLink
-                    v-else-if="donation.cause"
-                    :to="`/causes/${donation.cause?.documentId}`"
-                    class="font-light hover:underline text-primary"
-                  >
-                    {{ donation.cause?.title }}
-                  </NuxtLink>
-                  <p v-else class="font-light">
-                    {{ donation.causeTitle }}
-                  </p>
-                </div>
-              </TableCell>
-              <TableCell>
-                <span class="font-light text-gray-500">
-                  {{
-                    formatCurrency(
-                      donation.amount as number,
-                      (donation.currency as string).toUpperCase()
-                    )
-                  }}
-                </span>
-              </TableCell>
-              <TableCell>
-                <div
-                  v-if="donation.cause?.causeType === 'campaign'"
-                  class="flex gap-3 items-center"
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-5">
+        <div class="order-2 lg:order-1 lg:col-span-3">
+          <!-- Table -->
+          <div
+            v-if="
+              !loadingDonations &&
+              donations?.data?.length &&
+              donations?.data?.length > 0
+            "
+            class="overflow-x-auto w-full"
+          >
+            <Table class="border-b-[0.1px] border-gray-100">
+              <TableHeader>
+                <TableRow class="[&>th]:text-sm [&>th]:font-medium">
+                  <TableHead class="min-w-[200px]">Cause</TableHead>
+                  <TableHead class="min-w-[50px]">Amount</TableHead>
+                  <TableHead class="min-w-[150px]">Cause progress</TableHead>
+                  <TableHead class="min-w-[120px]">Date</TableHead>
+                  <TableHead class="min-w-[120px]">Payment Status</TableHead>
+                  <TableHead class="min-w-[120px]">Payment method</TableHead>
+                  <TableHead class="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow
+                  v-for="donation in donations?.data"
+                  :key="donation.id"
                 >
-                  <Progress
-                    class="[&>div]:bg-primary h-2"
-                    :model-value="
-                      Math.max(
-                        Math.round(
-                          (parseFloat(donation.cause?.raisedAmount) /
-                            parseFloat(
-                              donation.cause?.goalDetails[0].goalAmount
-                            )) *
-                            100
-                        ),
-                        3
-                      )
-                    "
-                  />
-                  <p>
-                    {{
+                  <TableCell>
+                    <div class="flex flex-col">
+                      <p
+                        v-if="
+                          !donation.causeTitle || donation.causeTitle === ''
+                        "
+                        class="font-light"
+                      >
+                        General Donation
+                      </p>
+                      <NuxtLink
+                        v-else-if="donation.cause"
+                        :to="`/causes/${donation.cause?.documentId}`"
+                        class="font-light hover:underline text-primary"
+                      >
+                        {{ donation.cause?.title }}
+                      </NuxtLink>
+                      <p v-else class="font-light">
+                        {{ donation.causeTitle }}
+                      </p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span class="font-light text-gray-500">
+                      {{
+                        formatCurrency(
+                          donation.amount as number,
+                          (donation.currency as string).toUpperCase()
+                        )
+                      }}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div
+                      v-if="donation.cause?.causeType === 'campaign'"
+                      class="flex gap-3 items-center"
+                    >
+                      <Progress
+                        class="[&>div]:bg-primary h-2"
+                        :model-value="
+                          Math.max(
+                            Math.round(
+                              (parseFloat(donation.cause?.raisedAmount) /
+                                parseFloat(
+                                  donation.cause?.goalDetails[0].goalAmount
+                                )) *
+                                100
+                            ),
+                            3
+                          )
+                        "
+                      />
+                      <p>
+                        {{
+                          Math.round(
+                            (parseFloat(donation.cause?.raisedAmount) /
+                              parseFloat(
+                                donation.cause?.goalDetails[0].goalAmount
+                              )) *
+                              100
+                          )
+                        }}%
+                      </p>
+                    </div>
+                    <Badge
+                      v-else-if="donation.cause"
+                      :variant="
+                        donation.cause?.isActive
+                          ? 'campaign-funded'
+                          : 'campaign-ongoing'
+                      "
+                      class="px-2"
+                      showCircle
+                    >
+                      {{ donation.cause?.isActive ? "Active" : "Inactive" }}
+                    </Badge>
+
+                    <!-- {{ donation.cause.causeType }} -->
+                    <!-- {{
                       Math.round(
                         (parseFloat(donation.cause?.raisedAmount) /
-                          parseFloat(
-                            donation.cause?.goalDetails[0].goalAmount
-                          )) *
+                          parseFloat(donation.cause?.goalDetails[0].goalAmount)) *
                           100
                       )
-                    }}%
-                  </p>
-                </div>
-                <Badge
-                  v-else-if="donation.cause"
-                  :variant="
-                    donation.cause?.isActive
-                      ? 'campaign-funded'
-                      : 'campaign-ongoing'
-                  "
-                  class="px-2"
-                  showCircle
+                    }}
+                    {{ donation.cause?.goalDetails[0].goalAmount }} -->
+                    <!-- <div class="flex gap-2 items-center"> 
+                       <Badge
+                        v-if="donation.cause.causeType === 'project'"
+                        :variant="
+                          donation.cause?.isActive
+                            ? 'campaign-funded'
+                            : 'campaign-ongoing'
+                        "
+                        class="px-2"
+                        showCircle
+                      >
+                        {{ donation.cause?.isActive ? "Active" : "Inactive" }}
+                      </Badge>
+                      <div v-else class="flex gap-2 items-center">
+                        <Progress
+                          :model-value="
+                            Math.max(
+                              parseFloat(donation.cause?.raisedAmount) /
+                                parseFloat(
+                                  donation.cause?.goalDetails[0].goalAmount
+                                ),
+                              5
+                            )
+                          "
+                        />
+                        <p>
+                          {{
+                            Math.round(
+                              (parseFloat(donation.cause?.raisedAmount) /
+                                parseFloat(
+                                  donation.cause?.goalDetails[0].goalAmount
+                                )) *
+                                100
+                            )
+                          }}%
+                        </p>
+                      </div>
+                    </div> -->
+                  </TableCell>
+                  <TableCell>
+                    <span class="font-light text-gray-500">{{
+                      formatDate(donation.createdAt as string)
+                    }}</span>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="payment-success" class="px-2" showCircle>
+                      Success
+                    </Badge>
+                    <!-- <Badge
+                      variant="default"
+                      class="flex gap-1.5 items-center w-fit"
+                    >
+                      {{ donation.paymentStatus }}
+                    </Badge> -->
+                  </TableCell>
+                  <TableCell>
+                    <!-- Todo: Change this for other payment methods -->
+                    <span class="font-light">{{
+                      (donation.source as string).charAt(0).toUpperCase() +
+                      (donation.source as string).slice(1)
+                    }}</span>
+                  </TableCell>
+                  <TableCell>
+                    <!-- <DropdownMenu>
+                      <DropdownMenuTrigger as-child>
+                        <Button variant="ghost" size="icon" class="w-8 h-8">
+                          <Icon name="lucide:more-vertical" class="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                          <Icon name="lucide:file-text" class="mr-2 w-4 h-4" />
+                          View donation
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Icon name="lucide:download" class="mr-2 w-4 h-4" />
+                          Download receipt
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu> -->
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+          <div
+            v-else-if="
+              !loadingDonations &&
+              donations?.data?.length &&
+              donations?.data?.length === 0
+            "
+          >
+            <div
+              class="flex flex-col justify-center items-center py-8 space-y-4"
+            >
+              <!-- Empty State Illustration -->
+              <img src="/img/designing-a-website.png" class="w-32 h-32" />
+              <!-- <div
+                  class="flex justify-center items-center w-32 h-32 bg-gray-100 rounded-lg"
                 >
-                  {{ donation.cause?.isActive ? "Active" : "Inactive" }}
-                </Badge>
+                  <Icon name="lucide:tablet" class="w-16 h-16 text-gray-400" />
+                </div> -->
+              <div class="space-y-2 text-center">
+                <p class="text-base font-medium">
+                  You haven't made donation yet
+                </p>
+                <p class="text-sm text-gray-500">Come back later</p>
+              </div>
+              <NuxtLink :to="$localePath('/causes')">
+                <Button class="mt-4">Donate now</Button>
+              </NuxtLink>
+            </div>
+          </div>
 
-                <!-- {{ donation.cause.causeType }} -->
-                <!-- {{
-                  Math.round(
-                    (parseFloat(donation.cause?.raisedAmount) /
-                      parseFloat(donation.cause?.goalDetails[0].goalAmount)) *
-                      100
-                  )
-                }}
-                {{ donation.cause?.goalDetails[0].goalAmount }} -->
-                <!-- <div class="flex gap-2 items-center"> 
-                   <Badge
-                    v-if="donation.cause.causeType === 'project'"
-                    :variant="
-                      donation.cause?.isActive
-                        ? 'campaign-funded'
-                        : 'campaign-ongoing'
-                    "
-                    class="px-2"
-                    showCircle
-                  >
-                    {{ donation.cause?.isActive ? "Active" : "Inactive" }}
-                  </Badge>
-                  <div v-else class="flex gap-2 items-center">
-                    <Progress
-                      :model-value="
-                        Math.max(
-                          parseFloat(donation.cause?.raisedAmount) /
-                            parseFloat(
-                              donation.cause?.goalDetails[0].goalAmount
-                            ),
-                          5
-                        )
-                      "
-                    />
-                    <p>
+          <!-- Pagination -->
+          <div
+            v-if="
+              donations?.meta?.pagination &&
+              donations.meta.pagination.pageCount > 0 &&
+              !loadingDonations
+            "
+            class="flex justify-between items-center w-full"
+          >
+            <!-- Previous Button -->
+            <button
+              :disabled="!canGoToPrevious"
+              :class="[
+                'flex gap-2 items-center text-sm',
+                canGoToPrevious
+                  ? 'text-gray-500 cursor-pointer hover:underline hover:text-gray-700'
+                  : 'text-gray-300 cursor-not-allowed',
+              ]"
+              @click="goToPreviousPage"
+            >
+              <Icon name="lucide:arrow-left" class="w-4 h-4" />
+              <span class="hidden sm:inline">Previous</span>
+            </button>
+
+            <!-- Desktop: Page Numbers -->
+            <div class="hidden gap-1 items-center md:flex">
+              <template v-for="pageNum in visiblePages" :key="pageNum">
+                <button
+                  v-if="pageNum !== 'ellipsis'"
+                  :class="[
+                    'px-3 py-1.5 text-sm rounded-md transition-colors',
+                    pageNum === currentPage
+                      ? 'bg-gray-200 text-gray-800 font-medium shadow-sm'
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100',
+                  ]"
+                  @click="goToPage(pageNum as number)"
+                >
+                  {{ pageNum }}
+                </button>
+                <span v-else class="px-2 text-gray-500">...</span>
+              </template>
+            </div>
+
+            <!-- Mobile: Page Input -->
+            <div class="flex gap-2 items-center md:hidden">
+              <span class="text-sm text-gray-500">Page</span>
+              <input
+                v-model.number="pageInput"
+                type="number"
+                :min="1"
+                :max="totalPages"
+                class="px-2 py-1 w-12 text-sm text-center rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent no-spinner"
+                @keyup.enter="goToPageFromInput"
+                @blur="goToPageFromInput"
+                style="appearance: textfield; -moz-appearance: textfield"
+              />
+              <span class="text-sm text-gray-500">of {{ totalPages }}</span>
+            </div>
+
+            <!-- Next Button -->
+            <button
+              :disabled="!canGoToNext"
+              :class="[
+                'flex gap-2 items-center text-sm',
+                canGoToNext
+                  ? 'text-gray-500 cursor-pointer hover:underline hover:text-gray-700'
+                  : 'text-gray-300 cursor-not-allowed',
+              ]"
+              @click="goToNextPage"
+            >
+              <span class="hidden sm:inline">Next</span>
+              <Icon name="lucide:arrow-right" class="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        <div class="order-1 lg:order-2 lg:col-span-2">
+          <Card class="shadow-none lg:col-span-2">
+            <CardHeader>
+              <div class="flex justify-between items-center">
+                <CardTitle class="text-base font-medium"
+                  >Ongoing Monthly Donations</CardTitle
+                >
+              </div>
+            </CardHeader>
+            <CardContent v-if="monthlyDonations?.data?.length === 0">
+              <div
+                class="flex flex-col justify-center items-center py-8 space-y-4"
+              >
+                <!-- Empty State Illustration -->
+                <img src="/img/designing-a-website.png" class="w-32 h-32" />
+                <!-- <div
+                class="flex justify-center items-center w-32 h-32 bg-gray-100 rounded-lg"
+              >
+                <Icon name="lucide:tablet" class="w-16 h-16 text-gray-400" />
+              </div> -->
+                <div class="space-y-2 text-center">
+                  <p class="text-base font-medium">
+                    You haven't subscribed to any monthly donations yet
+                  </p>
+                  <p class="text-sm text-gray-500">Invest in your akhirah</p>
+                </div>
+                <NuxtLink :to="$localePath('/causes')">
+                  <Button class="mt-4">Donate now</Button>
+                </NuxtLink>
+              </div>
+            </CardContent>
+            <CardContent
+              class="max-h-[500px] overflow-y-auto"
+              v-else-if="
+                monthlyDonations?.data?.length &&
+                monthlyDonations?.data?.length > 0
+              "
+            >
+              <div class="grid grid-cols-1">
+                <div
+                  v-for="monthlyDonation in monthlyDonations?.data"
+                  :key="monthlyDonation.id"
+                  class="flex overflow-hidden gap-2 justify-between items-center py-5 border-b border-gray-200"
+                >
+                  <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                      <Button variant="ghost" size="icon" class="w-8 h-8">
+                        <Icon name="lucide:more-vertical" class="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" class="w-fit">
+                      <DropdownMenuItem
+                        v-if="
+                          monthlyDonation.status === 'active' &&
+                          !monthlyDonation.pause_collection
+                        "
+                        @click="openConfirmDialog('pause', monthlyDonation.id)"
+                      >
+                        <Icon name="lucide:pause" class="mr-2 w-4 h-4" />
+                        Pause
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        v-else-if="
+                          monthlyDonation.status === 'active' &&
+                          monthlyDonation.pause_collection
+                        "
+                        @click="openConfirmDialog('resume', monthlyDonation.id)"
+                      >
+                        <Icon name="lucide:play" class="mr-2 w-4 h-4" />
+                        Resume
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        @click="openConfirmDialog('cancel', monthlyDonation.id)"
+                        class="text-destructive focus:text-destructive"
+                      >
+                        <Icon name="lucide:x-circle" class="mr-2 w-4 h-4" />
+                        Cancel
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <div class="flex flex-col grow">
+                    <h3
+                      class="text-base font-normal truncate"
+                      style="max-width: 100%"
+                    >
+                      {{ monthlyDonation.metadata.causeTitle }}
+                    </h3>
+                    <p class="text-xs font-light text-gray-400">
+                      Next payment on
                       {{
-                        Math.round(
-                          (parseFloat(donation.cause?.raisedAmount) /
-                            parseFloat(
-                              donation.cause?.goalDetails[0].goalAmount
-                            )) *
-                            100
-                        )
-                      }}%
+                        formatDate(monthlyDonation.current_period_end * 1000)
+                      }}
                     </p>
                   </div>
-                </div> -->
-              </TableCell>
-              <TableCell>
-                <span class="font-light text-gray-500">{{
-                  formatDate(donation.createdAt as string)
-                }}</span>
-              </TableCell>
-              <TableCell>
-                <Badge variant="payment-success" class="px-2" showCircle>
-                  Success
-                </Badge>
-                <!-- <Badge
-                  variant="default"
-                  class="flex gap-1.5 items-center w-fit"
+                  <div class="flex flex-col items-end">
+                    <p class="text-sm font-medium text-green-500">
+                      {{
+                        formatCurrency(
+                          ((
+                            monthlyDonation.items
+                              .data[0] as Stripe.SubscriptionItem
+                          ).plan.amount as number) / 100,
+                          (
+                            monthlyDonation.items
+                              .data[0] as Stripe.SubscriptionItem
+                          ).plan.currency?.toUpperCase()
+                        )
+                      }}
+                      /month
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            <CardContent v-else>
+              <div class="grid grid-cols-1">
+                <div
+                  v-for="i in 4"
+                  :key="i"
+                  class="flex overflow-hidden gap-2 justify-between items-center py-5 border-b border-gray-200"
                 >
-                  {{ donation.paymentStatus }}
-                </Badge> -->
-              </TableCell>
-              <TableCell>
-                <!-- Todo: Change this for other payment methods -->
-                <span class="font-light">{{
-                  (donation.source as string).charAt(0).toUpperCase() +
-                  (donation.source as string).slice(1)
-                }}</span>
-              </TableCell>
-              <TableCell>
-                <!-- <DropdownMenu>
-                  <DropdownMenuTrigger as-child>
-                    <Button variant="ghost" size="icon" class="w-8 h-8">
-                      <Icon name="lucide:more-vertical" class="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <Icon name="lucide:file-text" class="mr-2 w-4 h-4" />
-                      View donation
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Icon name="lucide:download" class="mr-2 w-4 h-4" />
-                      Download receipt
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu> -->
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-      <div
-        v-else-if="
-          !loadingDonations &&
-          donations?.data?.length &&
-          donations?.data?.length === 0
-        "
-      >
-        <div class="flex flex-col justify-center items-center py-8 space-y-4">
-          <!-- Empty State Illustration -->
-          <img src="/img/designing-a-website.png" class="w-32 h-32" />
-          <!-- <div
-              class="flex justify-center items-center w-32 h-32 bg-gray-100 rounded-lg"
-            >
-              <Icon name="lucide:tablet" class="w-16 h-16 text-gray-400" />
-            </div> -->
-          <div class="space-y-2 text-center">
-            <p class="text-base font-medium">You haven't made donation yet</p>
-            <p class="text-sm text-gray-500">Come back later</p>
-          </div>
-          <NuxtLink :to="$localePath('/causes')">
-            <Button class="mt-4">Donate now</Button>
-          </NuxtLink>
+                  <div class="flex flex-col space-y-2 grow">
+                    <Skeleton class="w-3/4 h-4"></Skeleton>
+                    <Skeleton class="w-1/2 h-3"></Skeleton>
+                  </div>
+                  <div class="flex flex-col items-end space-y-2">
+                    <Skeleton class="w-20 h-4"></Skeleton>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-
-      <!-- Pagination -->
-      <div
-        v-if="
-          donations?.meta?.pagination &&
-          donations.meta.pagination.pageCount > 0 &&
-          !loadingDonations
-        "
-        class="flex justify-between items-center w-full"
-      >
-        <!-- Previous Button -->
-        <button
-          :disabled="!canGoToPrevious"
-          :class="[
-            'flex gap-2 items-center text-sm',
-            canGoToPrevious
-              ? 'text-gray-500 cursor-pointer hover:underline hover:text-gray-700'
-              : 'text-gray-300 cursor-not-allowed',
-          ]"
-          @click="goToPreviousPage"
-        >
-          <Icon name="lucide:arrow-left" class="w-4 h-4" />
-          <span class="hidden sm:inline">Previous</span>
-        </button>
-
-        <!-- Desktop: Page Numbers -->
-        <div class="hidden gap-1 items-center md:flex">
-          <template v-for="pageNum in visiblePages" :key="pageNum">
-            <button
-              v-if="pageNum !== 'ellipsis'"
-              :class="[
-                'px-3 py-1.5 text-sm rounded-md transition-colors',
-                pageNum === currentPage
-                  ? 'bg-gray-200 text-gray-800 font-medium shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100',
-              ]"
-              @click="goToPage(pageNum as number)"
-            >
-              {{ pageNum }}
-            </button>
-            <span v-else class="px-2 text-gray-500">...</span>
-          </template>
-        </div>
-
-        <!-- Mobile: Page Input -->
-        <div class="flex gap-2 items-center md:hidden">
-          <span class="text-sm text-gray-500">Page</span>
-          <input
-            v-model.number="pageInput"
-            type="number"
-            :min="1"
-            :max="totalPages"
-            class="px-2 py-1 w-12 text-sm text-center rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent no-spinner"
-            @keyup.enter="goToPageFromInput"
-            @blur="goToPageFromInput"
-            style="appearance: textfield; -moz-appearance: textfield"
-          />
-          <span class="text-sm text-gray-500">of {{ totalPages }}</span>
-        </div>
-
-        <!-- Next Button -->
-        <button
-          :disabled="!canGoToNext"
-          :class="[
-            'flex gap-2 items-center text-sm',
-            canGoToNext
-              ? 'text-gray-500 cursor-pointer hover:underline hover:text-gray-700'
-              : 'text-gray-300 cursor-not-allowed',
-          ]"
-          @click="goToNextPage"
-        >
-          <span class="hidden sm:inline">Next</span>
-          <Icon name="lucide:arrow-right" class="w-4 h-4" />
-        </button>
       </div>
     </div>
+
+    <!-- Confirmation Dialog -->
+    <Dialog v-model:open="dialogOpen">
+      <DialogContent class="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{{ getDialogTitle() }}</DialogTitle>
+          <DialogDescription>
+            {{ getDialogDescription() }}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose as-child>
+            <Button variant="outline" :disabled="isProcessing"> Cancel </Button>
+          </DialogClose>
+          <Button
+            type="button"
+            @click="handleSubscriptionAction"
+            :disabled="isProcessing"
+            :variant="dialogAction === 'cancel' ? 'destructive' : 'default'"
+          >
+            <span v-if="isProcessing">Processing...</span>
+            <span v-else>{{ getConfirmButtonText() }}</span>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
 
@@ -373,6 +545,9 @@
 import { computed, ref, watch } from "vue"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import type { StripeTransactionMetadata } from "@@/server/api/process-donation.post"
+import type Stripe from "stripe"
+
 import {
   Table,
   TableBody,
@@ -388,18 +563,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import type { APIResponseCollection } from "@@/types/strapi/types"
 import type {
   ApiCauseCause,
@@ -410,7 +581,6 @@ definePageMeta({
   layout: "dashboard",
 })
 
-const { user } = useUserSession()
 const { formatCurrency } = useMoneyFormat()
 const { formateDayMonthYear } = useDateFormatter()
 
@@ -477,6 +647,28 @@ watch([currentPage, pageSize], () => {
 //   meta: {},
 // })
 
+const {
+  data: monthlyDonations,
+  pending: loadingMonthlyDonations,
+  refresh: refreshMonthlyDonations,
+} = await useAsyncData(
+  "monthly-subscriptions-" + Date.now(),
+  (): Promise<{
+    data: (Stripe.Subscription & {
+      metadata: StripeTransactionMetadata
+    })[]
+    success: boolean
+  }> => {
+    return $fetch("/api/dashboard/monthly-donations", {
+      method: "GET",
+    })
+  },
+  {
+    lazy: true,
+    server: false,
+  }
+)
+
 const { data: donationStats, pending: loadingDonationStats } =
   await useAsyncData(
     "donation-stats",
@@ -493,79 +685,6 @@ const { data: donationStats, pending: loadingDonationStats } =
       server: false,
     }
   )
-
-// const donations = ref<Donation[]>([
-//   {
-//     id: 1,
-//     campaign: "Botswana Dawah Center",
-//     causeId: 33,
-//     amount: 244.0,
-//     campaignProgress: 60,
-//     date: "2015-11-28",
-//     paymentStatus: "Refunded",
-//     paymentMethod: "Card Payment",
-//   },
-//   {
-//     id: 2,
-//     campaign: "Botswana Dawah Center",
-//     causeId: 33,
-//     amount: 244.0,
-//     campaignProgress: 60,
-//     date: "2015-07-14",
-//     paymentStatus: "Failed",
-//     paymentMethod: "Card Payment",
-//   },
-//   {
-//     id: 3,
-//     campaign: "Botswana Dawah Center",
-//     causeId: 33,
-//     amount: 244.0,
-//     campaignProgress: 10,
-//     date: "2013-08-24",
-//     paymentStatus: "Success",
-//     paymentMethod: "Card Payment",
-//   },
-//   {
-//     id: 4,
-//     campaign: "Botswana Dawah Center",
-//     causeId: 33,
-//     amount: 244.0,
-//     campaignProgress: 60,
-//     date: "2013-09-09",
-//     paymentStatus: "Refunded",
-//     paymentMethod: "Card Payment",
-//   },
-//   {
-//     id: 5,
-//     campaign: "Botswana Dawah Center",
-//     causeId: 33,
-//     amount: 244.0,
-//     campaignProgress: 100,
-//     date: "2012-05-06",
-//     paymentStatus: "Pending",
-//     paymentMethod: "Card Payment",
-//   },
-//   {
-//     id: 6,
-//     campaign: "Botswana Dawah Center",
-//     causeId: 33,
-//     amount: 244.0,
-//     campaignProgress: 60,
-//     date: "2017-11-07",
-//     paymentStatus: "Pending",
-//     paymentMethod: "Card Payment",
-//   },
-//   {
-//     id: 7,
-//     campaign: "Botswana Dawah Center",
-//     causeId: 33,
-//     amount: 244.0,
-//     campaignProgress: 50,
-//     date: "2015-02-09",
-//     paymentStatus: "Success",
-//     paymentMethod: "Direct Transfer",
-//   },
-// ])
 
 // Chart data
 const months = [
@@ -647,22 +766,8 @@ const areaPath = computed(() => {
   return path
 })
 
-// Total donations
-const totalDonations = computed(() => {
-  return 9999
-  // return donations.value.reduce((sum, d) => sum + d.amount, 0)
-  // return 0
-})
-
-// const paginatedDonations = computed(() => {
-//   const start = (currentPage.value - 1) * itemsPerPage.value
-//   const end = start + itemsPerPage.value
-//   // return donations.value.slice(start, end)
-//   return []
-// })
-
 // Helpers
-function formatDate(date: string) {
+function formatDate(date: any) {
   return formateDayMonthYear(date, "MMMM D, YYYY")
 }
 
@@ -788,6 +893,93 @@ function goToPageFromInput() {
   } else {
     // Reset to current page if invalid
     pageInput.value = currentPage.value
+  }
+}
+
+// Subscription management
+const dialogOpen = ref(false)
+const dialogAction = ref<"pause" | "resume" | "cancel" | null>(null)
+const selectedSubscriptionId = ref<string | null>(null)
+const isProcessing = ref(false)
+
+async function openConfirmDialog(
+  action: "pause" | "resume" | "cancel",
+  subscriptionId: string
+) {
+  dialogAction.value = action
+  selectedSubscriptionId.value = subscriptionId
+  dialogOpen.value = true
+}
+
+async function closeDialog() {
+  dialogOpen.value = false
+  dialogAction.value = null
+  selectedSubscriptionId.value = null
+}
+
+async function handleSubscriptionAction() {
+  if (!selectedSubscriptionId.value || !dialogAction.value) return
+
+  isProcessing.value = true
+  try {
+    await $fetch("/api/dashboard/subscription", {
+      method: "POST",
+      query: {
+        subscriptionId: selectedSubscriptionId.value,
+        action: dialogAction.value,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+
+    // Refresh monthly donations after action
+    await refreshMonthlyDonations()
+    closeDialog()
+  } catch (error) {
+    console.error("Error managing subscription:", error)
+    // You might want to show a toast notification here
+  } finally {
+    isProcessing.value = false
+  }
+}
+
+function getDialogTitle() {
+  switch (dialogAction.value) {
+    case "pause":
+      return "Pause Subscription"
+    case "resume":
+      return "Resume Subscription"
+    case "cancel":
+      return "Cancel Subscription"
+    default:
+      return "Confirm Action"
+  }
+}
+
+function getDialogDescription() {
+  switch (dialogAction.value) {
+    case "pause":
+      return "Are you sure you want to pause this subscription? You can resume it later."
+    case "resume":
+      return "Are you sure you want to resume this subscription? It will continue charging monthly."
+    case "cancel":
+      return "Are you sure you want to cancel this subscription? This action cannot be undone."
+    default:
+      return "Please confirm this action."
+  }
+}
+
+function getConfirmButtonText() {
+  switch (dialogAction.value) {
+    case "pause":
+      return "Pause"
+    case "resume":
+      return "Resume"
+    case "cancel":
+      return "Cancel Subscription"
+    default:
+      return "Confirm"
   }
 }
 </script>

@@ -76,7 +76,7 @@
                     ? 'payment-success'
                     : 'payment-failed'
               "
-              class="absolute right-0 bottom-0"
+              class="right-0 bottom-0 lg:absolute"
             >
               <span
                 v-if="
@@ -124,7 +124,7 @@
                     ? 'payment-success'
                     : 'payment-failed'
               "
-              class="absolute right-0 bottom-0"
+              class="right-0 bottom-0 lg:absolute"
             >
               <span
                 v-if="
@@ -140,7 +140,8 @@
                 "
                 >↓</span
               >
-              {{ donationStats?.percentageChange?.totalDonations }}% vs last
+              {{ donationStats?.percentageChange?.totalDonations ?? 0 }}% vs
+              last
               {{ timeframeAlts[timeframe as keyof typeof timeframeAlts] }}
             </Badge>
           </div>
