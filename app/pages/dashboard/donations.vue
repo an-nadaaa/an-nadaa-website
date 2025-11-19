@@ -102,7 +102,7 @@
                   :key="donation.id"
                 >
                   <TableCell>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 items-center">
                       <p
                         v-if="
                           !donation.causeTitle || donation.causeTitle === ''
@@ -188,7 +188,7 @@
                       class="px-2"
                       showCircle
                     >
-                      {{ donation.cause?.isActive ? "Active" : "Inactive" }}
+                      {{ donation.cause?.isActive ? "Ongoing" : "Closed" }}
                     </Badge>
 
                     <!-- {{ donation.cause.causeType }} -->
