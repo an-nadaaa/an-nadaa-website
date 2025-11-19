@@ -3,11 +3,6 @@ import { ApiDonationDonation } from "../../../types/strapi/contentTypes"
 import qs from "qs"
 import { z } from "zod"
 
-const STRAPI_API_KEY_BACKEND =
-  process.env.NODE_ENV === "production"
-    ? process.env.STRAPI_API_KEY_BACKEND_PROD
-    : process.env.STRAPI_API_KEY_BACKEND_DEV
-
 const donationStatsQuerySchema = z.object({
   // Example query parameters: e.g. timeframe, projectId (adjust as needed)
   // You can add more parameters as required for stats endpoints
@@ -242,7 +237,7 @@ export default defineEventHandler(async (event: any) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${STRAPI_API_KEY_BACKEND}`,
+          Authorization: `Bearer ${useRuntimeConfig().STRAPI_API_KEY_BACKEND}`,
         },
       }
     )
