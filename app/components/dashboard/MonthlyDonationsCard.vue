@@ -36,9 +36,9 @@
         <div
           v-for="monthlyDonation in monthlyDonations?.data?.slice(0, limit)"
           :key="monthlyDonation.id"
-          class="flex overflow-hidden gap-2 justify-between items-center py-5 border-b border-gray-200"
+          class="flex gap-2 items-center py-5 border-b border-gray-200"
         >
-          <DropdownMenu v-if="!hideDropdownMenu">
+          <DropdownMenu v-if="!hideDropdownMenu" class="shrink-0">
             <DropdownMenuTrigger as-child>
               <Button variant="ghost" size="icon" class="w-8 h-8">
                 <Icon name="lucide:more-vertical" class="w-4 h-4" />
@@ -75,31 +75,36 @@
             </DropdownMenuContent>
           </DropdownMenu>
           <div
-            class="flex flex-col grow"
+            class="flex overflow-hidden flex-col flex-1 min-w-0"
             :class="{
               'opacity-50':
                 monthlyDonation.status === 'active' &&
                 monthlyDonation.pause_collection,
             }"
           >
-            <h3 class="text-base font-normal truncate" style="max-width: 100%">
-              {{ monthlyDonation.metadata.causeTitle }}
-            </h3>
+            <NuxtLink
+              :to="`/causes/${monthlyDonation.metadata.causeId}`"
+              class="hover:underline"
+            >
+              <h3 class="text-base font-normal truncate">
+                {{ monthlyDonation.metadata.causeTitle }}
+              </h3>
+            </NuxtLink>
             <p
               v-if="
                 monthlyDonation.status === 'active' &&
                 !monthlyDonation.pause_collection
               "
-              class="text-xs font-light text-gray-400"
+              class="text-xs font-light text-gray-400 truncate"
             >
               Next payment on
               {{ formatDate(monthlyDonation.current_period_end * 1000) }}
             </p>
             <p v-else class="text-xs font-light text-gray-400">Paused</p>
           </div>
-          <div class="flex flex-col items-end">
+          <div class="flex flex-col items-end shrink-0">
             <p
-              class="text-sm font-medium"
+              class="text-sm font-medium whitespace-nowrap"
               :class="{
                 'text-gray-500':
                   monthlyDonation.status === 'active' &&
