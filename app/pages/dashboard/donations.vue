@@ -182,8 +182,8 @@
                       v-else-if="donation.cause"
                       :variant="
                         donation.cause?.isActive
-                          ? 'campaign-funded'
-                          : 'campaign-ongoing'
+                          ? 'campaign-ongoing'
+                          : 'campaign-funded'
                       "
                       class="px-2"
                       showCircle
