@@ -141,7 +141,7 @@ export default defineEventHandler(async (event) => {
     currency,
   } = body
 
-  if (userSession) {
+  if (userSession.user) {
     if (!userSession?.user?.user?.stripeCustomerId) {
       await stripe.customers.create({
         email: userSession?.user?.user?.email,

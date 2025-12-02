@@ -1,5 +1,5 @@
 <template>
-  <div class="container my-8 sm:my-32">
+  <div class="container my-8">
     <Card class="px-4 py-16 mx-auto max-w-xl shadow-lg sm:px-32">
       <template v-if="isProcessing">
         <div>

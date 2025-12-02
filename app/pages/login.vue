@@ -45,7 +45,7 @@
 
         <div class="flex justify-between items-center">
           <div class="flex relative items-center">
-            <FormField
+            <!-- <FormField
               v-slot="{ value, handleChange }"
               class="space-y-0"
               type="checkbox"
@@ -63,7 +63,7 @@
                   >Remember me</FormLabel
                 >
               </FormItem>
-            </FormField>
+            </FormField> -->
           </div>
           <NuxtLink
             to="/forgot-password"
