@@ -111,6 +111,11 @@ await strapiFetch(
       // isPrivate: false,
       environment: process.env.NODE_ENV,
     },
+    pagination: {
+      page: 1,
+      pageSize: 10000,
+    },
+    sort: ["title:asc"],
   }
 )
   .then((res: any) => {
