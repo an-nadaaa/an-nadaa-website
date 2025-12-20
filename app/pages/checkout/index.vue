@@ -77,12 +77,15 @@ const appConfig = useAppConfig()
 const logo = (appConfig.logo as any).color
 const route = useRoute()
 const router = useRouter()
+const { loggedIn } = useUserSession()
 
 const { currency, id, amount, frequency } = route.query
 const currencySelected = ref("USD")
 const causeSelected = ref("general")
 const donateAmount = ref<any>(Number(amount) || "")
-const donationFrequency = ref((frequency as string) || "one-time")
+const donationFrequency = ref(
+  loggedIn.value ? (frequency as string) || "one-time" : "one-time"
+)
 const isEditing = ref(false)
 const causes = ref<any[]>([])
 const loading = ref(false)

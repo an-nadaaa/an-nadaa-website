@@ -271,6 +271,12 @@ export default defineEventHandler(async (event) => {
   }
 
   if (donationType === "monthly") {
+    if (!userSession.user) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Unauthorized - Please login to continue",
+      })
+    }
     const subscription = await createMonthlyDonation(
       customerId,
       amount / 100,
