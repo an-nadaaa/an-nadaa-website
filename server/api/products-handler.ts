@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
         product = await stripe.products.create({
           name: entity.title,
           // description: entity.description,
-          images: [entity.cover],
+          images: entity.cover ? [entity.cover] : undefined,
         })
       } else {
         try {
