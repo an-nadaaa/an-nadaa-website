@@ -43,16 +43,22 @@ async function getSubscriptionDetails(subscriptionId: string) {
     let paymentIntentStatus = null
     let amount = null
     let currency = null
+    let receiptUrl = null
 
     // Retrieve the PaymentIntent linked to this invoice if it exists
     if (latestInvoice.payment_intent) {
       const paymentIntent = await stripe.paymentIntents.retrieve(
-        latestInvoice.payment_intent as string
+        latestInvoice.payment_intent as string,
+        {
+          expand: ["latest_charge"],
+        }
       )
 
       paymentIntentStatus = paymentIntent.status
       amount = paymentIntent.amount
       currency = paymentIntent.currency
+      receiptUrl =
+        (paymentIntent.latest_charge as Stripe.Charge)?.receipt_url || null
     }
 
     return {
@@ -60,6 +66,7 @@ async function getSubscriptionDetails(subscriptionId: string) {
       amount,
       currency,
       paymentIntentStatus,
+      receiptUrl,
     }
   } catch (error) {
     console.error("Error retrieving Subscription details:", error)
