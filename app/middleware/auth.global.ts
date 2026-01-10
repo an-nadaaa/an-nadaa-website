@@ -12,6 +12,8 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     fetch: refreshSession,
   } = useUserSession()
 
+  await refreshSession()
+
   const loginRoutes = [
     "/login",
     "/sign-up",
@@ -27,32 +29,21 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     return
   }
 
-  if (!to.path.startsWith("/dashboard")) {
-    return
-  }
-
-  // redirect the user to the login screen if they're not authenticated
-  if (!loggedIn.value) {
-    await logout()
-    return navigateTo("/login")
-  } else {
-    if (!user.value) {
-      await logout()
-      return navigateTo("/login")
-    }
+  if (loggedIn.value) {
     const { token } = user.value as User
-
     try {
       const decoded = jwtDecode<{ exp: number }>(token)
       if (decoded.exp && Date.now() >= decoded.exp * 1000) {
         await logout()
         await refreshSession()
-        return navigateTo("/login")
       }
     } catch (err) {
       await logout()
       await refreshSession()
-      return navigateTo("/login")
     }
+  }
+
+  if (!loggedIn.value && to.path.startsWith("/dashboard")) {
+    return navigateTo("/login")
   }
 })

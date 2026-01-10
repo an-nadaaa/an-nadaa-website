@@ -49,17 +49,23 @@
           <div class="flex items-center space-x-3 w-full">
             <Progress
               :model-value="
-                Math.round(
-                  (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
-                )
+                (() => {
+                  const percent = Math.round(
+                    (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
+                  )
+                  return Number.isFinite(percent) ? percent : 100
+                })()
               "
               class="h-[5px]"
             ></Progress>
             <p>
               {{
-                Math.round(
-                  (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
-                )
+                (() => {
+                  const percent = Math.round(
+                    (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
+                  )
+                  return Number.isFinite(percent) ? percent : 100
+                })()
               }}%
             </p>
           </div>

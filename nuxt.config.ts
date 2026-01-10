@@ -58,7 +58,7 @@ export default defineNuxtConfig({
         version: "v5",
         cookie: {
           path: "/",
-          maxAge: 14 * 24 * 60 * 60,
+          // maxAge: 20, This is set in the /config/plugins.ts in the backend
           secure: process.env.NODE_ENV === "production",
           sameSite: false,
         },
@@ -110,7 +110,7 @@ export default defineNuxtConfig({
     version: "v5",
     cookie: {
       path: "/",
-      maxAge: 14 * 24 * 60 * 60,
+      maxAge: 20,
       secure: process.env.NODE_ENV === "production",
       sameSite: true,
     },
