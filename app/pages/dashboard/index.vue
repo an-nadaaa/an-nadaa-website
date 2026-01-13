@@ -23,7 +23,7 @@
           <Icon name="lucide:cloud-download" class="mr-2" />Export Donations
         </Button> -->
         <NuxtLink :to="$localePath('/causes')">
-          <Button class="w-full sm:w-auto">Donate</Button>
+          <Button class="w-full sm:w-auto">Browse Causes</Button>
         </NuxtLink>
       </div>
     </div>
