@@ -21,6 +21,8 @@
         </NuxtLink>
       </div>
     </div>
+    
+    <DonationsChart :donations="chartDonations" />
 
     <!-- Time Filter Tabs -->
     <!-- <Tabs v-model="timeframe" default-value="12months" class="w-full">
@@ -567,84 +569,73 @@ const { data: donationStats, pending: loadingDonationStats } =
     }
   )
 
-// Chart data
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-]
-const fullMonths = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-]
-
-const chartData = computed(() => {
-  const data = months.map((month, index) => {
-    // Mock data - in real app, this would come from API
-    const amount = Math.random() * 1000 + 500
+// Chart data: build { [isoDatetime]: { amount, currency, amountUSD? } } for DonationsChart
+const chartDonations = computed(() => {
+  if(!donations.value?.data){
+    // Show empty chart when loading 
     return {
-      month: fullMonths[index],
-      monthShort: month,
-      amount,
-      x: 50 + (index * 700) / 11,
-      y: 250 - (amount / 1500) * 200,
+      "2025-01-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-02-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-03-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-04-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-05-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-06-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-07-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-08-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-09-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-10-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-11-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      },
+      "2025-12-01T00:00:00Z": {
+        amount: 0,
+        currency: "USD",
+      }
+    }
+  }
+  
+  const list = donations.value.data
+  const record: Record<string, { amount: number; currency: string; amountUSD?: number }> = {}
+  list.forEach((donation: any, i: number) => {
+    const key = donation.createdAt ? `${donation.createdAt}_${i}` : `unknown_${i}`
+    record[key] = {
+      amount: Number(donation.amount) ?? 0,
+      currency: (donation.currency as string) ?? "USD",
+      amountUSD: donation.amountUSD != null ? Number(donation.amountUSD) : undefined,
     }
   })
-  return data
-})
-
-const hoveredIndex = ref<number | null>(null)
-
-// Generate SVG paths for line and area
-const linePath = computed(() => {
-  const points = chartData.value
-  if (points.length === 0) return ""
-  const firstPoint = points[0]
-  if (!firstPoint) return ""
-  let path = `M ${firstPoint.x} ${firstPoint.y}`
-  for (let i = 1; i < points.length; i++) {
-    const point = points[i]
-    if (point) {
-      path += ` L ${point.x} ${point.y}`
-    }
-  }
-  return path
-})
-
-const areaPath = computed(() => {
-  const points = chartData.value
-  if (points.length === 0) return ""
-  const firstPoint = points[0]
-  const lastPoint = points[points.length - 1]
-  if (!firstPoint || !lastPoint) return ""
-  let path = `M ${firstPoint.x} 250 L ${firstPoint.x} ${firstPoint.y}`
-  for (let i = 1; i < points.length; i++) {
-    const point = points[i]
-    if (point) {
-      path += ` L ${point.x} ${point.y}`
-    }
-  }
-  path += ` L ${lastPoint.x} 250 Z`
-  return path
+  return record
 })
 
 // Helpers
