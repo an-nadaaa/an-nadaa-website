@@ -112,7 +112,7 @@ dependencies:
     version: 2.17.0
   shadcn-nuxt:
     specifier: https://pkg.pr.new/shadcn-nuxt@1418
-    version: '@pkg.pr.new/shadcn-nuxt@1418'
+    version: '@pkg.pr.new/shadcn-nuxt/1418'
   stripe:
     specifier: 17.3.1
     version: 17.3.1
@@ -20172,7 +20172,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
-  '@pkg.pr.new/shadcn-nuxt@1418':
+  '@pkg.pr.new/shadcn-nuxt/1418':
     resolution: {tarball: https://pkg.pr.new/shadcn-nuxt@1418}
     name: shadcn-nuxt
     version: 2.2.0
