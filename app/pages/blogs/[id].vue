@@ -19,7 +19,7 @@
     <div class="px-0 lg:px-32 xl:px-44">
       <h1 class="font-normal text-center">{{ blog?.title }}</h1>
       <p class="my-4 text-center text-dark-gray">
-        {{ formateDayMonthYear(blog?.createdAt) }}
+        {{ formatDayMonthYear(blog?.createdAt) }}
       </p>
     </div>
 
@@ -94,7 +94,7 @@ import { micromark } from "micromark"
 const copyClicked = ref(false)
 const strapiFetch = useStrapiFetch()
 const { locale } = useI18n()
-const { formateDayMonthYear } = useDateFormatter()
+const { formatDayMonthYear } = useDateFormatter()
 const route = useRoute()
 const pageUrl = ref()
 const blogId = route.params.id

@@ -39,7 +39,7 @@
                   {{ blog.title }}
                 </h2>
                 <p class="text-sm text-dark-gray">
-                  {{ formateDayMonthYear(blog.createdAt) }}
+                  {{ formatDayMonthYear(blog.createdAt) }}
                 </p>
               </div>
             </NuxtLink>
@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import { VueSpinnerBars } from "vue3-spinners"
 const strapiFetch = useStrapiFetch()
-const { formateDayMonthYear } = useDateFormatter()
+const { formatDayMonthYear } = useDateFormatter()
 
 const buttonIsLoading = ref(false)
 const blogs = ref<any[]>([])

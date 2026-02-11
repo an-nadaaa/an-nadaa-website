@@ -90,11 +90,43 @@
         class="mx-auto my-48 text-5xl text-primary"
       /> -->
       <div class="">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center mb-2">
           <h4 class="font-normal">Donation history</h4>
           <div class="flex gap-2">
-            <Button variant="outline"><Icon name="lucide:calendar" class="mr-1 w-4 h-4" /> Select dates</Button>
-            <Button variant="outline"><Icon name="lucide:list-filter" class="mr-1 w-4 h-4" />Apply filters</Button>
+            <Popover v-model:open="listDatePickerOpen" @update:open="onListDatePickerOpenChange">
+              <PopoverTrigger as-child>
+                <Button variant="outline">
+                  <Icon name="lucide:calendar" class="mr-1 w-4 h-4" />
+                  {{ listDateRange?.start && listDateRange?.end
+                    ? `${listDateRange.start.day.toString().padStart(2, '0')}/${listDateRange.start.month.toString().padStart(2, '0')}/${listDateRange.start.year.toString()} to ${listDateRange.end.day.toString().padStart(2, '0')}/${listDateRange.end.month.toString().padStart(2, '0')}/${listDateRange.end.year.toString()}`
+                    : "Select dates" }}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="p-0 w-auto" align="start">
+                <RangeCalendar
+                  v-model="dateRangePicker"
+                  class="rounded-md border shadow-sm"
+                  :number-of-months="2"
+                  disable-days-outside-current-view
+                />
+                <div class="flex gap-2 justify-end p-3 border-t">
+                  <Button
+                    v-if="listDateRange"
+                    variant="outline"
+                    size="sm"
+                    @click="clearListDateRange"
+                  >
+                    Clear
+                  </Button>
+                  <Button
+                    size="sm"
+                    @click="applyListDateRange"
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
         <div class="">
@@ -327,7 +359,6 @@
           <div
             v-else-if="
               !loadingDonations &&
-              donations?.data?.length &&
               donations?.data?.length === 0
             "
           >
@@ -342,10 +373,18 @@
                   <Icon name="lucide:tablet" class="w-16 h-16 text-gray-400" />
                 </div> -->
               <div class="space-y-2 text-center">
-                <p class="text-base font-medium">
-                  You haven't made donation yet
-                </p>
-                <p class="text-sm text-gray-500">Come back later</p>
+                <template v-if="!listDateRange">
+                  <p class="text-base font-medium">
+                    You haven't made donation yet
+                  </p>
+                  <p class="text-sm text-gray-500">Come back later</p>
+                </template>
+                <template v-else>
+                  <p class="text-base font-medium">
+                    No donations found
+                  </p>
+                  <p class="text-sm text-gray-500">Make sure to donate frequently :)</p>
+                </template>
               </div>
               <NuxtLink :to="$localePath('/causes')">
                 <Button class="mt-4">Donate now</Button>
@@ -467,6 +506,8 @@
 </template>
 
 <script setup lang="ts">
+import type { DateRange } from "reka-ui"
+import { getLocalTimeZone, today } from "@internationalized/date"
 import { computed, ref, watch } from "vue"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -490,6 +531,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { RangeCalendar } from "@/components/ui/range-calendar"
 import type { APIResponseCollection } from "@@/types/strapi/types"
 import type {
   ApiCauseCause,
@@ -503,18 +550,59 @@ definePageMeta({
 
 const { toast } = useToast()
 const { formatCurrency } = useMoneyFormat()
-const { formateDayMonthYear } = useDateFormatter()
+const { formatDayMonthYear } = useDateFormatter()
 
 // Pagination
 const pageSize = ref(20)
 const currentPage = ref(1)
+
+// List date filter (donation history table)
+const listDatePickerOpen = ref(false)
+const listDateRange = ref<DateRange | null>(null)
+const defaultPickerRange = (): DateRange => {
+  const t = today(getLocalTimeZone())
+  return { start: t.subtract({ days: 30 }), end: t } as DateRange
+}
+const dateRangePicker = ref<DateRange>(defaultPickerRange())
+
+function onListDatePickerOpenChange(open: boolean) {
+  if (open) {
+    if (listDateRange.value?.start != null && listDateRange.value?.end != null) {
+      dateRangePicker.value = {
+        start: listDateRange.value.start,
+        end: listDateRange.value.end,
+      } as DateRange
+    } else {
+      dateRangePicker.value = defaultPickerRange()
+    }
+  }
+}
+
+function applyListDateRange() {
+  if (dateRangePicker.value?.start && dateRangePicker.value?.end) {
+    listDateRange.value = {
+      start: dateRangePicker.value.start,
+      end: dateRangePicker.value.end,
+    } as DateRange
+    currentPage.value = 1
+    refreshDonations()
+  }
+  listDatePickerOpen.value = false
+}
+
+function clearListDateRange() {
+  listDateRange.value = null
+  listDatePickerOpen.value = false
+  currentPage.value = 1
+  refreshDonations()
+}
 
 const timeframeAlts = {
   "12months": "12 months",
   "30days": "30 days",
   "7days": "7 days",
 }
-const timeframe = ref("30days")
+const timeframe = ref("12months")
 
 // Window: from now back by the selected duration (UTC)
 const dateWindow = computed(() => {
@@ -549,14 +637,58 @@ const {
     data: (ApiDonationDonation & { cause: any | null })[]
   }
 >(
-  () => `donations-${timeframe.value}-${currentPage.value}-${pageSize.value}`,
+  () =>
+    `donations-list-${currentPage.value}-${pageSize.value}-${
+      listDateRange.value?.start && listDateRange.value?.end
+        ? `${listDateRange.value.start.toString()}-${listDateRange.value.end.toString()}`
+        : "all"
+    }`,
+  () => {
+    const query: Record<string, number | string> = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+    }
+    if (listDateRange.value?.start && listDateRange.value?.end) {
+      const start = listDateRange.value.start
+      const end = listDateRange.value.end
+      // Treat calendar dates as local: start of start day and end of end day, then to UTC ISO for backend
+      const startLocal = new Date(start.year, start.month - 1, start.day, 0, 0, 0, 0)
+      const endLocal = new Date(end.year, end.month - 1, end.day, 23, 59, 59, 999)
+      query.startDate = startLocal.toISOString()
+      query.endDate = endLocal.toISOString()
+    }
+    return $fetch("/api/dashboard/donations", {
+      method: "GET",
+      query,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      return res.data as any
+    })
+  },
+  {
+    lazy: true,
+    server: false,
+  }
+)
+
+const {
+  data: chartDonationsData,
+  refresh: refreshChartDonations,
+} = await useAsyncData<
+  APIResponseCollection<"api::donation.donation"> & {
+    data: (ApiDonationDonation & { cause: any | null })[]
+  }
+>(
+  () => `donations-chart-${timeframe.value}`,
   () => {
     const { windowStart, windowEnd } = dateWindow.value
     return $fetch("/api/dashboard/donations", {
       method: "GET",
       query: {
-        page: currentPage.value,
-        pageSize: pageSize.value,
+        page: 1,
+        pageSize: 1000,
         startDate: windowStart,
         endDate: windowEnd,
       },
@@ -578,8 +710,7 @@ watch([currentPage, pageSize], () => {
 })
 
 watch(timeframe, () => {
-  currentPage.value = 1
-  refreshDonations()
+  refreshChartDonations()
   refreshDonationStats()
 })
 
@@ -633,8 +764,8 @@ const chartDonations = computed(() => {
   const { windowStart, windowEnd } = dateWindow.value
   const record: Record<string, { amount: number; currency: string; amountUSD?: number }> = {}
 
-  if (donations.value?.data) {
-    const list = donations.value.data
+  if (chartDonationsData.value?.data) {
+    const list = chartDonationsData.value.data
     list.forEach((donation: any, i: number) => {
       const key = donation.createdAt ? `${donation.createdAt}_${i}` : `unknown_${i}`
       record[key] = {
@@ -652,7 +783,7 @@ const chartDonations = computed(() => {
 
 // Helpers
 function formatDate(date: any) {
-  return formateDayMonthYear(date, "MMMM D, YYYY")
+  return formatDayMonthYear(date, "MMMM D, YYYY")
 }
 
 const datePickerOpen = ref(false)

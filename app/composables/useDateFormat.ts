@@ -1,7 +1,7 @@
 export function useDateFormatter(locale?: Ref<string>) {
   const currentLocale = toValue(locale) ?? "en-US"
 
-  function formateDayMonthYear(
+  function formatDayMonthYear(
     date: MaybeRef<string | Date | number>,
     format?: string
   ) {
@@ -20,7 +20,7 @@ export function useDateFormatter(locale?: Ref<string>) {
   }
 
   return {
-    formateDayMonthYear,
+    formatDayMonthYear,
     formatMonthYear,
   }
 }

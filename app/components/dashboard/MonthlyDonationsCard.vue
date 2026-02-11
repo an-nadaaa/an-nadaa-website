@@ -222,7 +222,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { toast } = useToast()
 const { formatCurrency } = useMoneyFormat()
-const { formateDayMonthYear } = useDateFormatter()
+const { formatDayMonthYear } = useDateFormatter()
 
 // Fetch monthly donations
 const {
@@ -344,6 +344,6 @@ function getConfirmButtonText() {
 }
 
 function formatDate(date: any) {
-  return formateDayMonthYear(date, "MMMM D, YYYY")
+  return formatDayMonthYear(date, "MMMM D, YYYY")
 }
 </script>
