@@ -157,26 +157,29 @@
                         class="[&>div]:bg-primary h-2"
                         :model-value="
                           Math.max(
-                            Math.round(
-                              (parseFloat(donation.cause?.raisedAmount) /
-                                parseFloat(
-                                  donation.cause?.goalDetails[0].goalAmount
-                                )) *
-                                100
-                            ),
+                            (() => {
+                              const percent = Math.round(
+                                (parseFloat(donation.cause?.raisedAmount) /
+                                  parseFloat(
+                                    donation.cause?.goalDetails[0].goalAmount
+                                  )) *
+                                  100
+                              )
+                              return isNaN(percent) ? 0 : percent
+                            })(),
                             3
                           )
                         "
                       />
                       <p>
                         {{
-                          Math.round(
-                            (parseFloat(donation.cause?.raisedAmount) /
-                              parseFloat(
-                                donation.cause?.goalDetails[0].goalAmount
-                              )) *
-                              100
-                          )
+                          (() => {
+                            const numerator = parseFloat(donation.cause?.raisedAmount)
+                            const denominator = parseFloat(donation.cause?.goalDetails[0].goalAmount)
+                            let percent = Math.round((numerator / denominator) * 100)
+                            if (isNaN(percent)) percent = 0
+                            return percent
+                          })()
                         }}%
                       </p>
                     </div>
