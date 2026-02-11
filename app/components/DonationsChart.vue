@@ -73,28 +73,72 @@ type ChartPoint = {
   dayOfMonth: number
 }
 
-const chartData = computed<ChartPoint[]>(() => {
+const aggregation = computed(() => {
   const donations = props.donations
-  if (!donations || Object.keys(donations).length === 0) return []
-
   const byDate = new Map<string, number>()
+  if (!donations) return { byDate, first: undefined as string | undefined, last: undefined as string | undefined }
   for (const [iso, entry] of Object.entries(donations)) {
     const key = toDateKey(iso)
     const usd = toUSD(entry)
     byDate.set(key, (byDate.get(key) ?? 0) + usd)
   }
-
   const dates = Array.from(byDate.keys()).sort()
-  if (dates.length === 0) return []
+  const first = dates[0]
+  const last = dates[dates.length - 1]
+  return { byDate, first, last }
+})
 
-  const [first, last] = [dates[0], dates[dates.length - 1]]
+const monthsSpan = computed(() => {
+  const { first, last } = aggregation.value
+  if (!first || !last) return 0
+  const start = new Date(first + "T00:00:00Z")
+  const end = new Date(last + "T00:00:00Z")
+  return (
+    (end.getUTCFullYear() - start.getUTCFullYear()) * 12 +
+    (end.getUTCMonth() - start.getUTCMonth()) +
+    1
+  )
+})
+
+const useMonthlyAggregation = computed(() => monthsSpan.value >= 3)
+
+const chartData = computed<ChartPoint[]>(() => {
+  const { byDate, first, last } = aggregation.value
   if (!first || !last) return []
 
   const start = new Date(first + "T00:00:00Z")
   const end = new Date(last + "T00:00:00Z")
+
+  if (useMonthlyAggregation.value) {
+    const byMonth = new Map<string, number>()
+    for (const [dateKey, amount] of byDate) {
+      const monthKey = dateKey.slice(0, 7)
+      byMonth.set(monthKey, (byMonth.get(monthKey) ?? 0) + amount)
+    }
+    const points: ChartPoint[] = []
+    const current = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1))
+    const endMonth = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1))
+    while (current <= endMonth) {
+      const y = current.getUTCFullYear()
+      const m = current.getUTCMonth()
+      const monthKey = `${y}-${String(m + 1).padStart(2, "0")}`
+      const amount = byMonth.get(monthKey) ?? 0
+      points.push({
+        x: points.length,
+        y: Math.round(amount * 100) / 100,
+        date: `${monthKey}-01`,
+        dateLabel: `${FULL_MONTHS[m]} ${y}`,
+        isMonthStart: true,
+        monthIndex: m,
+        dayOfMonth: 1,
+      })
+      current.setUTCMonth(current.getUTCMonth() + 1)
+    }
+    return points
+  }
+
   const points: ChartPoint[] = []
   const current = new Date(start)
-
   while (current <= end) {
     const y = current.getUTCFullYear()
     const m = current.getUTCMonth()
@@ -113,7 +157,6 @@ const chartData = computed<ChartPoint[]>(() => {
     })
     current.setUTCDate(current.getUTCDate() + 1)
   }
-
   return points
 })
 
@@ -133,6 +176,7 @@ const useDateTicks = computed(() => daysSpan.value <= 31)
 const xTickValues = computed(() => {
   const data = chartData.value
   if (data.length === 0) return []
+  if (useMonthlyAggregation.value) return data.map((_, i) => i)
   if (useDateTicks.value) return data.map((_, i) => i)
   return data
     .map((p, i) => (p.isMonthStart ? i : -1))
@@ -143,6 +187,13 @@ const formatX = (tick: number) => {
   const data = chartData.value
   const point = data[tick]
   if (!point) return ""
+  if (useMonthlyAggregation.value) {
+    const year = point.date.slice(0, 4)
+    const prev = data[tick - 1]
+    const prevYear = prev?.date?.slice(0, 4)
+    const showYear = !prevYear || prevYear !== year
+    return showYear ? `${MONTHS[point.monthIndex]} ${year}` : MONTHS[point.monthIndex]
+  }
   if (useDateTicks.value) return point.isMonthStart ? MONTHS[point.monthIndex] : String(point.dayOfMonth)
   return MONTHS[point.monthIndex]
 }
