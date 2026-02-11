@@ -6,12 +6,28 @@ import z from "zod"
 const donationsQuerySchema = z.object({
   page: z.string().optional(),
   pageSize: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 })
 
 export default defineEventHandler(async (event: any) => {
   const { user } = await requireUserSession(event)
   const queryParams = await getValidatedQuery(event, donationsQuerySchema.parse)
-  const { page = "1", pageSize = "20" } = queryParams
+  const { page = "1", pageSize = "20", startDate, endDate } = queryParams
+
+  const filters: Record<string, unknown> = {
+    users_permissions_user: {
+      documentId: {
+        $eq: user.user.documentId,
+      },
+    },
+  }
+  if (startDate && endDate) {
+    filters.createdAt = {
+      $gte: new Date(startDate).toISOString(),
+      $lte: new Date(endDate).toISOString(),
+    }
+  }
 
   const query = qs.stringify(
     {
@@ -20,17 +36,8 @@ export default defineEventHandler(async (event: any) => {
         cause: {
           populate: "*",
         },
-        // cause: {
-        //   populate: ["cause.campaign", "cause.project"],
-        // },
-      }, // populate the relation
-      filters: {
-        users_permissions_user: {
-          documentId: {
-            $eq: user.user.documentId,
-          },
-        },
       },
+      filters,
       sort: ["createdAt:desc"],
       pagination: {
         page: parseInt(page),

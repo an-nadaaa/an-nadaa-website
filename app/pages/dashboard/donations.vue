@@ -5,7 +5,7 @@
       class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start"
     >
       <div>
-        <h1 class="text-xl font-light">Total Donations</h1>
+        <h1 class="text-xl font-light text-gray-500">Total Donations</h1>
         <Skeleton v-if="loadingDonationStats" class="w-24 h-12"></Skeleton>
         <p v-else class="mt-2 text-3xl font-medium sm:text-4xl">
           {{ formatCurrency(donationStats?.totalAmountUSD ?? 0) }}
@@ -21,6 +21,20 @@
         </NuxtLink>
       </div>
     </div>
+
+    <Tabs v-model="timeframe" default-value="30days" class="w-full sm:w-auto">
+      <TabsList class="grid grid-cols-4 w-full sm:w-auto sm:inline-flex">
+        <TabsTrigger value="12months" class="text-xs sm:text-sm">
+          12 months
+        </TabsTrigger>
+        <TabsTrigger value="30days" class="text-xs sm:text-sm">
+          30 days
+        </TabsTrigger>
+        <TabsTrigger value="7days" class="text-xs sm:text-sm">
+          7 days
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
     
     <DonationsChart :donations="chartDonations" />
 
@@ -75,8 +89,15 @@
         v-if="loadingDonations"
         class="mx-auto my-48 text-5xl text-primary"
       /> -->
-      <div class="grid grid-cols-1 gap-8 lg:grid-cols-5">
-        <div class="order-2 lg:order-1 lg:col-span-3">
+      <div class="">
+        <div class="flex justify-between items-center">
+          <h4 class="font-normal">Donation history</h4>
+          <div class="flex gap-2">
+            <Button variant="outline"><Icon name="lucide:calendar" class="mr-1 w-4 h-4" /> Select dates</Button>
+            <Button variant="outline"><Icon name="lucide:list-filter" class="mr-1 w-4 h-4" />Apply filters</Button>
+          </div>
+        </div>
+        <div class="">
           <!-- Table -->
           <div
             v-if="
@@ -408,12 +429,12 @@
           </div>
         </div>
 
-        <div class="order-1 lg:order-2 lg:col-span-2">
+        <!-- <div class="order-1 lg:order-2 lg:col-span-2">
           <DashboardMonthlyDonationsCard
             :hide-show-all-link="true"
             :hide-dropdown-menu="false"
           />
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -461,12 +482,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -494,8 +509,35 @@ const { formateDayMonthYear } = useDateFormatter()
 const pageSize = ref(20)
 const currentPage = ref(1)
 
-// Timeframe state
-const timeframe = ref("12months")
+const timeframeAlts = {
+  "12months": "12 months",
+  "30days": "30 days",
+  "7days": "7 days",
+}
+const timeframe = ref("30days")
+
+// Window: from now back by the selected duration (UTC)
+const dateWindow = computed(() => {
+  const end = new Date()
+  const start = new Date(end)
+  switch (timeframe.value) {
+    case "7days":
+      start.setUTCDate(start.getUTCDate() - 7)
+      break
+    case "30days":
+      start.setUTCDate(start.getUTCDate() - 30)
+      break
+    case "12months":
+      start.setUTCMonth(start.getUTCMonth() - 12)
+      break
+    default:
+      start.setUTCDate(start.getUTCDate() - 30)
+  }
+  return {
+    windowStart: start.toISOString(),
+    windowEnd: end.toISOString(),
+  }
+})
 
 const {
   data: donations,
@@ -507,13 +549,16 @@ const {
     data: (ApiDonationDonation & { cause: any | null })[]
   }
 >(
-  "donations-" + Date.now(),
+  () => `donations-${timeframe.value}-${currentPage.value}-${pageSize.value}`,
   () => {
+    const { windowStart, windowEnd } = dateWindow.value
     return $fetch("/api/dashboard/donations", {
       method: "GET",
       query: {
         page: currentPage.value,
         pageSize: pageSize.value,
+        startDate: windowStart,
+        endDate: windowEnd,
       },
       headers: {
         "Content-Type": "application/json",
@@ -528,9 +573,14 @@ const {
   }
 )
 
-// Watch for page changes and refresh data
 watch([currentPage, pageSize], () => {
   refreshDonations()
+})
+
+watch(timeframe, () => {
+  currentPage.value = 1
+  refreshDonations()
+  refreshDonationStats()
 })
 
 const {
@@ -555,12 +605,17 @@ const {
   }
 )
 
-const { data: donationStats, pending: loadingDonationStats } =
+const { data: donationStats, pending: loadingDonationStats, refresh: refreshDonationStats } =
   await useAsyncData(
-    "donation-stats",
+    () => `donation-stats-${timeframe.value}`,
     () => {
+      const { windowStart, windowEnd } = dateWindow.value
       return $fetch("/api/dashboard/donation-stats", {
         method: "GET",
+        query: {
+          startDate: windowStart,
+          endDate: windowEnd,
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -572,72 +627,26 @@ const { data: donationStats, pending: loadingDonationStats } =
     }
   )
 
-// Chart data: build { [isoDatetime]: { amount, currency, amountUSD? } } for DonationsChart
+// Chart data: build { [isoDatetime]: { amount, currency, amountUSD? } } for DonationsChart.
+// Add sentinel entries at window start and end (0 value) so the chart always shows the full window.
 const chartDonations = computed(() => {
-  if(!donations.value?.data){
-    // Show empty chart when loading 
-    return {
-      "2025-01-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-02-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-03-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-04-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-05-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-06-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-07-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-08-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-09-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-10-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-11-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      },
-      "2025-12-01T00:00:00Z": {
-        amount: 0,
-        currency: "USD",
-      }
-    }
-  }
-  
-  const list = donations.value.data
+  const { windowStart, windowEnd } = dateWindow.value
   const record: Record<string, { amount: number; currency: string; amountUSD?: number }> = {}
-  list.forEach((donation: any, i: number) => {
-    const key = donation.createdAt ? `${donation.createdAt}_${i}` : `unknown_${i}`
-    record[key] = {
-      amount: Number(donation.amount) ?? 0,
-      currency: (donation.currency as string) ?? "USD",
-      amountUSD: donation.amountUSD != null ? Number(donation.amountUSD) : undefined,
-    }
-  })
+
+  if (donations.value?.data) {
+    const list = donations.value.data
+    list.forEach((donation: any, i: number) => {
+      const key = donation.createdAt ? `${donation.createdAt}_${i}` : `unknown_${i}`
+      record[key] = {
+        amount: Number(donation.amount) ?? 0,
+        currency: (donation.currency as string) ?? "USD",
+        amountUSD: donation.amountUSD != null ? Number(donation.amountUSD) : undefined,
+      }
+    })
+  }
+
+  record[`${windowStart}_start`] = { amount: 0, currency: "USD" }
+  record[`${windowEnd}_end`] = { amount: 0, currency: "USD" }
   return record
 })
 
