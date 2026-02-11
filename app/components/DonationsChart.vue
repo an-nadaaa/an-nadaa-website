@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onUpdated, nextTick } from "vue"
+import { computed, ref, onUpdated, nextTick, onMounted, onUnmounted } from "vue"
 import {
   VisXYContainer,
   VisLine,
@@ -10,6 +10,8 @@ import {
 } from "@unovis/vue"
 import { CurveType } from "@unovis/ts"
 import { useMoneyFormat } from "@/composables/useMoneyFormat"
+
+const NARROW_VIEW_MAX_WIDTH = 480
 
 export type DonationEntry = {
   amount: number
@@ -46,10 +48,18 @@ function toDateKey(isoKey: string): string {
   const iso = isoKey.includes("_") ? isoKey.slice(0, isoKey.indexOf("_")) : isoKey
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return isoKey
-  const y = d.getUTCFullYear()
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0")
-  const day = String(d.getUTCDate()).padStart(2, "0")
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
   return `${y}-${m}-${day}`
+}
+
+function parseLocalDate(dateKey: string): Date {
+  const parts = dateKey.split("-").map(Number)
+  const y = parts[0] ?? 0
+  const m = (parts[1] ?? 1) - 1
+  const d = parts[2] ?? 1
+  return new Date(y, m, d)
 }
 
 function toUSD(entry: DonationEntry): number {
@@ -91,11 +101,11 @@ const aggregation = computed(() => {
 const monthsSpan = computed(() => {
   const { first, last } = aggregation.value
   if (!first || !last) return 0
-  const start = new Date(first + "T00:00:00Z")
-  const end = new Date(last + "T00:00:00Z")
+  const start = parseLocalDate(first)
+  const end = parseLocalDate(last)
   return (
-    (end.getUTCFullYear() - start.getUTCFullYear()) * 12 +
-    (end.getUTCMonth() - start.getUTCMonth()) +
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth()) +
     1
   )
 })
@@ -106,8 +116,8 @@ const chartData = computed<ChartPoint[]>(() => {
   const { byDate, first, last } = aggregation.value
   if (!first || !last) return []
 
-  const start = new Date(first + "T00:00:00Z")
-  const end = new Date(last + "T00:00:00Z")
+  const start = parseLocalDate(first)
+  const end = parseLocalDate(last)
 
   if (useMonthlyAggregation.value) {
     const byMonth = new Map<string, number>()
@@ -116,11 +126,11 @@ const chartData = computed<ChartPoint[]>(() => {
       byMonth.set(monthKey, (byMonth.get(monthKey) ?? 0) + amount)
     }
     const points: ChartPoint[] = []
-    const current = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1))
-    const endMonth = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1))
+    const current = new Date(start.getFullYear(), start.getMonth(), 1)
+    const endMonth = new Date(end.getFullYear(), end.getMonth(), 1)
     while (current <= endMonth) {
-      const y = current.getUTCFullYear()
-      const m = current.getUTCMonth()
+      const y = current.getFullYear()
+      const m = current.getMonth()
       const monthKey = `${y}-${String(m + 1).padStart(2, "0")}`
       const amount = byMonth.get(monthKey) ?? 0
       points.push({
@@ -132,17 +142,17 @@ const chartData = computed<ChartPoint[]>(() => {
         monthIndex: m,
         dayOfMonth: 1,
       })
-      current.setUTCMonth(current.getUTCMonth() + 1)
+      current.setMonth(current.getMonth() + 1)
     }
     return points
   }
 
   const points: ChartPoint[] = []
-  const current = new Date(start)
+  const current = new Date(start.getFullYear(), start.getMonth(), start.getDate())
   while (current <= end) {
-    const y = current.getUTCFullYear()
-    const m = current.getUTCMonth()
-    const d = current.getUTCDate()
+    const y = current.getFullYear()
+    const m = current.getMonth()
+    const d = current.getDate()
     const dateKey = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`
     const amount = byDate.get(dateKey) ?? 0
     const isMonthStart = d === 1
@@ -155,7 +165,7 @@ const chartData = computed<ChartPoint[]>(() => {
       monthIndex: m,
       dayOfMonth: d,
     })
-    current.setUTCDate(current.getUTCDate() + 1)
+    current.setDate(current.getDate() + 1)
   }
   return points
 })
@@ -163,21 +173,30 @@ const chartData = computed<ChartPoint[]>(() => {
 const daysSpan = computed(() => {
   const data = chartData.value
   if (data.length <= 1) return 0
-  const first = data[0]
-  const last = data[data.length - 1]
-  if (!first || !last) return 0
-  const a = new Date(first.date + "T00:00:00Z").getTime()
-  const b = new Date(last.date + "T00:00:00Z").getTime()
+  const firstPoint = data[0]
+  const lastPoint = data[data.length - 1]
+  if (!firstPoint || !lastPoint) return 0
+  const a = parseLocalDate(firstPoint.date).getTime()
+  const b = parseLocalDate(lastPoint.date).getTime()
   return Math.round((b - a) / (24 * 60 * 60 * 1000))
 })
 
 const useDateTicks = computed(() => daysSpan.value <= 31)
 
+const chartContainerRef = ref<HTMLElement | null>(null)
+const chartWidth = ref(0)
+const isNarrowView = computed(() => chartWidth.value > 0 && chartWidth.value < NARROW_VIEW_MAX_WIDTH)
+
 const xTickValues = computed(() => {
   const data = chartData.value
   if (data.length === 0) return []
   if (useMonthlyAggregation.value) return data.map((_, i) => i)
-  if (useDateTicks.value) return data.map((_, i) => i)
+  if (useDateTicks.value) {
+    if (isNarrowView.value) {
+      return data.map((p, i) => (p.isMonthStart ? i : -1)).filter((i) => i >= 0)
+    }
+    return data.map((_, i) => i)
+  }
   return data
     .map((p, i) => (p.isMonthStart ? i : -1))
     .filter((i) => i >= 0)
@@ -221,7 +240,23 @@ const crosshairTemplate = (d: ChartPoint) => {
 
 const crosshairColor = () => "#149ec7"
 
-const chartContainerRef = ref<HTMLElement | null>(null)
+let resizeObserver: ResizeObserver | null = null
+onMounted(() => {
+  const el = chartContainerRef.value
+  if (!el) return
+  resizeObserver = new ResizeObserver((entries) => {
+    const entry = entries[0]
+    if (entry) chartWidth.value = entry.contentRect.width
+  })
+  resizeObserver.observe(el)
+  chartWidth.value = el.getBoundingClientRect().width
+})
+onUnmounted(() => {
+  if (resizeObserver && chartContainerRef.value) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
+})
 
 function markMonthTicks() {
   nextTick(() => {
