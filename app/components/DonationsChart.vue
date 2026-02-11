@@ -262,14 +262,14 @@ onUpdated(markMonthTicks)
         :x="x"
         :y="y"
         color="url(#areaGradient)"
-        :curve-type="CurveType.CatmullRom"
+        :curve-type="CurveType.MonotoneX"
         :line="false"
       />
       <VisLine
         :x="x"
         :y="y"
         color="#149ec7"
-        :curve-type="CurveType.CatmullRom"
+        :curve-type="CurveType.MonotoneX"
         :stroke-width="3"
       />
       <VisAxis
