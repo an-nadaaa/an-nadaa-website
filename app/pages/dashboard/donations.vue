@@ -321,36 +321,25 @@
                     }}</span>
                   </TableCell>
                   <TableCell>
-                    <a
-                      :class="[
-                        !donation.invoiceUrl && 'opacity-50',
-                        !donation.invoiceUrl
-                          ? 'cursor-not-allowed'
-                          : 'cursor-pointer',
-                        donation.invoiceUrl ? 'hover:text-primary' : '',
-                      ]"
-                      :href="donation.invoiceUrl"
-                      target="_blank"
-                    >
-                      <Icon name="lucide:file-text" class="w-4 h-4" />
-                    </a>
-                    <!-- <DropdownMenu>
+                    <DropdownMenu>
                       <DropdownMenuTrigger as-child>
-                        <Button variant="ghost" size="icon" class="w-8 h-8">
-                          <Icon name="lucide:more-vertical" class="w-4 h-4" />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          class="w-8 h-8"
+                        >
+                          <Icon name="lucide:ellipsis-vertical" class="w-4 h-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Icon name="lucide:file-text" class="mr-2 w-4 h-4" />
-                          View donation
+                      <DropdownMenuContent align="end" class="w-48">
+                        <DropdownMenuItem @select="() => {}">
+                          <Icon name="lucide:file-text" class="w-4 h-4" /> View Donation
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Icon name="lucide:download" class="mr-2 w-4 h-4" />
-                          Download receipt
+                        <DropdownMenuItem @select="() => {}">
+                          <Icon name="lucide:download" class="w-4 h-4" /> Download Receipt
                         </DropdownMenuItem>
                       </DropdownMenuContent>
-                    </DropdownMenu> -->
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -531,6 +520,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
   Popover,
   PopoverContent,
