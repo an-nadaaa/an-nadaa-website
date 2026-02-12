@@ -26,10 +26,13 @@ const props = withDefaults(
   defineProps<{
     donations?: DonationsChartProp
     exchangeRates?: Record<string, number>
+    /** When "30days", narrow screens show week-start ticks (e.g. "2 Feb", "9 Feb"). */
+    timeframe?: string
   }>(),
   {
     donations: () => ({}),
     exchangeRates: () => ({}),
+    timeframe: undefined,
   }
 )
 
@@ -191,7 +194,7 @@ const chartContainerRef = ref<HTMLElement | null>(null)
 const chartWidth = ref(0)
 const isNarrowView = computed(() => chartWidth.value > 0 && chartWidth.value < NARROW_VIEW_MAX_WIDTH)
 const useWeekStartTicksOnNarrow = computed(
-  () => isNarrowView.value && !useMonthlyAggregation.value
+  () => isNarrowView.value && props.timeframe === "30days"
 )
 
 const xTickValues = computed(() => {
@@ -199,13 +202,18 @@ const xTickValues = computed(() => {
   if (data.length === 0) return []
   if (useMonthlyAggregation.value) return data.map((_, i) => i)
   if (useDateTicks.value) {
-    if (isNarrowView.value) {
-      return data.map((p, i) => (p.isWeekStart ? i : -1)).filter((i) => i >= 0)
+    if (isNarrowView.value && props.timeframe === "30days") {
+      return data
+        .map((p, i) => (p.isWeekStart ? i : -1))
+        .filter((i) => i >= 0)
     }
     return data.map((_, i) => i)
   }
   if (isNarrowView.value) {
-    return data.map((p, i) => (p.isWeekStart ? i : -1)).filter((i) => i >= 0)
+    const useWeek = props.timeframe === "30days"
+    return data
+      .map((p, i) => ((useWeek ? p.isWeekStart : p.isMonthStart) ? i : -1))
+      .filter((i) => i >= 0)
   }
   return data
     .map((p, i) => (p.isMonthStart ? i : -1))

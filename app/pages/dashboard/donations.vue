@@ -36,7 +36,7 @@
       </TabsList>
     </Tabs>
     
-    <DonationsChart :donations="chartDonations" />
+    <DonationsChart :donations="chartDonations" :timeframe="timeframe" />
 
     <!-- Time Filter Tabs -->
     <!-- <Tabs v-model="timeframe" default-value="12months" class="w-full">
