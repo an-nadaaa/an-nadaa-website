@@ -332,7 +332,7 @@
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" class="w-48">
-                        <DropdownMenuItem @select="() => {}">
+                        <DropdownMenuItem @select="() => openDonationDrawer(donation as DonationRow)">
                           <Icon name="lucide:file-text" class="w-4 h-4" /> View Donation
                         </DropdownMenuItem>
                         <DropdownMenuItem @select="() => {}">
@@ -466,6 +466,125 @@
       </div>
     </div>
 
+    <!-- Donation details drawer (right) -->
+    <Drawer direction="right" v-model:open="donationDrawerOpen">
+      <DrawerContent direction="right" class="flex flex-col">
+        <template v-if="selectedDonation">
+          <DrawerHeader class="text-left">
+            <div class="flex justify-between items-start pr-2">
+              <div>
+                <DrawerTitle>Donation Details</DrawerTitle>
+                <DrawerDescription>See donation details below.</DrawerDescription>
+              </div>
+              <DrawerClose as-child>
+                <Button variant="ghost" size="icon" class="h-8 w-8">
+                  <Icon name="lucide:x" class="w-4 h-4" />
+                  <span class="sr-only">Close</span>
+                </Button>
+              </DrawerClose>
+            </div>
+          </DrawerHeader>
+          <div class="flex-1 overflow-y-auto px-4 pb-4 space-y-6">
+            <!-- AMOUNT DONATED -->
+            <div class="space-y-1">
+              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Amount donated</p>
+              <p class="text-lg font-medium">
+                {{ formatCurrency(selectedDonation.amount as number, (selectedDonation.currency as string).toUpperCase()) }}
+              </p>
+            </div>
+            <!-- CAMPAIGN -->
+            <div class="space-y-1">
+              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Campaign</p>
+              <template v-if="selectedDonation.cause">
+                <p class="font-medium">{{ selectedDonation.cause.title }}</p>
+                <NuxtLink
+                  :to="$localePath(`/causes/${selectedDonation.cause.documentId}`)"
+                  class="text-sm text-primary hover:underline"
+                >
+                  {{ $localePath(`/causes/${selectedDonation.cause.documentId}`) }}
+                </NuxtLink>
+              </template>
+              <p v-else class="text-sm">{{ selectedDonation.causeTitle || 'General Donation' }}</p>
+            </div>
+            <!-- DATE & TIME -->
+            <div class="space-y-1">
+              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Date & time</p>
+              <p class="text-sm">{{ formatDateWithTime(selectedDonation.createdAt as string) }}</p>
+            </div>
+            <!-- PAYMENT STATUS -->
+            <div class="space-y-1">
+              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Payment status</p>
+              <Badge variant="payment-success" class="px-2" showCircle>
+                {{ (selectedDonation.donationStatus as string) === 'success' ? 'Success' : (selectedDonation.donationStatus as string) }}
+              </Badge>
+            </div>
+            <!-- CAMPAIGN STATUS (when cause exists with goal) -->
+            <div v-if="selectedDonation.cause" class="space-y-2">
+              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Campaign status</p>
+              <div class="rounded-lg border p-3 space-y-2">
+                <img
+                  v-if="selectedDonation.cause.thumbnail?.formats?.medium?.url || selectedDonation.cause.thumbnail?.url || selectedDonation.cause.coverImage?.url"
+                  :src="selectedDonation.cause.thumbnail?.formats?.medium?.url || selectedDonation.cause.thumbnail?.url || selectedDonation.cause.coverImage?.url"
+                  :alt="selectedDonation.cause.title"
+                  class="w-full h-24 object-cover rounded-md"
+                />
+                <div v-else class="w-full h-24 rounded-md bg-muted flex items-center justify-center">
+                  <Icon name="lucide:image" class="w-8 h-8 text-muted-foreground" />
+                </div>
+                <div v-if="selectedDonation.cause.tags?.length" class="flex flex-wrap gap-1">
+                  <Badge
+                    v-for="(tag, i) in selectedDonation.cause.tags"
+                    :key="i"
+                    variant="secondary"
+                    class="text-xs"
+                  >
+                    {{ typeof tag === 'string' ? tag : (tag as any)?.name ?? tag }}
+                  </Badge>
+                </div>
+                <p class="text-sm font-medium">
+                  {{ selectedDonation.cause.goalDetails?.[0]?.projectDescription || selectedDonation.cause.title }}
+                </p>
+                <template v-if="selectedDonation.cause.goalDetails?.[0]?.goalAmount != null && selectedDonation.cause.raisedAmount != null">
+                  <Progress
+                    class="h-2 [&>div]:bg-primary"
+                    :model-value="Math.min(100, Math.max(0, (parseFloat(selectedDonation.cause.raisedAmount) / parseFloat(selectedDonation.cause.goalDetails[0].goalAmount)) * 100))"
+                  />
+                  <p class="text-xs text-muted-foreground">
+                    {{ formatCurrency(parseFloat(selectedDonation.cause.raisedAmount), 'USD') }} of {{ formatCurrency(parseFloat(selectedDonation.cause.goalDetails[0].goalAmount), 'USD') }} Raised
+                  </p>
+                </template>
+              </div>
+            </div>
+            <!-- RECEIPT -->
+            <div class="space-y-1">
+              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Receipt</p>
+              <template v-if="selectedDonation.invoiceUrl">
+                <a
+                  :href="selectedDonation.invoiceUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-3 rounded-lg border p-3 hover:bg-muted/50"
+                >
+                  <Icon name="lucide:file-text" class="w-8 h-8 text-muted-foreground shrink-0" />
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium truncate">Receipt.pdf</p>
+                    <p class="text-xs text-muted-foreground">120 KB</p>
+                  </div>
+                  <Icon name="lucide:download" class="w-4 h-4 shrink-0" />
+                </a>
+              </template>
+              <p v-else class="text-sm text-muted-foreground">Receipt not available</p>
+            </div>
+          </div>
+          <DrawerFooter class="pt-4 border-t">
+            <DrawerClose as-child>
+              <Button variant="outline" class="w-full">Close</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </template>
+      </DrawerContent>
+    </Drawer>
+
     <!-- Confirmation Dialog -->
     <Dialog v-model:open="dialogOpen">
       <DialogContent class="sm:max-w-[425px] max-w-11/12 rounded-lg">
@@ -511,6 +630,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer"
 import {
   Dialog,
   DialogClose,
@@ -781,6 +909,11 @@ function formatDate(date: any) {
   return formatDayMonthYear(date, "MMMM D, YYYY")
 }
 
+function formatDateWithTime(date: string | Date | number | undefined | null) {
+  if (date == null) return ""
+  return formatDayMonthYear(date, "MMM D, YYYY [at] HH:mm")
+}
+
 const datePickerOpen = ref(false)
 
 // Pagination computed properties
@@ -872,6 +1005,30 @@ function goToPageFromInput() {
     // Reset to current page if invalid
     pageInput.value = currentPage.value
   }
+}
+
+// Donation details drawer (right-side)
+const donationDrawerOpen = ref(false)
+/** Donation row as returned by the API (document shape with populated cause) */
+type DonationRow = {
+  id?: number
+  documentId?: string
+  amount: number
+  currency: string
+  amountUSD?: number
+  cause: any | null
+  causeTitle?: string
+  createdAt: string
+  donationStatus: string
+  invoiceUrl?: string | null
+  source?: string
+  donationType?: string
+  [key: string]: unknown
+}
+const selectedDonation = ref<DonationRow | null>(null)
+function openDonationDrawer(donation: DonationRow) {
+  selectedDonation.value = donation
+  donationDrawerOpen.value = true
 }
 
 // Subscription management

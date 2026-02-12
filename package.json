@@ -53,6 +53,7 @@
     "stripe": "17.3.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "vaul-vue": "^0.4.1",
     "vee-validate": "^4.13.2",
     "vidstack": "^1.12.12",
     "vue": "^3.3.13",
