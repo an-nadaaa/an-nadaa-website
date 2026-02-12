@@ -161,7 +161,7 @@ const chartData = computed<ChartPoint[]>(() => {
     const dateKey = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`
     const amount = byDate.get(dateKey) ?? 0
     const isMonthStart = d === 1
-    const isWeekStart = parseLocalDate(dateKey).getDay() === 0
+    const isWeekStart = parseLocalDate(dateKey).getDay() === 1
     points.push({
       x: points.length,
       y: Math.round(amount * 100) / 100,
