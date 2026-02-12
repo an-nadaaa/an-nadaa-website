@@ -11,7 +11,7 @@ import {
 import { CurveType } from "@unovis/ts"
 import { useMoneyFormat } from "@/composables/useMoneyFormat"
 
-const NARROW_VIEW_MAX_WIDTH = 480
+const NARROW_VIEW_MAX_WIDTH = 720
 
 export type DonationEntry = {
   amount: number
@@ -79,6 +79,7 @@ type ChartPoint = {
   date: string
   dateLabel: string
   isMonthStart: boolean
+  isWeekStart: boolean
   monthIndex: number
   dayOfMonth: number
 }
@@ -139,6 +140,7 @@ const chartData = computed<ChartPoint[]>(() => {
         date: `${monthKey}-01`,
         dateLabel: `${FULL_MONTHS[m]} ${y}`,
         isMonthStart: true,
+        isWeekStart: false,
         monthIndex: m,
         dayOfMonth: 1,
       })
@@ -156,12 +158,14 @@ const chartData = computed<ChartPoint[]>(() => {
     const dateKey = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`
     const amount = byDate.get(dateKey) ?? 0
     const isMonthStart = d === 1
+    const isWeekStart = parseLocalDate(dateKey).getDay() === 0
     points.push({
       x: points.length,
       y: Math.round(amount * 100) / 100,
       date: dateKey,
       dateLabel: `${FULL_MONTHS[m]} ${d}, ${y}`,
       isMonthStart,
+      isWeekStart,
       monthIndex: m,
       dayOfMonth: d,
     })
@@ -186,6 +190,9 @@ const useDateTicks = computed(() => daysSpan.value <= 31)
 const chartContainerRef = ref<HTMLElement | null>(null)
 const chartWidth = ref(0)
 const isNarrowView = computed(() => chartWidth.value > 0 && chartWidth.value < NARROW_VIEW_MAX_WIDTH)
+const useWeekStartTicksOnNarrow = computed(
+  () => isNarrowView.value && !useMonthlyAggregation.value
+)
 
 const xTickValues = computed(() => {
   const data = chartData.value
@@ -193,9 +200,12 @@ const xTickValues = computed(() => {
   if (useMonthlyAggregation.value) return data.map((_, i) => i)
   if (useDateTicks.value) {
     if (isNarrowView.value) {
-      return data.map((p, i) => (p.isMonthStart ? i : -1)).filter((i) => i >= 0)
+      return data.map((p, i) => (p.isWeekStart ? i : -1)).filter((i) => i >= 0)
     }
     return data.map((_, i) => i)
+  }
+  if (isNarrowView.value) {
+    return data.map((p, i) => (p.isWeekStart ? i : -1)).filter((i) => i >= 0)
   }
   return data
     .map((p, i) => (p.isMonthStart ? i : -1))
@@ -212,6 +222,9 @@ const formatX = (tick: number) => {
     const prevYear = prev?.date?.slice(0, 4)
     const showYear = !prevYear || prevYear !== year
     return showYear ? `${MONTHS[point.monthIndex]} ${year}` : MONTHS[point.monthIndex]
+  }
+  if (useWeekStartTicksOnNarrow.value) {
+    return `${point.dayOfMonth} ${MONTHS[point.monthIndex]}`
   }
   if (useDateTicks.value) return point.isMonthStart ? MONTHS[point.monthIndex] : String(point.dayOfMonth)
   return MONTHS[point.monthIndex]
@@ -263,10 +276,13 @@ function markMonthTicks() {
     const el = chartContainerRef.value
     if (!el) return
     const ticks = el.querySelectorAll(".tick")
+    const isEmphasizedLabel = (content: string) =>
+      MONTHS.includes(content) ||
+      MONTHS.some((m) => content.endsWith(` ${m}`))
     ticks.forEach((g) => {
       const text = g.querySelector("text")
       const content = text?.textContent?.trim() ?? ""
-      if (MONTHS.includes(content)) {
+      if (isEmphasizedLabel(content)) {
         g.classList.add("month-tick")
       } else {
         g.classList.remove("month-tick")
