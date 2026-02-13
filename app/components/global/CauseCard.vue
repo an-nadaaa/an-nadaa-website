@@ -1,6 +1,6 @@
 <template>
   <Card
-    :class="`relative h-full p-0 px-4 py-1 pt-4 pb-4 transition transform bg-white rounded-lg shadow-md `"
+    :class="`relative p-0 px-4 py-1 pt-4 pb-4 transition transform bg-white rounded-lg shadow-md `"
   >
     <AspectRatio class="relative" :ratio="3 / 2">
       <div v-if="cause.isFeatured && route.path !== '/'">

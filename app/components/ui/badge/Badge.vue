@@ -17,7 +17,7 @@ const circleColor = computed(() => {
   // Map variants to their text color classes
   const colorMap: Record<string, string> = {
     default: "text-primary-foreground",
-    secondary: "text-secondary-foreground",
+    secondary: "font-normal text-gray-800",
     destructive: "text-destructive-foreground",
     outline: "text-foreground",
     "payment-success": "text-green-600",

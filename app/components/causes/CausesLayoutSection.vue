@@ -130,7 +130,7 @@
       >
         <CauseCard
           :cause="cause"
-          class="hover:cursor-pointer hover:shadow-xl"
+          class="hover:cursor-pointer hover:shadow-xl  h-full"
         />
       </NuxtLink>
     </div>

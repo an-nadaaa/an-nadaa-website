@@ -335,9 +335,11 @@
                         <DropdownMenuItem @select="() => openDonationDrawer(donation as DonationRow)">
                           <Icon name="lucide:file-text" class="w-4 h-4" /> View Donation
                         </DropdownMenuItem>
-                        <DropdownMenuItem @select="() => {}">
-                          <Icon name="lucide:download" class="w-4 h-4" /> Download Receipt
-                        </DropdownMenuItem>
+                        <a :href="donation.invoiceUrl" target="_blank" rel="noopener noreferrer">
+                          <DropdownMenuItem>
+                            <Icon name="lucide:external-link" class="w-4 h-4" /> View Receipt
+                          </DropdownMenuItem>
+                        </a>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -467,59 +469,71 @@
     </div>
 
     <!-- Donation details drawer (right) -->
+
     <Drawer direction="right" v-model:open="donationDrawerOpen">
       <DrawerContent direction="right" class="flex flex-col">
         <template v-if="selectedDonation">
-          <DrawerHeader class="text-left">
-            <div class="flex justify-between items-start pr-2">
-              <div>
-                <DrawerTitle>Donation Details</DrawerTitle>
+          <DrawerHeader class="text-left p-6 pb-0">
+            <div class="flex justify-between items-start pr-2 relative">
+              <div class="flex flex-col gap-2">
+                <DrawerTitle class=" font-normal">Donation Details</DrawerTitle>
                 <DrawerDescription>See donation details below.</DrawerDescription>
               </div>
               <DrawerClose as-child>
-                <Button variant="ghost" size="icon" class="h-8 w-8">
+                <Button variant="ghost" size="icon" class="h-4 w-4 absolute right-0 top-0">
                   <Icon name="lucide:x" class="w-4 h-4" />
                   <span class="sr-only">Close</span>
                 </Button>
               </DrawerClose>
             </div>
           </DrawerHeader>
-          <div class="flex-1 overflow-y-auto px-4 pb-4 space-y-6">
+          <div class="border-b my-5"></div>
+          <div class="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
             <!-- AMOUNT DONATED -->
             <div class="space-y-1">
-              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Amount donated</p>
-              <p class="text-lg font-medium">
+              <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Amount donated</p>
+              <p class="text-3xl font-normal">
                 {{ formatCurrency(selectedDonation.amount as number, (selectedDonation.currency as string).toUpperCase()) }}
               </p>
             </div>
-            <!-- CAMPAIGN -->
-            <div class="space-y-1">
-              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Campaign</p>
-              <template v-if="selectedDonation.cause">
-                <p class="font-medium">{{ selectedDonation.cause.title }}</p>
-                <NuxtLink
-                  :to="$localePath(`/causes/${selectedDonation.cause.documentId}`)"
-                  class="text-sm text-primary hover:underline"
-                >
-                  {{ $localePath(`/causes/${selectedDonation.cause.documentId}`) }}
-                </NuxtLink>
-              </template>
-              <p v-else class="text-sm">{{ selectedDonation.causeTitle || 'General Donation' }}</p>
-            </div>
-            <!-- DATE & TIME -->
-            <div class="space-y-1">
-              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Date & time</p>
-              <p class="text-sm">{{ formatDateWithTime(selectedDonation.createdAt as string) }}</p>
-            </div>
-            <!-- PAYMENT STATUS -->
-            <div class="space-y-1">
-              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Payment status</p>
-              <Badge variant="payment-success" class="px-2" showCircle>
-                {{ (selectedDonation.donationStatus as string) === 'success' ? 'Success' : (selectedDonation.donationStatus as string) }}
-              </Badge>
-            </div>
+            <template v-if="selectedDonation.cause">
+              <!-- CAMPAIGN -->
+              <div class="space-y-1">
+                <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Cause</p>
+                <template v-if="selectedDonation.cause">
+                  <p class="font-normal mb-0">{{ selectedDonation.cause.title }}</p>
+                  <NuxtLink
+                    :to="$localePath(`/causes/${selectedDonation.cause.documentId}`)"
+                    class="text-sm text-primary hover:underline"
+                  >
+                    an-nadaa.com{{ $localePath(`/causes/${selectedDonation.cause.documentId}`) }}
+                  </NuxtLink>
+                </template>
+                <p v-else class="text-sm">{{ selectedDonation.causeTitle || 'General Donation' }}</p>
+              </div>
+              <!-- DATE & TIME -->
+              <div class="space-y-1">
+                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Date & time</p>
+                <p class="text-sm">{{ formatDateWithTime(selectedDonation.createdAt as string) }}</p>
+              </div>
+              <!-- PAYMENT STATUS -->
+              <div class="space-y-1">
+                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Payment status</p>
+                <Badge variant="payment-success" class="px-2" showCircle>
+                  {{ (selectedDonation.donationStatus as string).charAt(0).toUpperCase() + (selectedDonation.donationStatus as string).slice(1) }}
+                </Badge>
+              </div>
+              <CauseCard
+                :cause="selectedDonation.cause"
+                class="hover:cursor-pointer"
+              />
+            </template>
+            <template v-else>
+              <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Cause</p>
+              <p class="font-normal text-gray-600 text-center">Cause not found</p>
+            </template>
             <!-- CAMPAIGN STATUS (when cause exists with goal) -->
-            <div v-if="selectedDonation.cause" class="space-y-2">
+            <!-- <div v-if="selectedDonation.cause" class="space-y-2">
               <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Campaign status</p>
               <div class="rounded-lg border p-3 space-y-2">
                 <img
@@ -531,14 +545,14 @@
                 <div v-else class="w-full h-24 rounded-md bg-muted flex items-center justify-center">
                   <Icon name="lucide:image" class="w-8 h-8 text-muted-foreground" />
                 </div>
-                <div v-if="selectedDonation.cause.tags?.length" class="flex flex-wrap gap-1">
+                <div v-if="selectedDonation.cause.categories?.length" class="flex flex-wrap gap-1">
                   <Badge
-                    v-for="(tag, i) in selectedDonation.cause.tags"
+                    v-for="(category, i) in selectedDonation.cause.categories"
                     :key="i"
                     variant="secondary"
-                    class="text-xs"
+                    class=" font-normal text-gray-800"
                   >
-                    {{ typeof tag === 'string' ? tag : (tag as any)?.name ?? tag }}
+                    {{ category.title }}
                   </Badge>
                 </div>
                 <p class="text-sm font-medium">
@@ -554,24 +568,25 @@
                   </p>
                 </template>
               </div>
-            </div>
+            </div> -->
             <!-- RECEIPT -->
             <div class="space-y-1">
-              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Receipt</p>
+              <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Receipt</p>
               <template v-if="selectedDonation.invoiceUrl">
-                <a
-                  :href="selectedDonation.invoiceUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-3 rounded-lg border p-3 hover:bg-muted/50"
+                <div
+                  class="flex items-center gap-3 rounded-lg border p-3"
                 >
                   <Icon name="lucide:file-text" class="w-8 h-8 text-muted-foreground shrink-0" />
                   <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium truncate">Receipt.pdf</p>
-                    <p class="text-xs text-muted-foreground">120 KB</p>
+                    <p class="text-sm font-medium truncate">View Receipt</p>
                   </div>
-                  <Icon name="lucide:download" class="w-4 h-4 shrink-0" />
-                </a>
+                    <a :href="selectedDonation.invoiceUrl" target="_blank" rel="noopener noreferrer">
+                      <Button variant="ghost" size="icon" class="w-8 h-8">
+                        <Icon name="lucide:external-link" class="w-4 h-4 shrink-0" />
+                        <span class="sr-only">View Receipt</span>
+                      </Button>
+                    </a>
+                </div>
               </template>
               <p v-else class="text-sm text-muted-foreground">Receipt not available</p>
             </div>
@@ -911,7 +926,11 @@ function formatDate(date: any) {
 
 function formatDateWithTime(date: string | Date | number | undefined | null) {
   if (date == null) return ""
-  return formatDayMonthYear(date, "MMM D, YYYY [at] HH:mm")
+  const dateTimeStr = toValue(formatDayMonthYear(date, "MMM D, YYYY [at] HH:mm"))
+  const parts = new Intl.DateTimeFormat(undefined, { timeZoneName: "short" }).formatToParts(new Date(date as string | Date | number))
+  const tzPart = parts.find((p) => p.type === "timeZoneName")
+  const tzName = tzPart?.value ?? ""
+  return tzName ? `${dateTimeStr} ${tzName}` : dateTimeStr
 }
 
 const datePickerOpen = ref(false)
