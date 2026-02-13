@@ -12,7 +12,7 @@
         </p>
       </div>
       <div class="flex flex-col gap-2 sm:flex-row">
-        <!-- <Button variant="outline" class="w-full sm:w-auto">
+        <!-- <Button variant="outline" class="w-full sm:w-auto"
           <Icon name="lucide:download" class="mr-2 w-4 h-4" />
           Export Donations
         </Button> -->
@@ -89,7 +89,8 @@
         v-if="loadingDonations"
         class="mx-auto my-48 text-5xl text-primary"
       /> -->
-      <div class="">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-5">
+        <div class="order-2 lg:order-1 lg:col-span-5">
         <div class="flex justify-between items-center mb-2">
           <h4 class="font-normal">Donation history</h4>
           <div class="flex gap-2">
@@ -129,7 +130,7 @@
             </Popover>
           </div>
         </div>
-        <div class="">
+        <div class="max-w-full">
           <!-- Table -->
           <div
             v-if="
@@ -137,7 +138,7 @@
               donations?.data?.length &&
               donations?.data?.length > 0
             "
-            class="overflow-x-auto w-full"
+            class="overflow-x-scroll "
           >
             <Table class="border-b-[0.1px] border-gray-100">
               <TableHeader>
@@ -458,13 +459,7 @@
             </button>
           </div>
         </div>
-
-        <!-- <div class="order-1 lg:order-2 lg:col-span-2">
-          <DashboardMonthlyDonationsCard
-            :hide-show-all-link="true"
-            :hide-dropdown-menu="false"
-          />
-        </div> -->
+        </div>
       </div>
     </div>
 
@@ -489,7 +484,7 @@
           </DrawerHeader>
           <div class="border-b my-5"></div>
           <div class="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
-            <!-- AMOUNT DONATED -->
+
             <div class="space-y-1">
               <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Amount donated</p>
               <p class="text-3xl font-normal">
@@ -497,7 +492,7 @@
               </p>
             </div>
             <template v-if="selectedDonation.cause">
-              <!-- CAMPAIGN -->
+
               <div class="space-y-1">
                 <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Cause</p>
                 <template v-if="selectedDonation.cause">
@@ -511,12 +506,12 @@
                 </template>
                 <p v-else class="text-sm">{{ selectedDonation.causeTitle || 'General Donation' }}</p>
               </div>
-              <!-- DATE & TIME -->
+
               <div class="space-y-1">
                 <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Date & time</p>
                 <p class="text-sm">{{ formatDateWithTime(selectedDonation.createdAt as string) }}</p>
               </div>
-              <!-- PAYMENT STATUS -->
+
               <div class="space-y-1">
                 <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Payment status</p>
                 <Badge variant="payment-success" class="px-2" showCircle>
