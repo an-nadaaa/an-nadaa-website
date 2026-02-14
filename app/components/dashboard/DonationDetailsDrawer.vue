@@ -63,49 +63,58 @@
               <p class="font-normal text-center text-gray-400">Cause not found</p>
             </template>
 
-            <!-- Monthly subscription controls (above Receipt) -->
+            <!-- Monthly subscription controls (above Receipt); hide when cancelled (no subscription after load) -->
             <div
-              v-if="selectedDonation.donationType === 'monthly' && subscriptionForSelectedDonation"
+              v-if="selectedDonation.donationType === 'monthly' && (subscriptionLoading || subscriptionForSelectedDonation)"
               class="space-y-1"
             >
               <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Monthly subscription</p>
               <div class="p-3 space-y-3 rounded-lg border">
-                <p
-                  v-if="subscriptionForSelectedDonation.status === 'active' && !subscriptionForSelectedDonation.pause_collection"
-                  class="text-xs text-muted-foreground"
-                >
-                  Next payment on {{ formatDate(subscriptionForSelectedDonation.current_period_end * 1000) }}
-                </p>
-                <p v-else class="text-xs text-muted-foreground">Paused</p>
-                <div class="grid grid-cols-1 gap-2">
-                  <Button
+                <template v-if="subscriptionLoading">
+                  <Skeleton class="h-4 w-3/4" />
+                  <div class="grid grid-cols-1 gap-2 pt-1">
+                    <Skeleton class="h-9 w-full" />
+                    <Skeleton class="h-9 w-full" />
+                  </div>
+                </template>
+                <template v-else>
+                  <p
                     v-if="subscriptionForSelectedDonation.status === 'active' && !subscriptionForSelectedDonation.pause_collection"
-                    variant="outline"
-                    size="sm"
-                    @click="openConfirmDialog('pause', subscriptionForSelectedDonation.id)"
+                    class="text-xs text-muted-foreground"
                   >
-                    <Icon name="lucide:pause" class="mr-1 w-4 h-4" />
-                    Pause
-                  </Button>
-                  <Button
-                    v-else-if="subscriptionForSelectedDonation.status === 'active' && subscriptionForSelectedDonation.pause_collection"
-                    variant="outline"
-                    size="sm"
-                    @click="openConfirmDialog('resume', subscriptionForSelectedDonation.id)"
-                  >
-                    <Icon name="lucide:play" class="mr-1 w-4 h-4" />
-                    Resume
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    class="text-destructive hover:text-destructive"
-                    @click="openConfirmDialog('cancel', subscriptionForSelectedDonation.id)"
-                  >
-                    <Icon name="lucide:x-circle" class="mr-1 w-4 h-4" />
-                    Cancel
-                  </Button>
-                </div>
+                    Next payment on {{ formatDate(subscriptionForSelectedDonation.current_period_end * 1000) }}
+                  </p>
+                  <p v-else class="text-xs text-muted-foreground">Paused</p>
+                  <div class="grid grid-cols-1 gap-2">
+                    <Button
+                      v-if="subscriptionForSelectedDonation.status === 'active' && !subscriptionForSelectedDonation.pause_collection"
+                      variant="outline"
+                      size="sm"
+                      @click="openConfirmDialog('pause', subscriptionForSelectedDonation.id)"
+                    >
+                      <Icon name="lucide:pause" class="mr-1 w-4 h-4" />
+                      Pause
+                    </Button>
+                    <Button
+                      v-else-if="subscriptionForSelectedDonation.status === 'active' && subscriptionForSelectedDonation.pause_collection"
+                      variant="outline"
+                      size="sm"
+                      @click="openConfirmDialog('resume', subscriptionForSelectedDonation.id)"
+                    >
+                      <Icon name="lucide:play" class="mr-1 w-4 h-4" />
+                      Resume
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      class="text-destructive hover:text-destructive"
+                      @click="openConfirmDialog('cancel', subscriptionForSelectedDonation.id)"
+                    >
+                      <Icon name="lucide:x-circle" class="mr-1 w-4 h-4" />
+                      Cancel
+                    </Button>
+                  </div>
+                </template>
               </div>
             </div>
 
@@ -171,6 +180,7 @@
 import { computed, ref, toValue } from "vue"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import type Stripe from "stripe"
 import {
   Drawer,
@@ -204,6 +214,7 @@ export type DonationRow = {
   donationStatus: string
   invoiceUrl?: string | null
   source?: string
+  sourceTransactionId?: string
   donationType?: string
   [key: string]: unknown
 }
@@ -246,29 +257,35 @@ function formatDateWithTime(date: string | Date | number | undefined | null) {
   return tzName ? `${dateTimeStr} ${tzName}` : dateTimeStr
 }
 
-// Resolve Stripe subscription for the selected donation (monthly, same cause + amount; active only)
+// Resolve subscription ID from the donation's sourceTransactionId (invoice or payment intent)
+const { data: subscriptionIdFromApi, pending: subscriptionLoading } = await useAsyncData(
+  () =>
+    `subscription-by-transaction-${props.selectedDonation?.documentId ?? "none"}-${props.selectedDonation?.sourceTransactionId ?? "none"}`,
+  async () => {
+    const d = props.selectedDonation
+    if (!d || d.donationType !== "monthly" || !d.sourceTransactionId)
+      return null
+    const res = await $fetch<{ subscriptionId: string | null }>(
+      "/api/dashboard/subscription-by-transaction",
+      { query: { sourceTransactionId: d.sourceTransactionId } }
+    )
+    return res.subscriptionId
+  },
+  {
+    watch: [
+      () => props.selectedDonation?.documentId,
+      () => props.selectedDonation?.sourceTransactionId,
+    ],
+    lazy: true,
+  }
+)
+
+// Subscription for this donation = the one in monthlyDonations that matches the transaction's subscription id
 const subscriptionForSelectedDonation = computed(() => {
-  const donation = props.selectedDonation
+  const id = subscriptionIdFromApi.value
   const list = props.monthlyDonations?.data
-  if (
-    !donation ||
-    donation.donationType !== "monthly" ||
-    !donation.cause?.documentId ||
-    !list?.length
-  )
-    return null
-  const causeId = donation.cause.documentId
-  const amountDollars = Math.round(Number(donation.amount) * 100) / 100
-  return list.find((sub) => {
-    if (sub.status !== "active") return false
-    const meta = sub.metadata as { causeId?: string }
-    if (meta?.causeId !== causeId) return false
-    const item = sub.items?.data?.[0] as Stripe.SubscriptionItem | undefined
-    const planAmountCents = item?.plan?.amount
-    if (planAmountCents == null) return false
-    const subAmountDollars = Math.round((planAmountCents as number) / 100 * 100) / 100
-    return subAmountDollars === amountDollars
-  }) ?? null
+  if (!id || !list?.length) return null
+  return list.find((sub) => sub.id === id) ?? null
 })
 
 // Subscription dialog state
