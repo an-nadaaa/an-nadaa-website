@@ -50,45 +50,50 @@ function scrollToElement() {
   bankInfo.value?.scrollIntoView({ behavior: "smooth" })
 }
 
-await strapiFetch(
-  "/causes",
-  "GET",
-  {
-    populate: "*",
-  },
-  {
-    filters: {
-      isActive: true,
-      isPrivate: false,
-      environment: process.env.NODE_ENV,
-    },
-    pagination: {
-      page: 1,
-      pageSize: 10000,
-    },
-    sort: ["title:asc"],
-  }
-)
-  .then((res: any) => {
-    const strapiCauses = res.data.value.data
-      .filter((cause: any) => {
-        const currentDate = new Date()
-        const startsAt = new Date(cause.startsAt)
-        const endsAt = cause.endsAt
-          ? new Date(cause.goalDetails[0].endsAt)
-          : null
+const pageSize = 100
+const allCauses: any[] = []
 
-        return currentDate > startsAt && (!endsAt || currentDate < endsAt)
-      })
-      .map((cause: any) => {
-        return {
-          name: cause.title,
-          id: cause.documentId,
-        }
-      })
-    causes.value = [...strapiCauses]
-  })
-  .catch((err: any) => {
-    console.log(err)
-  })
+try {
+  let page = 1
+  let pageCount = 1
+  do {
+    const res = await strapiFetch(
+      "/causes",
+      "GET",
+      { populate: "*" },
+      {
+        filters: {
+          isActive: true,
+          isPrivate: false,
+          environment: process.env.NODE_ENV,
+        },
+        pagination: { page, pageSize },
+        sort: ["title:asc"],
+      }
+    )
+    const value = (res as any).data?.value ?? (res as any).data
+    const data = value?.data ?? []
+    const meta = value?.meta ?? {}
+    allCauses.push(...data)
+    pageCount = meta?.pagination?.pageCount ?? 1
+    page += 1
+  } while (page <= pageCount)
+
+  const currentDate = new Date()
+  const strapiCauses = allCauses
+    .filter((cause: any) => {
+      const startsAt = new Date(cause.startsAt)
+      const endsAt = cause.endsAt
+        ? new Date(cause.goalDetails?.[0]?.endsAt)
+        : null
+      return currentDate > startsAt && (!endsAt || currentDate < endsAt)
+    })
+    .map((cause: any) => ({
+      name: cause.title,
+      id: cause.documentId,
+    }))
+  causes.value = [...strapiCauses]
+} catch (err: any) {
+  console.log(err)
+}
 </script>

@@ -104,56 +104,52 @@ function onConfirm() {
   isEditing.value = false
 }
 
-await strapiFetch(
-  "/causes",
-  "GET",
-  {},
-  {
-    filters: {
-      isActive: true,
-      // isPrivate: false,
-      environment: process.env.NODE_ENV,
-    },
-    pagination: {
-      page: 1,
-      pageSize: 10000,
-    },
-    sort: ["title:asc"],
-  }
-)
-  .then((res: any) => {
-    const strapiCauses = res.data.value.data.map((cause: any) => {
-      return {
-        name: cause.title,
-        id: cause.documentId,
-        isPrivate: cause.isPrivate,
-      }
-    })
-    causes.value = [...strapiCauses].filter((cause) => {
-      if (cause.id !== id) return cause.isPrivate === false
-      else return true
-    })
+const pageSize = 100
+const allCauses: any[] = []
+let page = 1
+let pageCount = 1
 
-    if (id && id !== "general") {
-      if (
-        !(strapiCauses as any[]).find((cause: any) => {
-          return id === cause.id
-        })
-      ) {
-        throw new Error("404 - Cause not found")
-      }
+do {
+  const res = await strapiFetch(
+    "/causes",
+    "GET",
+    {},
+    {
+      filters: {
+        isActive: true,
+        environment: process.env.NODE_ENV,
+      },
+      pagination: { page, pageSize },
+      sort: ["title:asc"],
     }
-  })
-  .catch((err: any) => {
-    console.log(err)
+  )
+  const value = (res as any).data?.value ?? (res as any).data
+  const data = value?.data ?? []
+  const meta = value?.meta ?? {}
+  allCauses.push(...data)
+  pageCount = meta?.pagination?.pageCount ?? 1
+  page += 1
+} while (page <= pageCount)
 
-    if (err.message.includes("404"))
-      throw createError({
-        statusCode: 404,
-        statusMessage: "Cause not found",
-        fatal: true,
-      })
-  })
+const strapiCauses = allCauses.map((cause: any) => ({
+  name: cause.title,
+  id: cause.documentId,
+  isPrivate: cause.isPrivate,
+}))
+causes.value = [...strapiCauses].filter((cause) => {
+  if (cause.id !== id) return cause.isPrivate === false
+  return true
+})
+
+if (id && id !== "general") {
+  if (!(strapiCauses as any[]).find((cause: any) => id === cause.id)) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Cause not found",
+      fatal: true,
+    })
+  }
+}
 
 onBeforeMount(async () => {
   currencySelected.value = (currency as string) || "USD"
