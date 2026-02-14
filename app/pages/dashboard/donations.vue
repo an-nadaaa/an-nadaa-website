@@ -100,7 +100,7 @@
                   <TableHead class="min-w-[120px]">Date</TableHead>
                   <TableHead class="min-w-[120px]">Payment Status</TableHead>
                   <TableHead class="min-w-[120px]">Payment method</TableHead>
-                  <!-- <TableHead class="w-[50px]">Invoice</TableHead> -->
+                  <TableHead class="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

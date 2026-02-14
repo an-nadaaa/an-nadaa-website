@@ -2,6 +2,7 @@ import { APIResponseCollection } from "../../../types/strapi/types"
 import { ApiDonationDonation } from "../../../types/strapi/contentTypes"
 import qs from "qs"
 import { z } from "zod"
+import monthlyDonationsGet from "./monthly-donations.get"
 
 const donationStatsQuerySchema = z.object({
   // Example query parameters: e.g. timeframe, projectId (adjust as needed)
@@ -161,12 +162,12 @@ export default defineEventHandler(async (event: any) => {
     previousPeriodStartDate = new Date(now.getTime() - 2 * timeDiff)
   }
 
-  const query = {
+  const baseQuery = {
     populate: {
       cause: {
         populate: "*",
       },
-    }, // populate the relation
+    },
     filters: {
       users_permissions_user: {
         documentId: {
@@ -185,35 +186,47 @@ export default defineEventHandler(async (event: any) => {
     },
   }
 
-  const donations = await fetch(
-    `${useRuntimeConfig().public.STRAPI_API}/donations?${qs.stringify(query)}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${useRuntimeConfig().STRAPI_API_KEY_BACKEND}`,
-      },
-    }
-  )
-    .then(async (res) => {
-      if (res.ok) {
-        return res.json()
-      } else {
-        throw createError({
-          statusCode: res.status,
-          statusMessage: res.statusText,
-        })
-      }
-    })
-    .then((res) => {
-      return res as APIResponseCollection<"api::donation.donation"> & {
-        data: ApiDonationDonation[]
-      }
-    })
+  const pageSize = 100
+  const allDonations: ApiDonationDonation[] = []
+  let page = 1
+  let pageCount = 1
 
-  // Fetch previous period donations if needed
+  do {
+    const query = {
+      ...baseQuery,
+      pagination: { page, pageSize },
+    }
+    const res = await fetch(
+      `${useRuntimeConfig().public.STRAPI_API}/donations?${qs.stringify(query)}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useRuntimeConfig().STRAPI_API_KEY_BACKEND}`,
+        },
+      }
+    )
+    if (!res.ok) {
+      throw createError({
+        statusCode: res.status,
+        statusMessage: res.statusText,
+      })
+    }
+    const json = (await res.json()) as APIResponseCollection<"api::donation.donation"> & {
+      data: ApiDonationDonation[]
+      meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } }
+    }
+    allDonations.push(...(json.data ?? []))
+    pageCount = json.meta?.pagination?.pageCount ?? 1
+    page += 1
+  } while (page <= pageCount)
+
+  const donations = { data: allDonations }
+  
+
+  // Fetch previous period donations if needed (all pages)
   let previousPeriodDonations: ApiDonationDonation[] = []
   if (shouldFetchPreviousPeriod && previousPeriodStartDate && startDate) {
-    const previousPeriodQuery = {
+    const previousPeriodBaseQuery = {
       populate: {
         cause: {
           populate: "*",
@@ -232,32 +245,36 @@ export default defineEventHandler(async (event: any) => {
       },
     }
 
-    const previousPeriodResponse = await fetch(
-      `${useRuntimeConfig().public.STRAPI_API}/donations?${qs.stringify(previousPeriodQuery)}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${useRuntimeConfig().STRAPI_API_KEY_BACKEND}`,
-        },
+    let prevPage = 1
+    let prevPageCount = 1
+    do {
+      const prevQuery = {
+        ...previousPeriodBaseQuery,
+        pagination: { page: prevPage, pageSize },
       }
-    )
-      .then(async (res) => {
-        if (res.ok) {
-          return res.json()
-        } else {
-          throw createError({
-            statusCode: res.status,
-            statusMessage: res.statusText,
-          })
+      const prevRes = await fetch(
+        `${useRuntimeConfig().public.STRAPI_API}/donations?${qs.stringify(prevQuery)}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${useRuntimeConfig().STRAPI_API_KEY_BACKEND}`,
+          },
         }
-      })
-      .then((res) => {
-        return res as APIResponseCollection<"api::donation.donation"> & {
-          data: ApiDonationDonation[]
-        }
-      })
-
-    previousPeriodDonations = previousPeriodResponse.data
+      )
+      if (!prevRes.ok) {
+        throw createError({
+          statusCode: prevRes.status,
+          statusMessage: prevRes.statusText,
+        })
+      }
+      const prevJson = (await prevRes.json()) as APIResponseCollection<"api::donation.donation"> & {
+        data: ApiDonationDonation[]
+        meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } }
+      }
+      previousPeriodDonations.push(...(prevJson.data ?? []))
+      prevPageCount = prevJson.meta?.pagination?.pageCount ?? 1
+      prevPage += 1
+    } while (prevPage <= prevPageCount)
   }
 
   const conversionRates = await fetch("https://open.er-api.com/v6/latest/USD", {
