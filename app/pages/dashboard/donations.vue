@@ -207,8 +207,8 @@
                     }}</span>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="payment-success" class="px-2" showCircle>
-                      Success
+                    <Badge :variant="donation.donationStatus === 'success' ? 'payment-success' : donation.donationStatus === 'pending' ? 'payment-pending' : 'payment-failed'" class="px-2" showCircle>
+                      {{  donation.donationStatus.charAt(0).toUpperCase() + donation.donationStatus.slice(1) }}
                     </Badge>
                   </TableCell>
                   <TableCell>
