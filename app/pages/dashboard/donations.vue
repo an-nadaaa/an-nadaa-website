@@ -525,7 +525,7 @@
             </template>
             <template v-else>
               <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Cause</p>
-              <p class="font-normal text-gray-600 text-center">Cause not found</p>
+              <p class="font-normal text-gray-400 text-center">Cause not found</p>
             </template>
             <!-- CAMPAIGN STATUS (when cause exists with goal) -->
             <!-- <div v-if="selectedDonation.cause" class="space-y-2">
