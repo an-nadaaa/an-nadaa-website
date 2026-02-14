@@ -38,57 +38,8 @@
     
     <DonationsChart :donations="chartDonations" :timeframe="timeframe" />
 
-    <!-- Time Filter Tabs -->
-    <!-- <Tabs v-model="timeframe" default-value="12months" class="w-full">
-      <TabsList class="grid grid-cols-3 w-full sm:w-auto sm:inline-flex">
-        <TabsTrigger value="12months" class="text-xs sm:text-sm">
-          12 months
-        </TabsTrigger>
-        <TabsTrigger value="30days" class="text-xs sm:text-sm">
-          30 days
-        </TabsTrigger>
-        <TabsTrigger value="7days" class="text-xs sm:text-sm">
-          7 days
-        </TabsTrigger>
-      </TabsList>
-    </Tabs> -->
-
     <!-- Donation History Section -->
     <div class="space-y-4">
-      <!-- <div
-        class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center"
-      >
-        <h2 class="text-xl font-medium">Donation history</h2>
-        <div class="flex flex-col gap-2 sm:flex-row">
-          <Popover v-model:open="datePickerOpen">
-            <PopoverTrigger as-child>
-              <Button variant="outline" class="w-full sm:w-auto">
-                <Icon name="lucide:calendar" class="mr-2 w-4 h-4" />
-                Select dates
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent class="p-0 w-auto" align="start">
-              <div class="p-4">
-                <p class="mb-2 text-sm text-muted-foreground">
-                  Date range picker
-                </p>
-                <p class="text-xs text-muted-foreground">
-                  Date picker implementation would go here
-                </p>
-              </div>
-            </PopoverContent>
-          </Popover>
-          <Button variant="outline" class="w-full sm:w-auto">
-            <Icon name="lucide:filter" class="mr-2 w-4 h-4" />
-            Apply filter
-          </Button>
-        </div>
-      </div> -->
-
-      <!-- <VueSpinnerBars
-        v-if="loadingDonations"
-        class="mx-auto my-48 text-5xl text-primary"
-      /> -->
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-5">
         <div class="order-2 lg:order-1 lg:col-span-5">
         <div class="flex justify-between items-center mb-2">
@@ -138,7 +89,7 @@
               donations?.data?.length &&
               donations?.data?.length > 0
             "
-            class="overflow-x-scroll "
+            class="overflow-x-scroll"
           >
             <Table class="border-b-[0.1px] border-gray-100">
               <TableHeader>
@@ -249,54 +200,6 @@
                     >
                       {{ donation.cause?.isActive ? "Ongoing" : "Closed" }}
                     </Badge>
-
-                    <!-- {{ donation.cause.causeType }} -->
-                    <!-- {{
-                      Math.round(
-                        (parseFloat(donation.cause?.raisedAmount) /
-                          parseFloat(donation.cause?.goalDetails[0].goalAmount)) *
-                          100
-                      )
-                    }}
-                    {{ donation.cause?.goalDetails[0].goalAmount }} -->
-                    <!-- <div class="flex gap-2 items-center"> 
-                       <Badge
-                        v-if="donation.cause.causeType === 'project'"
-                        :variant="
-                          donation.cause?.isActive
-                            ? 'campaign-funded'
-                            : 'campaign-ongoing'
-                        "
-                        class="px-2"
-                        showCircle
-                      >
-                        {{ donation.cause?.isActive ? "Active" : "Inactive" }}
-                      </Badge>
-                      <div v-else class="flex gap-2 items-center">
-                        <Progress
-                          :model-value="
-                            Math.max(
-                              parseFloat(donation.cause?.raisedAmount) /
-                                parseFloat(
-                                  donation.cause?.goalDetails[0].goalAmount
-                                ),
-                              5
-                            )
-                          "
-                        />
-                        <p>
-                          {{
-                            Math.round(
-                              (parseFloat(donation.cause?.raisedAmount) /
-                                parseFloat(
-                                  donation.cause?.goalDetails[0].goalAmount
-                                )) *
-                                100
-                            )
-                          }}%
-                        </p>
-                      </div>
-                    </div> -->
                   </TableCell>
                   <TableCell>
                     <span class="font-light text-gray-500">{{
@@ -307,12 +210,6 @@
                     <Badge variant="payment-success" class="px-2" showCircle>
                       Success
                     </Badge>
-                    <!-- <Badge
-                      variant="default"
-                      class="flex gap-1.5 items-center w-fit"
-                    >
-                      {{ donation.paymentStatus }}
-                    </Badge> -->
                   </TableCell>
                   <TableCell>
                     <!-- Todo: Change this for other payment methods -->
@@ -359,11 +256,6 @@
             >
               <!-- Empty State Illustration -->
               <img src="/img/designing-a-website.png" class="w-32 h-32" />
-              <!-- <div
-                  class="flex justify-center items-center w-32 h-32 bg-gray-100 rounded-lg"
-                >
-                  <Icon name="lucide:tablet" class="w-16 h-16 text-gray-400" />
-                </div> -->
               <div class="space-y-2 text-center">
                 <template v-if="!listDateRange">
                   <p class="text-base font-medium">
@@ -468,35 +360,36 @@
     <Drawer direction="right" v-model:open="donationDrawerOpen">
       <DrawerContent direction="right" class="flex flex-col">
         <template v-if="selectedDonation">
-          <DrawerHeader class="text-left p-6 pb-0">
-            <div class="flex justify-between items-start pr-2 relative">
+          <DrawerHeader class="p-6 pb-0 text-left">
+            <div class="flex relative justify-between items-start pr-2">
               <div class="flex flex-col gap-2">
-                <DrawerTitle class=" font-normal">Donation Details</DrawerTitle>
+                <DrawerTitle class="font-normal">Donation Details</DrawerTitle>
                 <DrawerDescription>See donation details below.</DrawerDescription>
               </div>
               <DrawerClose as-child>
-                <Button variant="ghost" size="icon" class="h-4 w-4 absolute right-0 top-0">
+                <Button variant="ghost" size="icon" class="absolute top-0 right-0 w-4 h-4">
                   <Icon name="lucide:x" class="w-4 h-4" />
                   <span class="sr-only">Close</span>
                 </Button>
               </DrawerClose>
             </div>
           </DrawerHeader>
-          <div class="border-b my-5"></div>
-          <div class="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
+          <div class="my-5 border-b"></div>
+          <div class="overflow-y-auto flex-1 px-6 pb-6 space-y-6">
 
             <div class="space-y-1">
-              <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Amount donated</p>
+              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Amount donated</p>
               <p class="text-3xl font-normal">
                 {{ formatCurrency(selectedDonation.amount as number, (selectedDonation.currency as string).toUpperCase()) }}
               </p>
             </div>
+
             <template v-if="selectedDonation.cause">
 
               <div class="space-y-1">
-                <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Cause</p>
+                <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Cause</p>
                 <template v-if="selectedDonation.cause">
-                  <p class="font-normal mb-0">{{ selectedDonation.cause.title }}</p>
+                  <p class="mb-0 font-normal">{{ selectedDonation.cause.title }}</p>
                   <NuxtLink
                     :to="$localePath(`/causes/${selectedDonation.cause.documentId}`)"
                     class="text-sm text-primary hover:underline"
@@ -508,12 +401,12 @@
               </div>
 
               <div class="space-y-1">
-                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Date & time</p>
+                <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Date & time</p>
                 <p class="text-sm">{{ formatDateWithTime(selectedDonation.createdAt as string) }}</p>
               </div>
 
               <div class="space-y-1">
-                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Payment status</p>
+                <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Payment status</p>
                 <Badge variant="payment-success" class="px-2" showCircle>
                   {{ (selectedDonation.donationStatus as string).charAt(0).toUpperCase() + (selectedDonation.donationStatus as string).slice(1) }}
                 </Badge>
@@ -524,52 +417,62 @@
               />
             </template>
             <template v-else>
-              <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Cause</p>
-              <p class="font-normal text-gray-400 text-center">Cause not found</p>
+              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Cause</p>
+              <p class="font-normal text-center text-gray-400">Cause not found</p>
             </template>
-            <!-- CAMPAIGN STATUS (when cause exists with goal) -->
-            <!-- <div v-if="selectedDonation.cause" class="space-y-2">
-              <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Campaign status</p>
-              <div class="rounded-lg border p-3 space-y-2">
-                <img
-                  v-if="selectedDonation.cause.thumbnail?.formats?.medium?.url || selectedDonation.cause.thumbnail?.url || selectedDonation.cause.coverImage?.url"
-                  :src="selectedDonation.cause.thumbnail?.formats?.medium?.url || selectedDonation.cause.thumbnail?.url || selectedDonation.cause.coverImage?.url"
-                  :alt="selectedDonation.cause.title"
-                  class="w-full h-24 object-cover rounded-md"
-                />
-                <div v-else class="w-full h-24 rounded-md bg-muted flex items-center justify-center">
-                  <Icon name="lucide:image" class="w-8 h-8 text-muted-foreground" />
-                </div>
-                <div v-if="selectedDonation.cause.categories?.length" class="flex flex-wrap gap-1">
-                  <Badge
-                    v-for="(category, i) in selectedDonation.cause.categories"
-                    :key="i"
-                    variant="secondary"
-                    class=" font-normal text-gray-800"
-                  >
-                    {{ category.title }}
-                  </Badge>
-                </div>
-                <p class="text-sm font-medium">
-                  {{ selectedDonation.cause.goalDetails?.[0]?.projectDescription || selectedDonation.cause.title }}
+            
+            <!-- Monthly subscription controls (above Receipt) -->
+            <div
+              v-if="selectedDonation.donationType === 'monthly' && subscriptionForSelectedDonation"
+              class="space-y-1"
+            >
+              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Monthly subscription</p>
+              <div class="p-3 space-y-3 rounded-lg border">
+                <p
+                  v-if="subscriptionForSelectedDonation.status === 'active' && !subscriptionForSelectedDonation.pause_collection"
+                  class="text-xs text-muted-foreground"
+                >
+                  Next payment on {{ formatDate(subscriptionForSelectedDonation.current_period_end * 1000) }}
                 </p>
-                <template v-if="selectedDonation.cause.goalDetails?.[0]?.goalAmount != null && selectedDonation.cause.raisedAmount != null">
-                  <Progress
-                    class="h-2 [&>div]:bg-primary"
-                    :model-value="Math.min(100, Math.max(0, (parseFloat(selectedDonation.cause.raisedAmount) / parseFloat(selectedDonation.cause.goalDetails[0].goalAmount)) * 100))"
-                  />
-                  <p class="text-xs text-muted-foreground">
-                    {{ formatCurrency(parseFloat(selectedDonation.cause.raisedAmount), 'USD') }} of {{ formatCurrency(parseFloat(selectedDonation.cause.goalDetails[0].goalAmount), 'USD') }} Raised
-                  </p>
-                </template>
+                <p v-else class="text-xs text-muted-foreground">Paused</p>
+                <div class="grid grid-cols-1 gap-2">
+                  <Button
+                    v-if="subscriptionForSelectedDonation.status === 'active' && !subscriptionForSelectedDonation.pause_collection"
+                    variant="outline"
+                    size="sm"
+                    @click="openConfirmDialog('pause', subscriptionForSelectedDonation.id)"
+                  >
+                    <Icon name="lucide:pause" class="mr-1 w-4 h-4" />
+                    Pause
+                  </Button>
+                  <Button
+                    v-else-if="subscriptionForSelectedDonation.status === 'active' && subscriptionForSelectedDonation.pause_collection"
+                    variant="outline"
+                    size="sm"
+                    @click="openConfirmDialog('resume', subscriptionForSelectedDonation.id)"
+                  >
+                    <Icon name="lucide:play" class="mr-1 w-4 h-4" />
+                    Resume
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    class="text-destructive hover:text-destructive"
+                    @click="openConfirmDialog('cancel', subscriptionForSelectedDonation.id)"
+                  >
+                    <Icon name="lucide:x-circle" class="mr-1 w-4 h-4" />
+                    Cancel
+                  </Button>
+                </div>
               </div>
-            </div> -->
+            </div>
+            
             <!-- RECEIPT -->
             <div class="space-y-1">
-              <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Receipt</p>
+              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Receipt</p>
               <template v-if="selectedDonation.invoiceUrl">
                 <div
-                  class="flex items-center gap-3 rounded-lg border p-3"
+                  class="flex gap-3 items-center p-3 rounded-lg border"
                 >
                   <Icon name="lucide:file-text" class="w-8 h-8 text-muted-foreground shrink-0" />
                   <div class="flex-1 min-w-0">
@@ -1045,6 +948,31 @@ function openDonationDrawer(donation: DonationRow) {
   donationDrawerOpen.value = true
 }
 
+// Resolve Stripe subscription for the selected donation (monthly, same cause + amount; active only)
+const subscriptionForSelectedDonation = computed(() => {
+  const donation = selectedDonation.value
+  const list = monthlyDonations.value?.data
+  if (
+    !donation ||
+    donation.donationType !== "monthly" ||
+    !donation.cause?.documentId ||
+    !list?.length
+  )
+    return null
+  const causeId = donation.cause.documentId
+  const amountDollars = Math.round(Number(donation.amount) * 100) / 100
+  return list.find((sub) => {
+    if (sub.status !== "active") return false
+    const meta = sub.metadata as { causeId?: string }
+    if (meta?.causeId !== causeId) return false
+    const item = sub.items?.data?.[0] as Stripe.SubscriptionItem | undefined
+    const planAmountCents = item?.plan?.amount
+    if (planAmountCents == null) return false
+    const subAmountDollars = Math.round((planAmountCents as number) / 100 * 100) / 100
+    return subAmountDollars === amountDollars
+  }) ?? null
+})
+
 // Subscription management
 const dialogOpen = ref(false)
 const dialogAction = ref<"pause" | "resume" | "cancel" | null>(null)
@@ -1087,8 +1015,9 @@ async function handleSubscriptionAction() {
       description: "Your subscription has been updated successfully",
       variant: "default",
     })
-    // Refresh monthly donations after action
+    // Refresh monthly donations and donations list after action
     await refreshMonthlyDonations()
+    await refreshDonations()
     closeDialog()
   } catch (error) {
     console.error("Error managing subscription:", error)
@@ -1120,8 +1049,9 @@ function getDialogDescription() {
   switch (dialogAction.value) {
     case "pause":
       return "Are you sure you want to pause this subscription? You can resume it later."
-    case "resume":
+    case "resume": {
       return "Are you sure you want to resume this subscription? It will continue charging monthly."
+    }
     case "cancel":
       return "Are you sure you want to cancel this subscription? This action cannot be undone."
     default:
