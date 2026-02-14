@@ -196,7 +196,7 @@
       <DashboardMonthlyDonationsCard
         class="lg:col-span-2"
         :hide-show-all-link="false"
-        :hide-dropdown-menu="true"
+        :hide-dropdown-menu="false"
         :limit="5"
       />
     </div>

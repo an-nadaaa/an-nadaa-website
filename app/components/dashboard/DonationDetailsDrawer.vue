@@ -58,6 +58,11 @@
                 class="hover:cursor-pointer"
               />
             </template>
+            <template v-else-if="!selectedDonation.causeTitle || selectedDonation.causeTitle === ''">
+              <p class="text-sm text-muted-foreground">
+                This is a general donation. Your contribution supports An-Nadaa's work across causes.
+              </p>
+            </template>
             <template v-else>
               <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Cause</p>
               <p class="font-normal text-center text-gray-400">Cause not found</p>
@@ -71,10 +76,10 @@
               <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Monthly subscription</p>
               <div class="p-3 space-y-3 rounded-lg border">
                 <template v-if="subscriptionLoading">
-                  <Skeleton class="h-4 w-3/4" />
+                  <Skeleton class="w-3/4 h-4" />
                   <div class="grid grid-cols-1 gap-2 pt-1">
-                    <Skeleton class="h-9 w-full" />
-                    <Skeleton class="h-9 w-full" />
+                    <Skeleton class="w-full h-9" />
+                    <Skeleton class="w-full h-9" />
                   </div>
                 </template>
                 <template v-else>
@@ -116,6 +121,12 @@
                   </div>
                 </template>
               </div>
+            </div>
+            <div v-else-if="selectedDonation.donationType === 'monthly' && !subscriptionLoading  && !subscriptionForSelectedDonation" class="space-y-2">
+              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Monthly subscription</p>
+              <p class="text-sm text-muted-foreground">
+                This monthly donation has been cancelled.
+              </p>
             </div>
 
             <!-- RECEIPT -->
