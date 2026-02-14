@@ -355,174 +355,12 @@
       </div>
     </div>
 
-    <!-- Donation details drawer (right) -->
-
-    <Drawer direction="right" v-model:open="donationDrawerOpen">
-      <DrawerContent direction="right" class="flex flex-col">
-        <template v-if="selectedDonation">
-          <DrawerHeader class="p-6 pb-0 text-left">
-            <div class="flex relative justify-between items-start pr-2">
-              <div class="flex flex-col gap-2">
-                <DrawerTitle class="font-normal">Donation Details</DrawerTitle>
-                <DrawerDescription>See donation details below.</DrawerDescription>
-              </div>
-              <DrawerClose as-child>
-                <Button variant="ghost" size="icon" class="absolute top-0 right-0 w-4 h-4">
-                  <Icon name="lucide:x" class="w-4 h-4" />
-                  <span class="sr-only">Close</span>
-                </Button>
-              </DrawerClose>
-            </div>
-          </DrawerHeader>
-          <div class="my-5 border-b"></div>
-          <div class="overflow-y-auto flex-1 px-6 pb-6 space-y-6">
-
-            <div class="space-y-1">
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Amount donated</p>
-              <p class="text-3xl font-normal">
-                {{ formatCurrency(selectedDonation.amount as number, (selectedDonation.currency as string).toUpperCase()) }}
-              </p>
-            </div>
-
-            <template v-if="selectedDonation.cause">
-
-              <div class="space-y-1">
-                <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Cause</p>
-                <template v-if="selectedDonation.cause">
-                  <p class="mb-0 font-normal">{{ selectedDonation.cause.title }}</p>
-                  <NuxtLink
-                    :to="$localePath(`/causes/${selectedDonation.cause.documentId}`)"
-                    class="text-sm text-primary hover:underline"
-                  >
-                    an-nadaa.com{{ $localePath(`/causes/${selectedDonation.cause.documentId}`) }}
-                  </NuxtLink>
-                </template>
-                <p v-else class="text-sm">{{ selectedDonation.causeTitle || 'General Donation' }}</p>
-              </div>
-
-              <div class="space-y-1">
-                <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Date & time</p>
-                <p class="text-sm">{{ formatDateWithTime(selectedDonation.createdAt as string) }}</p>
-              </div>
-
-              <div class="space-y-1">
-                <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Payment status</p>
-                <Badge variant="payment-success" class="px-2" showCircle>
-                  {{ (selectedDonation.donationStatus as string).charAt(0).toUpperCase() + (selectedDonation.donationStatus as string).slice(1) }}
-                </Badge>
-              </div>
-              <CauseCard
-                :cause="selectedDonation.cause"
-                class="hover:cursor-pointer"
-              />
-            </template>
-            <template v-else>
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Cause</p>
-              <p class="font-normal text-center text-gray-400">Cause not found</p>
-            </template>
-            
-            <!-- Monthly subscription controls (above Receipt) -->
-            <div
-              v-if="selectedDonation.donationType === 'monthly' && subscriptionForSelectedDonation"
-              class="space-y-1"
-            >
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Monthly subscription</p>
-              <div class="p-3 space-y-3 rounded-lg border">
-                <p
-                  v-if="subscriptionForSelectedDonation.status === 'active' && !subscriptionForSelectedDonation.pause_collection"
-                  class="text-xs text-muted-foreground"
-                >
-                  Next payment on {{ formatDate(subscriptionForSelectedDonation.current_period_end * 1000) }}
-                </p>
-                <p v-else class="text-xs text-muted-foreground">Paused</p>
-                <div class="grid grid-cols-1 gap-2">
-                  <Button
-                    v-if="subscriptionForSelectedDonation.status === 'active' && !subscriptionForSelectedDonation.pause_collection"
-                    variant="outline"
-                    size="sm"
-                    @click="openConfirmDialog('pause', subscriptionForSelectedDonation.id)"
-                  >
-                    <Icon name="lucide:pause" class="mr-1 w-4 h-4" />
-                    Pause
-                  </Button>
-                  <Button
-                    v-else-if="subscriptionForSelectedDonation.status === 'active' && subscriptionForSelectedDonation.pause_collection"
-                    variant="outline"
-                    size="sm"
-                    @click="openConfirmDialog('resume', subscriptionForSelectedDonation.id)"
-                  >
-                    <Icon name="lucide:play" class="mr-1 w-4 h-4" />
-                    Resume
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    class="text-destructive hover:text-destructive"
-                    @click="openConfirmDialog('cancel', subscriptionForSelectedDonation.id)"
-                  >
-                    <Icon name="lucide:x-circle" class="mr-1 w-4 h-4" />
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            </div>
-            
-            <!-- RECEIPT -->
-            <div class="space-y-1">
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Receipt</p>
-              <template v-if="selectedDonation.invoiceUrl">
-                <div
-                  class="flex gap-3 items-center p-3 rounded-lg border"
-                >
-                  <Icon name="lucide:file-text" class="w-8 h-8 text-muted-foreground shrink-0" />
-                  <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium truncate">View Receipt</p>
-                  </div>
-                    <a :href="selectedDonation.invoiceUrl" target="_blank" rel="noopener noreferrer">
-                      <Button variant="ghost" size="icon" class="w-8 h-8">
-                        <Icon name="lucide:external-link" class="w-4 h-4 shrink-0" />
-                        <span class="sr-only">View Receipt</span>
-                      </Button>
-                    </a>
-                </div>
-              </template>
-              <p v-else class="text-sm text-muted-foreground">Receipt not available</p>
-            </div>
-          </div>
-          <DrawerFooter class="pt-4 border-t">
-            <DrawerClose as-child>
-              <Button variant="outline" class="w-full">Close</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </template>
-      </DrawerContent>
-    </Drawer>
-
-    <!-- Confirmation Dialog -->
-    <Dialog v-model:open="dialogOpen">
-      <DialogContent class="sm:max-w-[425px] max-w-11/12 rounded-lg">
-        <DialogHeader>
-          <DialogTitle>{{ getDialogTitle() }}</DialogTitle>
-          <DialogDescription>
-            {{ getDialogDescription() }}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter class="gap-2 rounded-b-lg">
-          <DialogClose as-child>
-            <Button variant="outline" :disabled="isProcessing"> Cancel </Button>
-          </DialogClose>
-          <Button
-            type="button"
-            @click="handleSubscriptionAction"
-            :disabled="isProcessing"
-            :variant="dialogAction === 'cancel' ? 'destructive' : 'default'"
-          >
-            <span v-if="isProcessing">Processing...</span>
-            <span v-else>{{ getConfirmButtonText() }}</span>
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <DashboardDonationDetailsDrawer
+      v-model:open="donationDrawerOpen"
+      :selected-donation="selectedDonation"
+      :monthly-donations="monthlyDonations ?? null"
+      @subscription-updated="onSubscriptionUpdated"
+    />
   </div>
 </template>
 
@@ -544,24 +382,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -578,13 +398,10 @@ import type {
   ApiCauseCause,
   ApiDonationDonation,
 } from "@@/types/strapi/contentTypes"
-import { useToast } from "@/components/ui/toast"
-
 definePageMeta({
   layout: "dashboard",
 })
 
-const { toast } = useToast()
 const { formatCurrency } = useMoneyFormat()
 const { formatDayMonthYear } = useDateFormatter()
 
@@ -948,128 +765,9 @@ function openDonationDrawer(donation: DonationRow) {
   donationDrawerOpen.value = true
 }
 
-// Resolve Stripe subscription for the selected donation (monthly, same cause + amount; active only)
-const subscriptionForSelectedDonation = computed(() => {
-  const donation = selectedDonation.value
-  const list = monthlyDonations.value?.data
-  if (
-    !donation ||
-    donation.donationType !== "monthly" ||
-    !donation.cause?.documentId ||
-    !list?.length
-  )
-    return null
-  const causeId = donation.cause.documentId
-  const amountDollars = Math.round(Number(donation.amount) * 100) / 100
-  return list.find((sub) => {
-    if (sub.status !== "active") return false
-    const meta = sub.metadata as { causeId?: string }
-    if (meta?.causeId !== causeId) return false
-    const item = sub.items?.data?.[0] as Stripe.SubscriptionItem | undefined
-    const planAmountCents = item?.plan?.amount
-    if (planAmountCents == null) return false
-    const subAmountDollars = Math.round((planAmountCents as number) / 100 * 100) / 100
-    return subAmountDollars === amountDollars
-  }) ?? null
-})
-
-// Subscription management
-const dialogOpen = ref(false)
-const dialogAction = ref<"pause" | "resume" | "cancel" | null>(null)
-const selectedSubscriptionId = ref<string | null>(null)
-const isProcessing = ref(false)
-
-async function openConfirmDialog(
-  action: "pause" | "resume" | "cancel",
-  subscriptionId: string
-) {
-  dialogAction.value = action
-  selectedSubscriptionId.value = subscriptionId
-  dialogOpen.value = true
-}
-
-async function closeDialog() {
-  dialogOpen.value = false
-  dialogAction.value = null
-  selectedSubscriptionId.value = null
-}
-
-async function handleSubscriptionAction() {
-  if (!selectedSubscriptionId.value || !dialogAction.value) return
-
-  isProcessing.value = true
-  try {
-    await $fetch("/api/dashboard/subscription", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: {
-        subscriptionId: selectedSubscriptionId.value,
-        action: dialogAction.value,
-      },
-    })
-
-    toast({
-      title: "Subscription updated",
-      description: "Your subscription has been updated successfully",
-      variant: "default",
-    })
-    // Refresh monthly donations and donations list after action
-    await refreshMonthlyDonations()
-    await refreshDonations()
-    closeDialog()
-  } catch (error) {
-    console.error("Error managing subscription:", error)
-    // You might want to show a toast notification here
-    toast({
-      title: "Error updating subscription",
-      description: "An error occurred while updating your subscription",
-      variant: "destructive",
-    })
-  } finally {
-    isProcessing.value = false
-  }
-}
-
-function getDialogTitle() {
-  switch (dialogAction.value) {
-    case "pause":
-      return "Pause Subscription"
-    case "resume":
-      return "Resume Subscription"
-    case "cancel":
-      return "Cancel Subscription"
-    default:
-      return "Confirm Action"
-  }
-}
-
-function getDialogDescription() {
-  switch (dialogAction.value) {
-    case "pause":
-      return "Are you sure you want to pause this subscription? You can resume it later."
-    case "resume": {
-      return "Are you sure you want to resume this subscription? It will continue charging monthly."
-    }
-    case "cancel":
-      return "Are you sure you want to cancel this subscription? This action cannot be undone."
-    default:
-      return "Please confirm this action."
-  }
-}
-
-function getConfirmButtonText() {
-  switch (dialogAction.value) {
-    case "pause":
-      return "Pause"
-    case "resume":
-      return "Resume"
-    case "cancel":
-      return "Cancel Subscription"
-    default:
-      return "Confirm"
-  }
+async function onSubscriptionUpdated() {
+  await refreshMonthlyDonations()
+  await refreshDonations()
 }
 </script>
 
