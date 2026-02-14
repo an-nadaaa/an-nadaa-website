@@ -28,12 +28,22 @@
                   <span class="font-light">{{ item.title }}</span>
                 </div>
               </NuxtLink>
+             
               <!-- <SidebarMenuButton
                 asChild
                 :data-active="isActive(item.url)"
                 :is-active="isActive(item.url)"
               > -->
               <!-- </SidebarMenuButton> -->
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <div
+                class="flex gap-2 items-center px-2 py-2 text-gray-400 rounded-md hover:bg-sidebar-accent"
+              >
+                <component :is="Bell" />
+                <span class="font-light">Updates</span>
+                <Badge variant="payment-refunded">Coming Soon</Badge>
+              </div>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <NuxtLink :to="$localePath('/causes')" @click="handleLinkClick">
@@ -142,6 +152,7 @@ const navItems = [
     url: "/dashboard/donations",
     icon: Layers,
   },
+
   // {
   //   title: "Updates",
   //   url: "/updates",
