@@ -61,8 +61,8 @@
         <NuxtLink :href="receiptUrl" target="_blank">
           <Button class="mt-4 w-full" variant="outline">View receipt</Button>
         </NuxtLink>
-        <NuxtLink :to="$localePath('/')">
-          <Button class="mt-2 w-full">Goto home page</Button>
+        <NuxtLink :to="loggedIn ? $localePath('/dashboard') : $localePath('/')">
+          <Button class="mt-2 w-full">{{ loggedIn ? 'Go to dashboard' : 'Go to home page' }}</Button>
         </NuxtLink>
       </template>
     </Card>
@@ -73,6 +73,8 @@
 import { VueSpinnerClock } from "vue3-spinners"
 import GreenCheck from "~/assets/media/img/green-check.png"
 import RedError from "~/assets/media/img/red-error.svg"
+
+const { loggedIn } = useUserSession()
 
 defineProps({
   amount: {

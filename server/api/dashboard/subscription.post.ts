@@ -32,9 +32,6 @@ async function pauseSubscription(
       pauseConfig
     )
 
-    console.log("Subscription paused:", subscription.id)
-    console.log("Pause collection:", subscription.pause_collection)
-
     return subscription
   } catch (error) {
     console.error("Error pausing subscription:", error)
