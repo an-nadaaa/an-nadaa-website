@@ -12,6 +12,8 @@ import { CurveType } from "@unovis/ts"
 import { useMoneyFormat } from "@/composables/useMoneyFormat"
 
 const NARROW_VIEW_MAX_WIDTH = 720
+/** Below this width, x-axis month ticks are rotated (12-month chart) to avoid overlap on small phones. */
+const SMALL_MOBILE_MAX_WIDTH = 480
 
 export type DonationEntry = {
   amount: number
@@ -193,6 +195,11 @@ const useDateTicks = computed(() => daysSpan.value <= 31)
 const chartContainerRef = ref<HTMLElement | null>(null)
 const chartWidth = ref(0)
 const isNarrowView = computed(() => chartWidth.value > 0 && chartWidth.value < NARROW_VIEW_MAX_WIDTH)
+const isSmallMobile = computed(() => chartWidth.value > 0 && chartWidth.value < SMALL_MOBILE_MAX_WIDTH)
+/** Rotate x-axis tick labels on small mobile when showing 12-month chart to prevent overlap. */
+const rotateXAxisTicks = computed(
+  () => isSmallMobile.value && useMonthlyAggregation.value
+)
 const useWeekStartTicksOnNarrow = computed(
   () => isNarrowView.value && props.timeframe === "30days"
 )
@@ -335,6 +342,8 @@ onUpdated(markMonthTicks)
         type="x"
         :tick-format="formatX"
         :tick-values="xTickValues"
+        :tick-text-angle="rotateXAxisTicks ? -45 : 0"
+        :tick-text-align="rotateXAxisTicks ? 'right' : 'center'"
         :grid-line="false"
         :domain-line="false"
       />
