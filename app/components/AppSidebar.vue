@@ -13,6 +13,9 @@
         />
       </NuxtLink>
     </SidebarHeader>
+    <div class="px-2 w-full">
+      <div class="w-full border border-b border-gray-100 opacity-20" > </div>
+    </div>
     <!-- <SidebarSeparator /> -->
     <SidebarContent class="text-white">
       <SidebarGroup>
@@ -58,16 +61,17 @@
       <div class="flex-1" />
       <SidebarGroup>
         <SidebarGroupContent>
-          <SidebarMenu>
+          <SidebarMenu class="space-y-2">
             <SidebarMenuItem v-for="item in utilityItems" :key="item.title">
               <SidebarMenuButton
                 asChild
                 :data-active="isActive(item.url)"
                 :is-active="isActive(item.url)"
+                class="p-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <NuxtLink :to="$localePath(item.url)" @click="handleLinkClick">
                   <component :is="item.icon" />
-                  <span>{{ item.title }}</span>
+                  <span class="font-light">{{ item.title }}</span>
                 </NuxtLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -75,7 +79,10 @@
         </SidebarGroupContent>
       </SidebarGroup>
     </SidebarContent>
-    <!-- <SidebarSeparator /> -->
+    <div class="px-2 w-full">
+      <div class="w-full border border-b border-gray-100 opacity-20" > </div>
+    </div>
+
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
@@ -167,11 +174,11 @@ const utilityItems = [
     url: "/contact",
     icon: Mail,
   },
-  // {
-  //   title: "Settings",
-  //   url: "/settings",
-  //   icon: Settings,
-  // },
+  {
+    title: "Settings",
+    url: "/dashboard/settings",
+    icon: Settings,
+  },
 ]
 
 // Get user initials for avatar
