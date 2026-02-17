@@ -9,198 +9,204 @@
         <TabsTrigger value="notifications">Notifications</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="profile" class="mt-6">
-        <div class="space-y-6">
-          <div>
-            <h2 class="text-lg font-semibold">Profile</h2>
-            <p class="text-sm text-muted-foreground">
-              Update your photo and details here.
-            </p>
-          </div>
-          <Form
-            :validation-schema="profileSchema"
-            :initial-values="profileInitial"
-            @submit="onProfileSubmit"
-            v-slot="{ resetForm }"
-            class="space-y-4"
-          >
-            <div class="grid gap-4 sm:grid-cols-2">
-              <FormField v-slot="{ componentField }" name="firstName">
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="First name"
-                      v-bind="componentField"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-              <FormField v-slot="{ componentField }" name="lastName">
-                <FormItem>
-                  <FormLabel class="sr-only sm:not-sr-only">Last name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Last name"
-                      class="sm:mt-6"
-                      v-bind="componentField"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
+      <div class="my-8 w-full border border-b border-gray-200">
+      </div>
+      
+      <div class="max-w-4xl">
+        <TabsContent value="profile" class="mt-6">
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-lg font-medium">Profile</h2>
+              <p class="text-sm text-muted-foreground">
+                Update your account details here.
+              </p>
             </div>
-            <FormField v-slot="{ componentField }" name="email">
-              <FormItem>
-                <FormLabel>Email address</FormLabel>
-                <FormControl>
-                  <div class="relative">
-                    <Mail
-                      class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                      aria-hidden
-                    />
-                    <Input
-                      type="email"
-                      placeholder="Email"
-                      class="pl-9"
-                      v-bind="componentField"
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-            <div class="flex gap-2">
-              <Button type="button" variant="outline" @click="resetForm">
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
-            </div>
-          </Form>
-        </div>
-      </TabsContent>
-
-      <TabsContent value="password" class="mt-6">
-        <div class="space-y-6">
-          <div>
-            <h2 class="text-lg font-semibold">Password</h2>
-            <p class="text-sm text-muted-foreground">
-              Please enter your current password to change your password.
-            </p>
-          </div>
-          <Form
-            :validation-schema="passwordSchema"
-            :initial-values="passwordInitial"
-            @submit="onPasswordSubmit"
-            v-slot="{ resetForm }"
-            class="space-y-4"
-          >
-            <FormField v-slot="{ componentField }" name="currentPassword">
-              <FormItem>
-                <FormLabel>Current password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="••••••••" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-            <FormField v-slot="{ componentField }" name="newPassword">
-              <FormItem>
-                <FormLabel>New password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="••••••••" v-bind="componentField" />
-                </FormControl>
-                <p class="text-xs text-muted-foreground">
-                  Your new password must be more than 8 characters.
-                </p>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-            <FormField v-slot="{ componentField }" name="confirmPassword">
-              <FormItem>
-                <FormLabel>Confirm new password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="••••••••" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-            <div class="flex gap-2">
-              <Button type="button" variant="outline" @click="resetForm">
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
-            </div>
-          </Form>
-        </div>
-      </TabsContent>
-
-      <TabsContent value="notifications" class="mt-6">
-        <div class="space-y-6">
-          <div>
-            <h2 class="text-lg font-semibold">Notification settings</h2>
-            <p class="text-sm text-muted-foreground">
-              We may still send you important notifications about your account
-              outside of your notification settings.
-            </p>
-          </div>
-          <Form
-            :validation-schema="notificationsSchema"
-            :initial-values="notificationsInitial"
-            @submit="onNotificationsSubmit"
-            v-slot="{ resetForm }"
-            class="space-y-6"
-          >
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div class="space-y-0.5">
-                <p class="font-medium">Project Updates</p>
-                <p class="text-sm text-muted-foreground">
-                  These are notifications for updates on the progress of the
-                  projects you support.
-                </p>
+            <Form
+              :validation-schema="profileSchema"
+              :initial-values="profileInitial"
+              @submit="onProfileSubmit"
+              v-slot="{ resetForm }"
+              class="space-y-8"
+            >
+              <div class="grid gap-4 items-center sm:grid-cols-3">
+                <p class="text-sm text-muted-foreground">Name</p>
+                <FormField v-slot="{ componentField }" name="firstName">
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="First name"
+                        v-bind="componentField"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+                <FormField v-slot="{ componentField }" name="lastName">
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Last name"
+                        v-bind="componentField"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
               </div>
-              <FormField v-slot="{ value, handleChange }" name="projectUpdatesEmail">
-                <FormItem class="flex items-center gap-2 space-y-0">
-                  <FormControl>
-                    <Switch
-                      :checked="value"
-                      @update:checked="handleChange"
-                    />
-                  </FormControl>
-                  <FormLabel class="mt-0! cursor-pointer">Email</FormLabel>
-                </FormItem>
-              </FormField>
-            </div>
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div class="space-y-0.5">
-                <p class="font-medium">Donation Payment</p>
-                <p class="text-sm text-muted-foreground">
-                  These are notifications for when your donation funds are
-                  processed.
-                </p>
+              <div class="grid gap-4 items-center sm:grid-cols-3">
+                <p class="text-sm text-muted-foreground">Email Address</p>
+                <FormField v-slot="{ componentField }" name="email">
+                  <FormItem class="sm:col-span-2">
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="me@an-nadaa.com"
+                        
+                        v-bind="componentField"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
               </div>
-              <FormField v-slot="{ value, handleChange }" name="donationPaymentEmail">
-                <FormItem class="flex items-center gap-2 space-y-0">
-                  <FormControl>
-                    <Switch
-                      :checked="value"
-                      @update:checked="handleChange"
-                    />
-                  </FormControl>
-                  <FormLabel class="mt-0! cursor-pointer">Email</FormLabel>
-                </FormItem>
-              </FormField>
+              <div class="flex gap-2 mt-12">
+                <Button type="button" variant="outline" @click="resetForm">
+                  Cancel
+                </Button>
+                <Button type="submit">Save</Button>
+              </div>
+            </Form>
+          </div>
+        </TabsContent>
+  
+        <TabsContent value="password" class="mt-6">
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-lg font-medium">Password</h2>
+              <p class="text-sm text-muted-foreground">
+                Please enter your current password to change your password.
+              </p>
             </div>
-            <div class="flex gap-2">
-              <Button type="button" variant="outline" @click="resetForm">
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
+            <Form
+              :validation-schema="passwordSchema"
+              :initial-values="passwordInitial"
+              @submit="onPasswordSubmit"
+              v-slot="{ resetForm }"
+              class="space-y-8"
+            >
+              <div class="grid gap-4 items-center sm:grid-cols-3">
+                <p class="text-sm text-muted-foreground">Current password</p>
+                <FormField v-slot="{ componentField }" name="currentPassword">
+                  <FormItem class="sm:col-span-2">
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" v-bind="componentField" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="grid gap-4 items-center sm:grid-cols-3">
+                <p class="text-sm text-muted-foreground">New password</p>
+                <FormField v-slot="{ componentField }" name="newPassword">
+                  <FormItem class="sm:col-span-2">
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" v-bind="componentField" />
+                    </FormControl>
+                    <p class="mt-1.5 text-xs text-muted-foreground">
+                      Your new password must be more than 8 characters.
+                    </p>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="grid gap-4 items-center sm:grid-cols-3">
+                <p class="text-sm text-muted-foreground">Confirm new password</p>
+                <FormField v-slot="{ componentField }" name="confirmPassword">
+                  <FormItem class="sm:col-span-2">
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" v-bind="componentField" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="flex gap-2 mt-12">
+                <Button type="button" variant="outline" @click="resetForm">
+                  Cancel
+                </Button>
+                <Button type="submit">Save</Button>
+              </div>
+            </Form>
+          </div>
+        </TabsContent>
+  
+        <TabsContent value="notifications" class="mt-6">
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-lg font-medium">Notification settings</h2>
+              <p class="text-sm text-muted-foreground">
+                We may still send you important notifications about your account
+                outside of your notification settings.
+              </p>
             </div>
-          </Form>
-        </div>
-      </TabsContent>
+            <Form
+              :validation-schema="notificationsSchema"
+              :initial-values="notificationsInitial"
+              @submit="onNotificationsSubmit"
+              v-slot="{ resetForm }"
+              class="space-y-6"
+            >
+              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="space-y-0.5">
+                  <p class="text-base font-normal">Project Updates</p>
+                  <p class="text-sm text-muted-foreground">
+                    These are notifications for updates on the progress of the
+                    projects you support.
+                  </p>
+                </div>
+                <FormField v-slot="{ value, handleChange }" name="projectUpdatesEmail">
+                  <FormItem class="flex gap-2 items-center space-y-0">
+                    <FormControl>
+                      <Switch
+                        :checked="value"
+                        @update:checked="handleChange"
+                      />
+                    </FormControl>
+                    <FormLabel class="mt-0! cursor-pointer">Email</FormLabel>
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="space-y-0.5">
+                  <p class="text-base font-normal">Donation Payment</p>
+                  <p class="text-sm text-muted-foreground">
+                    These are notifications for when your donation funds are
+                    processed.
+                  </p>
+                </div>
+                <FormField v-slot="{ value, handleChange }" name="donationPaymentEmail">
+                  <FormItem class="flex gap-2 items-center space-y-0">
+                    <FormControl>
+                      <Switch
+                        :checked="value"
+                        @update:checked="handleChange"
+                      />
+                    </FormControl>
+                    <FormLabel class="mt-0! cursor-pointer">Email</FormLabel>
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="flex gap-2 mt-12">
+                <Button type="button" variant="outline" @click="resetForm">
+                  Cancel
+                </Button>
+                <Button type="submit">Save</Button>
+              </div>
+            </Form>
+          </div>
+        </TabsContent>
+      </div>
+
     </Tabs>
   </div>
 </template>
