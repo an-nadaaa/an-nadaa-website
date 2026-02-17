@@ -1,8 +1,9 @@
 <template>
+  {{ user }}
   <div class="space-y-6">
     <h1 class="text-2xl font-medium sm:text-3xl">Settings</h1>
 
-    <Tabs default-value="profile" class="w-full">
+    <Tabs v-model="activeTab" default-value="profile" class="w-full">
       <TabsList class="inline-flex w-auto">
         <TabsTrigger value="profile">Profile</TabsTrigger>
         <TabsTrigger value="password">Password</TabsTrigger>
@@ -21,31 +22,19 @@
                 Update your account details here.
               </p>
             </div>
-            <Form
+            <form
               :validation-schema="profileSchema"
               :initial-values="profileInitial"
               @submit="onProfileSubmit"
-              v-slot="{ resetForm }"
               class="space-y-8"
             >
               <div class="grid gap-4 items-center sm:grid-cols-3">
-                <p class="text-sm text-muted-foreground">Name</p>
-                <FormField v-slot="{ componentField }" name="firstName">
-                  <FormItem>
+                <p class="text-sm text-muted-foreground">Username</p>
+                <FormField v-slot="{ componentField }" name="username">
+                  <FormItem class="sm:col-span-1">
                     <FormControl>
                       <Input
-                        placeholder="First name"
-                        v-bind="componentField"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-                <FormField v-slot="{ componentField }" name="lastName">
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Last name"
+                        placeholder="Enter your username"
                         v-bind="componentField"
                       />
                     </FormControl>
@@ -56,11 +45,11 @@
               <div class="grid gap-4 items-center sm:grid-cols-3">
                 <p class="text-sm text-muted-foreground">Email Address</p>
                 <FormField v-slot="{ componentField }" name="email">
-                  <FormItem class="sm:col-span-2">
+                  <FormItem class="sm:col-span-1">
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="me@an-nadaa.com"
+                        placeholder="Enter your email"
                         
                         v-bind="componentField"
                       />
@@ -70,12 +59,12 @@
                 </FormField>
               </div>
               <div class="flex gap-2 mt-12">
-                <Button type="button" variant="outline" @click="resetForm">
+                <Button type="button" variant="outline" :disabled="!hasProfileChanges" @click="profileForm.resetForm">
                   Cancel
                 </Button>
-                <Button type="submit">Save</Button>
+                <Button type="submit" :disabled="!hasProfileChanges">Save</Button>
               </div>
-            </Form>
+            </form>
           </div>
         </TabsContent>
   
@@ -230,32 +219,59 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/toast"
 import { toTypedSchema } from "@vee-validate/zod"
+import { useForm } from "vee-validate"
 import { Mail } from "lucide-vue-next"
 import * as z from "zod"
 
 const { toast } = useToast()
+const { user, fetch: refreshSession } = useUserSession()
+
+const activeTab = ref("profile")
 
 const profileSchema = toTypedSchema(
   z.object({
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
+    username: z.string().min(1, { message: "Username is required" }).optional().or(z.literal("")),
     email: z.string().email({ message: "Invalid email" }).optional().or(z.literal("")),
   })
 )
-
-const profileInitial = {
-  firstName: "",
-  lastName: "",
-  email: "",
-}
-
-function onProfileSubmit() {
-  // TODO: call settings API
-  toast({
-    title: "Profile updated successfully",
-    variant: "success",
+const profileInitial = ref({
+  username: user.value?.user?.username,
+  email: user.value?.user?.email,
+})
+const profileForm = useForm({
+  validationSchema: profileSchema,
+  initialValues: profileInitial.value,
+})
+const hasProfileChanges = computed(() => {
+  return JSON.stringify(profileInitial.value) !== JSON.stringify(profileForm.values)
+})
+const onProfileSubmit = profileForm.handleSubmit(async (values) => {
+  const res = await $fetch("/api/dashboard/profile", {
+    method: "PUT",
+    body: {...values, isEmailChanged: values.email !== user.value?.user?.email},
   })
-}
+  if(res.success) {
+    toast({
+      title: "Profile updated successfully",
+      variant: "success",
+    })
+
+    profileInitial.value = { username: values.username, email: values.email }
+    await refreshSession()
+  } else {
+    toast({
+      title: "Error updating profile",
+      description: res.message,
+      variant: "destructive",
+    })
+  }
+
+})
+
+watch(activeTab, (newVal) => {
+  if(newVal === "profile" && !hasProfileChanges.value) profileForm.resetForm()
+})
+
 
 const passwordSchema = toTypedSchema(
   z

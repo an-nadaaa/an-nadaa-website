@@ -5,6 +5,7 @@ import SidebarStateSync from "@/components/SidebarStateSync.vue"
 import { useSidebarState } from "@/composables/useSidebarState"
 
 const { isCollapsed } = useSidebarState()
+const appConfig = useAppConfig()
 </script>
 
 <template>
@@ -13,12 +14,17 @@ const { isCollapsed } = useSidebarState()
     <SidebarStateSync />
     <main class="flex flex-col flex-1 min-h-screen">
       <div class="flex-1">
-        <div class="py-4 mb-4 w-full bg-white drop-shadow-sm md:hidden">
+        <div class="py-4 mb-4 w-full drop-shadow-sm bg-dark-blue md:hidden">
           <div
             class="container flex gap-4 items-center"
             :class="{ 'mx-auto': isCollapsed }"
           >
-            <SidebarTrigger />
+            <SidebarTrigger class="text-white" />
+            <NuxtImg
+              :src="(appConfig.logo as any).whiteLargeText"
+              alt="An-Nadaa"
+              class="ml-2 w-auto h-8"
+            />
           </div>
         </div>
         <!-- <div class="container flex-1 px-4 mx-auto w-full"> -->
