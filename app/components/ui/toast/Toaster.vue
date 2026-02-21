@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Check } from 'lucide-vue-next'
+import { Check, AlertTriangle } from 'lucide-vue-next'
 import { isVNode } from 'vue'
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from '.'
 import { useToast } from './use-toast'
@@ -17,6 +17,13 @@ const { toasts } = useToast()
           aria-hidden
         >
           <Check class="w-3 h-3" />
+        </div>
+        <div
+          v-if="toast.variant === 'warning'"
+          class="flex justify-center items-center w-5 h-5 text-black bg-amber-600 rounded-full shrink-0"
+          aria-hidden
+        >
+          <AlertTriangle class="w-3 h-3" />
         </div>
         <div class="grid flex-1 gap-1">
           <ToastTitle v-if="toast.title">
