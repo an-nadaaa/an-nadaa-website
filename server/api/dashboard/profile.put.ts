@@ -27,8 +27,9 @@ export default defineEventHandler(async (event: any) => {
     return res.json()
   })
   const isEmailChanged = email !== user.email
+  const isEmailChangeTokenExpired = user.emailChangeTokenExpiry? parseInt(user.emailChangeTokenExpiry)< Date.now() : true
 
-  if(isEmailChanged) {
+  if(isEmailChanged && isEmailChangeTokenExpired) {
     await fetch(`${STRAPI_API}/users?filters[email][$eq]=${email}`, {
       method: "GET",
       headers: {
@@ -52,13 +53,13 @@ export default defineEventHandler(async (event: any) => {
       }
     })
   }
-  const emailChangeToken = isEmailChanged ? crypto.randomUUID() : undefined
-  const emailChangeTokenExpiry = isEmailChanged ? Date.now() + TOKEN_EXPIRY : undefined
+  const emailChangeToken = isEmailChanged && isEmailChangeTokenExpired ? crypto.randomUUID() : undefined
+  const emailChangeTokenExpiry = isEmailChanged && isEmailChangeTokenExpired ? Date.now() + TOKEN_EXPIRY : undefined
   return await fetch(`${STRAPI_API}/users/${userSession?.user?.user?.id}`, {
     method: "PUT",
     body: JSON.stringify({
       username: username,
-      pendingEmail: isEmailChanged ? email : undefined,
+      pendingEmail: isEmailChanged && isEmailChangeTokenExpired ? email : undefined,
       emailChangeToken: emailChangeToken,
       emailChangeTokenExpiry: emailChangeTokenExpiry,
     }),

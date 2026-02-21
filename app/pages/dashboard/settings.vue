@@ -51,7 +51,7 @@
                 <FormField v-slot="{ componentField }" name="email">
                   <FormItem class="sm:col-span-1">
                     <FormControl>
-                      <Skeleton v-if="isPendingEmailLoading" class="h-9 w-full" />
+                      <Skeleton v-if="isPendingEmailLoading" class="w-full h-9" />
                       <Input
                         v-else
                         type="email"
@@ -313,9 +313,6 @@ const onProfileSubmit = profileForm.handleSubmit(async (values) => {
   })
 })
 
-const isPendingEmailExpired = computed(() => {
-  return pendingEmailData.value?.emailChangeTokenExpiry && pendingEmailData.value?.emailChangeTokenExpiry < Date.now()
-})
 
 const pendingEmailExpiryString = ref('')
 
@@ -357,14 +354,33 @@ watch(() => pendingEmailData.value?.emailChangeTokenExpiry, () => {
 
 const pendingEmailExpiry = computed(() => pendingEmailExpiryString.value)
 
+const isPendingEmailExpired = computed(() => {
+  return pendingEmailExpiryString.value === "expired"
+})
+
 watch(pendingEmailData, (newVal) => {
   if(newVal && !isPendingEmailExpired.value) {
     profileForm.setFieldValue("email", newVal.pendingEmail)
   }
 })
-watch(activeTab, (newVal) => {
+watch(activeTab, async (newVal) => {
   if(newVal === "profile") {
     profileForm.resetForm()
+    isPendingEmailLoading.value = true
+    const res = await $fetch("/api/dashboard/profile", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+
+    },
+  }) as { success: boolean, pendingEmail?: string, emailChangeTokenExpiry?: number, message: string }
+  if(res.pendingEmail && res.emailChangeTokenExpiry) {
+    pendingEmailData.value = {
+      pendingEmail: res.pendingEmail,
+      emailChangeTokenExpiry: res.emailChangeTokenExpiry,
+    }
+  }
+  isPendingEmailLoading.value = false
   } 
 })
 watch(isPendingEmailExpired, (newVal) => {
