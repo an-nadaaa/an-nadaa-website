@@ -25,6 +25,52 @@ const STRAPI_API_KEY = runtimeConfig.public.STRAPI_API_KEY
 
 const stripe = new Stripe(STRIPE_SK as string)
 
+function formatAmount(amountInCents: number, currency: string): string {
+  const value = amountInCents / 100
+  if (currency.toUpperCase() === "USD") return `$${value.toFixed(2)}`
+  if (currency.toUpperCase() === "MYR") return `RM ${value.toFixed(2)}`
+  return `${value.toFixed(2)} ${currency.toUpperCase()}`
+}
+
+function formatDate(unixSeconds: number): string {
+  return new Date(unixSeconds * 1000).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })
+}
+
+async function sendMonthlyStartedEmail(
+  to: string,
+  metadata: StripeTransactionMetadata,
+  amountFormatted: string,
+  nextChargeDate: string
+): Promise<void> {
+  const causeType =
+    metadata.causeId === "general" ? "general" : metadata.causeTitle ? "project" : "general"
+  const body = {
+    type: "monthly_started",
+    to,
+    AMOUNT: amountFormatted,
+    NEXT_CHARGE_DATE: nextChargeDate,
+    causeType,
+    causeTitle: metadata.causeTitle || (metadata.causeId === "general" ? "General Donation" : undefined),
+    causeThumbnailUrl: metadata.causeThumbnailUrl || null,
+  }
+  const res = await fetch(`${STRAPI_BASE_URL}/donation-emails/send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${runtimeConfig.STRAPI_API_KEY_BACKEND}`,
+    },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    const err = await res.text()
+    console.error("[process-donation] Donation email (monthly_started) failed:", res.status, err)
+  }
+}
+
 async function createOneTimeDonation(
   customerId: string,
   donationAmount: number,
@@ -122,6 +168,7 @@ async function createMonthlyDonation(
   return {
     subscriptionId: subscription.id,
     clientSecret: paymentIntent.client_secret,
+    currentPeriodEnd: subscription.current_period_end ?? null,
   }
 }
 
@@ -286,6 +333,22 @@ export default defineEventHandler(async (event) => {
       productId || STRIPE_GENERAL_PRODUCT,
       currency.toLowerCase()
     )
+
+    const userEmail = userSession?.user?.user?.email
+    if (userEmail && typeof userEmail === "string" && userEmail.trim()) {
+      const nextChargeDate =
+        subscription.currentPeriodEnd != null
+          ? formatDate(subscription.currentPeriodEnd)
+          : ""
+      sendMonthlyStartedEmail(
+        userEmail.trim(),
+        metadata,
+        formatAmount(amount, currency?.toLowerCase() ?? "usd"),
+        nextChargeDate
+      ).catch((err) => {
+        console.error("[process-donation] sendMonthlyStartedEmail error:", err)
+      })
+    }
 
     return {
       subscriptionId: subscription.subscriptionId,
