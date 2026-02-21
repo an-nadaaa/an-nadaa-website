@@ -13,23 +13,28 @@
       @submit="onNotificationsSubmit"
       class="space-y-6"
     >
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between opacity-50 pointer-events-none"
+        aria-disabled="true"
+      >
         <div class="space-y-0.5">
-          <p class="text-base font-normal">Project Updates</p>
+          <p class="text-base font-normal inline-flex items-center gap-2">
+            Project Updates
+            <span class="text-xs font-medium text-muted-foreground rounded-md bg-muted px-2 py-0.5">
+              Coming soon
+            </span>
+          </p>
           <p class="text-sm text-muted-foreground">
             These are notifications for updates on the progress of the
             projects you support.
           </p>
         </div>
-        <FormField v-slot="{ value, handleChange }" name="projectUpdatesEmail">
+        <FormField v-slot="{ value }" name="projectUpdatesEmail">
           <FormItem class="flex gap-2 items-center space-y-0">
             <FormControl>
-              <Switch
-                :checked="value"
-                @update:checked="handleChange"
-              />
+              <Switch :checked="value" disabled />
             </FormControl>
-            <FormLabel class="mt-0! cursor-pointer">Email</FormLabel>
+            <FormLabel class="mt-0!">Email</FormLabel>
           </FormItem>
         </FormField>
       </div>
