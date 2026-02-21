@@ -1,9 +1,4 @@
 <template>
-  <!-- {{ user }} -->
-  <!-- {{ profileInitial }} -->
-  {{  profileForm.values }}
-  <!-- {{ activeTab }} -->
-  <!-- {{ profileForm }} -->
   <div class="space-y-6">
     <h1 class="text-2xl font-medium sm:text-3xl">Settings</h1>
 
@@ -244,6 +239,7 @@ type PendingEmailData = {
 const { toast } = useToast()
 const { user, fetch: refreshSession } = useUserSession()
 
+const isFormLoading = ref(false)
 const isPendingEmailLoading = ref(true)
 const pendingEmailData = ref<PendingEmailData | null>()
 const activeTab = ref("profile")
@@ -282,6 +278,7 @@ onMounted(async () => {
   isPendingEmailLoading.value = false
 })
 const onProfileSubmit = profileForm.handleSubmit(async (values) => {
+  isFormLoading.value = true
   $fetch("/api/dashboard/profile", {
     method: "PUT",
     body: { username: values.username, email: values.email },
@@ -304,12 +301,15 @@ const onProfileSubmit = profileForm.handleSubmit(async (values) => {
         emailChangeTokenExpiry: res.emailChangeTokenExpiry as number,
       }
     }
+      isFormLoading.value = false
+
   }).catch((err) => {
     toast({
       title: "Error updating profile",
       description: err.status===400 ? "Invalid credentials" : err.statusText,
       variant: "warning",
     })
+    isFormLoading.value = false
   })
 })
 
