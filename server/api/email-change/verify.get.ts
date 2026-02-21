@@ -1,3 +1,4 @@
+import Stripe from "stripe"
 
 export default defineEventHandler(async (event) => {
   const userSession = await getUserSession(event)
@@ -105,6 +106,19 @@ export default defineEventHandler(async (event) => {
       statusMessage,
       message: "Failed to update email.",
     })
+  }
+
+  const stripeCustomerId = user.stripeCustomerId
+  if (stripeCustomerId && typeof stripeCustomerId === "string" && stripeCustomerId.trim()) {
+    try {
+      const stripeSecretKey = runtimeConfig.STRIPE_SK
+      if (stripeSecretKey) {
+        const stripe = new Stripe(stripeSecretKey as string)
+        await stripe.customers.update(stripeCustomerId.trim(), { email: pendingEmail })
+      }
+    } catch (_err) {
+      // Log but do not fail the request; Strapi email is already updated
+    }
   }
 
   if(userSession) {
