@@ -35,10 +35,9 @@
       </div>
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-0.5">
-          <p class="text-base font-normal">Donation Payment</p>
+          <p class="text-base font-normal">Donations</p>
           <p class="text-sm text-muted-foreground">
-            These are notifications for when your donation funds are
-            processed.
+            These are notifications that are related to your donations. Such as when your donation funds are processed, when your donation is cancelled, when your donation is paused, when your donation is resumed, etc.
           </p>
         </div>
         <FormField v-slot="{ value, handleChange }" name="donationPaymentEmail">
