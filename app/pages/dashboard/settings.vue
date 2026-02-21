@@ -135,6 +135,7 @@ const profileForm = useForm({
   initialValues: profileInitial.value,
 })
 const hasProfileChanges = computed(() => {
+  if(!profileInitial.value || !profileForm.values) return false
   return JSON.stringify(profileInitial.value) !== JSON.stringify(profileForm.values)
 })
 
