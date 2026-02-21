@@ -20,6 +20,8 @@ export default defineEventHandler(async (event: any) => {
 
   return {
     success: true,
+    username: user.username ?? null,
+    email: user.email ?? null,
     pendingEmail: user.pendingEmail || null,
     emailChangeTokenExpiry: parseInt(user?.emailChangeTokenExpiry ?? '0') || null,
     message: "Profile fetched successfully",

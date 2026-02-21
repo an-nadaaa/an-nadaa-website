@@ -66,7 +66,7 @@
                 </div>
               </div>
               <div class="flex gap-2 mt-12">
-                <Button type="button" variant="outline" :disabled="!hasProfileChanges || isProfileFormLoading" @click="profileForm.resetForm">
+                <Button type="button" variant="outline" :disabled="!hasProfileChanges || isProfileFormLoading" @click="profileForm.resetForm({ values: profileInitial })">
                   Cancel
                 </Button>
                 <Button type="submit" :disabled="!hasProfileChanges" :is-loading="isProfileFormLoading">Save</Button>
@@ -76,130 +76,11 @@
         </TabsContent>
   
         <TabsContent value="password" class="mt-6">
-          <div class="space-y-6">
-            <div>
-              <h2 class="text-lg font-medium">Password</h2>
-              <p class="text-sm text-muted-foreground">
-                Please enter your current password to change your password.
-              </p>
-            </div>
-            <Form
-              :validation-schema="passwordSchema"
-              :initial-values="passwordInitial"
-              @submit="onPasswordSubmit"
-              v-slot="{ resetForm }"
-              class="space-y-8"
-            >
-              <div class="grid gap-4 items-center sm:grid-cols-3">
-                <p class="text-sm text-muted-foreground">Current password</p>
-                <FormField v-slot="{ componentField }" name="currentPassword">
-                  <FormItem class="sm:col-span-2">
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" v-bind="componentField" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="grid gap-4 items-center sm:grid-cols-3">
-                <p class="text-sm text-muted-foreground">New password</p>
-                <FormField v-slot="{ componentField }" name="newPassword">
-                  <FormItem class="sm:col-span-2">
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" v-bind="componentField" />
-                    </FormControl>
-                    <p class="mt-1.5 text-xs text-muted-foreground">
-                      Your new password must be more than 8 characters.
-                    </p>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="grid gap-4 items-center sm:grid-cols-3">
-                <p class="text-sm text-muted-foreground">Confirm new password</p>
-                <FormField v-slot="{ componentField }" name="confirmPassword">
-                  <FormItem class="sm:col-span-2">
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" v-bind="componentField" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="flex gap-2 mt-12">
-                <Button type="button" variant="outline" @click="resetForm">
-                  Cancel
-                </Button>
-                <Button type="submit">Save</Button>
-              </div>
-            </Form>
-          </div>
+          <SettingsPasswordForm />
         </TabsContent>
-  
+
         <TabsContent value="notifications" class="mt-6">
-          <div class="space-y-6">
-            <div>
-              <h2 class="text-lg font-medium">Notification settings</h2>
-              <p class="text-sm text-muted-foreground">
-                We may still send you important notifications about your account
-                outside of your notification settings.
-              </p>
-            </div>
-            <Form
-              :validation-schema="notificationsSchema"
-              :initial-values="notificationsInitial"
-              @submit="onNotificationsSubmit"
-              v-slot="{ resetForm }"
-              class="space-y-6"
-            >
-              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div class="space-y-0.5">
-                  <p class="text-base font-normal">Project Updates</p>
-                  <p class="text-sm text-muted-foreground">
-                    These are notifications for updates on the progress of the
-                    projects you support.
-                  </p>
-                </div>
-                <FormField v-slot="{ value, handleChange }" name="projectUpdatesEmail">
-                  <FormItem class="flex gap-2 items-center space-y-0">
-                    <FormControl>
-                      <Switch
-                        :checked="value"
-                        @update:checked="handleChange"
-                      />
-                    </FormControl>
-                    <FormLabel class="mt-0! cursor-pointer">Email</FormLabel>
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div class="space-y-0.5">
-                  <p class="text-base font-normal">Donation Payment</p>
-                  <p class="text-sm text-muted-foreground">
-                    These are notifications for when your donation funds are
-                    processed.
-                  </p>
-                </div>
-                <FormField v-slot="{ value, handleChange }" name="donationPaymentEmail">
-                  <FormItem class="flex gap-2 items-center space-y-0">
-                    <FormControl>
-                      <Switch
-                        :checked="value"
-                        @update:checked="handleChange"
-                      />
-                    </FormControl>
-                    <FormLabel class="mt-0! cursor-pointer">Email</FormLabel>
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="flex gap-2 mt-12">
-                <Button type="button" variant="outline" @click="resetForm">
-                  Cancel
-                </Button>
-                <Button type="submit">Save</Button>
-              </div>
-            </Form>
-          </div>
+          <SettingsNotificationsForm />
         </TabsContent>
       </div>
 
@@ -214,21 +95,17 @@ definePageMeta({
 
 import { Button } from "@/components/ui/button"
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/toast"
 import { toTypedSchema } from "@vee-validate/zod"
 import { useForm } from "vee-validate"
-import { Mail } from "lucide-vue-next"
 import * as z from "zod"
 
 type PendingEmailData = {
@@ -237,7 +114,7 @@ type PendingEmailData = {
 }
 
 const { toast } = useToast()
-const { user, fetch: refreshSession } = useUserSession()
+const { user } = useUserSession()
 
 const isProfileFormLoading = ref(false)
 const isPendingEmailLoading = ref(true)
@@ -261,21 +138,35 @@ const hasProfileChanges = computed(() => {
   return JSON.stringify(profileInitial.value) !== JSON.stringify(profileForm.values)
 })
 
-onMounted(async () => {
+async function loadProfileIntoForm() {
   const res = await $fetch("/api/dashboard/profile", {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-
-    },
-  }) as { success: boolean, pendingEmail?: string, emailChangeTokenExpiry?: number, message: string }
-  if(res.pendingEmail && res.emailChangeTokenExpiry) {
+    headers: { "Content-Type": "application/json" },
+  }) as {
+    success: boolean
+    username?: string | null
+    email?: string | null
+    pendingEmail?: string | null
+    emailChangeTokenExpiry?: number | null
+    message: string
+  }
+  const username = res.username ?? ""
+  const email = res.email ?? ""
+  profileInitial.value = { username, email }
+  profileForm.setValues({ username, email })
+  if (res.pendingEmail && res.emailChangeTokenExpiry) {
     pendingEmailData.value = {
       pendingEmail: res.pendingEmail,
       emailChangeTokenExpiry: res.emailChangeTokenExpiry,
     }
+  } else {
+    pendingEmailData.value = null
   }
   isPendingEmailLoading.value = false
+}
+
+onMounted(async () => {
+  await loadProfileIntoForm()
 })
 const onProfileSubmit = profileForm.handleSubmit(async (values) => {
   isProfileFormLoading.value = true
@@ -364,24 +255,10 @@ watch(pendingEmailData, (newVal) => {
   }
 })
 watch(activeTab, async (newVal) => {
-  if(newVal === "profile") {
-    profileForm.resetForm()
+  if (newVal === "profile") {
     isPendingEmailLoading.value = true
-    const res = await $fetch("/api/dashboard/profile", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-
-    },
-  }) as { success: boolean, pendingEmail?: string, emailChangeTokenExpiry?: number, message: string }
-  if(res.pendingEmail && res.emailChangeTokenExpiry) {
-    pendingEmailData.value = {
-      pendingEmail: res.pendingEmail,
-      emailChangeTokenExpiry: res.emailChangeTokenExpiry,
-    }
+    await loadProfileIntoForm()
   }
-  isPendingEmailLoading.value = false
-  } 
 })
 watch(isPendingEmailExpired, (newVal) => {
   if(newVal === true) {
@@ -389,52 +266,4 @@ watch(isPendingEmailExpired, (newVal) => {
   }
 })
 
-const passwordSchema = toTypedSchema(
-  z
-    .object({
-      currentPassword: z.string().min(1, { message: "Current password is required" }),
-      newPassword: z
-        .string()
-        .min(8, { message: "Password must be at least 8 characters" }),
-      confirmPassword: z.string().min(1, { message: "Please confirm your password" }),
-    })
-    .refine((data) => data.newPassword === data.confirmPassword, {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    })
-)
-
-const passwordInitial = {
-  currentPassword: "",
-  newPassword: "",
-  confirmPassword: "",
-}
-
-function onPasswordSubmit() {
-  // TODO: call settings API
-  toast({
-    title: "Password changed successfully",
-    variant: "success",
-  })
-}
-
-const notificationsSchema = toTypedSchema(
-  z.object({
-    projectUpdatesEmail: z.boolean(),
-    donationPaymentEmail: z.boolean(),
-  })
-)
-
-const notificationsInitial = {
-  projectUpdatesEmail: true,
-  donationPaymentEmail: false,
-}
-
-function onNotificationsSubmit() {
-  // TODO: call settings API
-  toast({
-    title: "Changes updated successfully",
-    variant: "success",
-  })
-}
 </script>
