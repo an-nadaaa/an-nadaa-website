@@ -66,10 +66,10 @@
                 </div>
               </div>
               <div class="flex gap-2 mt-12">
-                <Button type="button" variant="outline" :disabled="!hasProfileChanges" @click="profileForm.resetForm">
+                <Button type="button" variant="outline" :disabled="!hasProfileChanges || isProfileFormLoading" @click="profileForm.resetForm">
                   Cancel
                 </Button>
-                <Button type="submit" :disabled="!hasProfileChanges">Save</Button>
+                <Button type="submit" :disabled="!hasProfileChanges" :is-loading="isProfileFormLoading">Save</Button>
               </div>
             </form>
           </div>
@@ -239,7 +239,7 @@ type PendingEmailData = {
 const { toast } = useToast()
 const { user, fetch: refreshSession } = useUserSession()
 
-const isFormLoading = ref(false)
+const isProfileFormLoading = ref(false)
 const isPendingEmailLoading = ref(true)
 const pendingEmailData = ref<PendingEmailData | null>()
 const activeTab = ref("profile")
@@ -278,7 +278,7 @@ onMounted(async () => {
   isPendingEmailLoading.value = false
 })
 const onProfileSubmit = profileForm.handleSubmit(async (values) => {
-  isFormLoading.value = true
+  isProfileFormLoading.value = true
   $fetch("/api/dashboard/profile", {
     method: "PUT",
     body: { username: values.username, email: values.email },
@@ -301,7 +301,7 @@ const onProfileSubmit = profileForm.handleSubmit(async (values) => {
         emailChangeTokenExpiry: res.emailChangeTokenExpiry as number,
       }
     }
-      isFormLoading.value = false
+      isProfileFormLoading.value = false
 
   }).catch((err) => {
     toast({
@@ -309,7 +309,7 @@ const onProfileSubmit = profileForm.handleSubmit(async (values) => {
       description: err.status===400 ? "Invalid credentials" : err.statusText,
       variant: "warning",
     })
-    isFormLoading.value = false
+    isProfileFormLoading.value = false
   })
 })
 
