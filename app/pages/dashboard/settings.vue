@@ -51,7 +51,9 @@
                 <FormField v-slot="{ componentField }" name="email">
                   <FormItem class="sm:col-span-1">
                     <FormControl>
+                      <Skeleton v-if="isPendingEmailLoading" class="h-9 w-full" />
                       <Input
+                        v-else
                         type="email"
                         placeholder="Enter your email"
                         :disabled="!!pendingEmailData?.pendingEmail && !isPendingEmailExpired"
@@ -225,6 +227,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/toast"
@@ -241,6 +244,7 @@ type PendingEmailData = {
 const { toast } = useToast()
 const { user, fetch: refreshSession } = useUserSession()
 
+const isPendingEmailLoading = ref(true)
 const pendingEmailData = ref<PendingEmailData | null>()
 const activeTab = ref("profile")
 const profileSchema = toTypedSchema(
@@ -259,6 +263,23 @@ const profileForm = useForm({
 })
 const hasProfileChanges = computed(() => {
   return JSON.stringify(profileInitial.value) !== JSON.stringify(profileForm.values)
+})
+
+onMounted(async () => {
+  const res = await $fetch("/api/dashboard/profile", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+
+    },
+  }) as { success: boolean, pendingEmail?: string, emailChangeTokenExpiry?: number, message: string }
+  if(res.pendingEmail && res.emailChangeTokenExpiry) {
+    pendingEmailData.value = {
+      pendingEmail: res.pendingEmail,
+      emailChangeTokenExpiry: res.emailChangeTokenExpiry,
+    }
+  }
+  isPendingEmailLoading.value = false
 })
 const onProfileSubmit = profileForm.handleSubmit(async (values) => {
   $fetch("/api/dashboard/profile", {
