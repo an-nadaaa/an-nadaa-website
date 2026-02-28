@@ -21,7 +21,7 @@
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu class="space-y-2">
-            <SidebarMenuItem v-for="item in navItems" :key="item.title">
+            <SidebarMenuItem v-for="item in navItems" :key="item.title" >
               <NuxtLink :to="$localePath(item.url)" @click="handleLinkClick">
                 <div
                   class="flex gap-2 items-center px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -41,7 +41,7 @@
             </SidebarMenuItem>
             <SidebarMenuItem>
               <div
-                class="flex gap-2 items-center px-2 py-2 text-gray-400 rounded-md hover:bg-sidebar-accent"
+                class="flex gap-2 items-center px-2 py-2 text-gray-400 rounded-md hover:bg-sidebar-accent hover:cursor-pointer"
               >
                 <component :is="Bell" />
                 <span class="font-light">Updates</span>

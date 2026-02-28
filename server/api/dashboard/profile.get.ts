@@ -24,6 +24,7 @@ export default defineEventHandler(async (event: any) => {
     email: user.email ?? null,
     pendingEmail: user.pendingEmail || null,
     emailChangeTokenExpiry: parseInt(user?.emailChangeTokenExpiry ?? '0') || null,
+    settings: user.settings ?? null,
     message: "Profile fetched successfully",
   }
 })

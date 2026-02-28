@@ -14,12 +14,11 @@
         Please check your email and click on the link to verify your email
         address.
       </p>
-      <Button @click="openEmailProvider" class="mt-8 w-full">Open email</Button>
       <Button
-        variant="outline"
+        variant="default"
         @click="handleResendEmail"
         :disabled="!isResendEnabled || isResendLoading"
-        class="mt-2 w-full outline-2 outline-primary -outline-offset-2 text-primary hover:text-[#2397ba] disabled:opacity-50 disabled:cursor-not-allowed"
+        class="mt-2 w-full outline-2 outline-primary -outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         ><template v-if="!isResendLoading"> {{ resendButtonText }} </template>
         <template v-else> <VueSpinnerBars /> </template>
       </Button>
