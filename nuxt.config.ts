@@ -29,6 +29,9 @@ export default defineNuxtConfig({
       "/help-orphans": {
         redirect: "/causes/ghdapx0kf7cz9se7rhb7w60p",
       },
+      "/hoping-for-jannah": {
+        redirect: "/causes/qvnkizug6vk807gl5kb6hhl3",
+      },
     },
   },
   compatibilityDate: "2024-04-03",
