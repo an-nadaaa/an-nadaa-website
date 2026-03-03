@@ -32,6 +32,9 @@ export default defineNuxtConfig({
       "/hoping-for-jannah": {
         redirect: "/causes/qvnkizug6vk807gl5kb6hhl3",
       },
+      "/school-admin": {
+        redirect: "/causes/rwj8vnjiq90mofu5m9brtu8b",
+      },
     },
   },
   compatibilityDate: "2024-04-03",
