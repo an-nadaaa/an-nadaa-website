@@ -35,6 +35,15 @@ export default defineNuxtConfig({
       "/school-admin": {
         redirect: "/causes/rwj8vnjiq90mofu5m9brtu8b",
       },
+      "/MRIMachine": {
+        redirect: "/causes/h2nog4orue75mjt98c0gwihn",
+      },
+      "/CTScanner": {
+        redirect: "/causes/ewywddaebekajz0d0v9mqlyx",
+      },
+      "/Ambulance": {
+        redirect: "/causes/xirbyfr2nhfdc9qlmha5w0c2",
+      },
     },
   },
   compatibilityDate: "2024-04-03",
