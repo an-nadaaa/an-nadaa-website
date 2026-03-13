@@ -1,5 +1,5 @@
 <template>
-  <div class="container grid gap-y-2 gap-x-8 py-4 sm:py-10 sm:grid-cols-2">
+  <div class="container grid gap-y-2 gap-x-4 py-4 sm:py-10 sm:grid-cols-2">
     <div class="sm:col-span-2">
       <NuxtLink class="w-fit" @click="() => router.back()">
         <div class="relative mb-2 w-fit hover:underline">

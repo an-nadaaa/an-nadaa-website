@@ -1318,6 +1318,10 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    emailChangeToken: Schema.Attribute.String;
+    emailChangeTokenExpiry: Schema.Attribute.BigInteger;
+    isDonationNotificationsEnabled: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1337,6 +1341,7 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    settings: Schema.Attribute.JSON;
     stripeCustomerId: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

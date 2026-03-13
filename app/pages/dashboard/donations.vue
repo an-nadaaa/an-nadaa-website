@@ -17,12 +17,12 @@
           Export Donations
         </Button> -->
         <NuxtLink :to="$localePath('/causes')">
-          <Button class="w-full sm:w-auto">Donate</Button>
+          <Button class="w-full sm:w-auto">Browse Causes</Button>
         </NuxtLink>
       </div>
     </div>
 
-    <Tabs v-model="timeframe" default-value="30days" class="w-full sm:w-auto">
+    <Tabs v-model="timeframe" default-value="30days" class="sm:w-auto">
       <TabsList class="grid grid-cols-4 w-full sm:w-auto sm:inline-flex">
         <TabsTrigger value="12months" class="text-xs sm:text-sm">
           12 months
@@ -183,7 +183,7 @@
                             const denominator = parseFloat(donation.cause?.goalDetails[0].goalAmount)
                             let percent = Math.round((numerator / denominator) * 100)
                             if (isNaN(percent)) percent = 0
-                            return percent
+                            return Math.min(percent, 100)
                           })()
                         }}%
                       </p>

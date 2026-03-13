@@ -64,7 +64,8 @@
                   const percent = Math.round(
                     (cause.raisedAmount / cause.goalDetails[0].goalAmount) * 100
                   )
-                  return Number.isFinite(percent) ? percent : 100
+                  if (!Number.isFinite(percent)) return 100
+                  return Math.min(percent, 100)
                 })()
               }}%
             </p>

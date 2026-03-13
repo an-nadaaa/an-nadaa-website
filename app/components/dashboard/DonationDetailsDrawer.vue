@@ -171,16 +171,15 @@
         </DialogHeader>
         <DialogFooter class="gap-2 rounded-b-lg">
           <DialogClose as-child>
-            <Button variant="outline" :disabled="isProcessing"> Cancel </Button>
+            <Button variant="outline" :is-loading="isProcessing"> Cancel </Button>
           </DialogClose>
           <Button
             type="button"
             @click="handleSubscriptionAction"
-            :disabled="isProcessing"
+            :is-loading="isProcessing"
             :variant="dialogAction === 'cancel' ? 'destructive' : 'default'"
           >
-            <span v-if="isProcessing">Processing...</span>
-            <span v-else>{{ getConfirmButtonText() }}</span>
+{{ getConfirmButtonText() }}
           </Button>
         </DialogFooter>
       </DialogContent>
