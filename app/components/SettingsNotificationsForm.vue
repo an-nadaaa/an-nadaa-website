@@ -117,7 +117,7 @@ onMounted(() => {
   $fetch("/api/dashboard/profile", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
-  }).then((res: any) => res.settings.notifications ?? null).then((res: NotificationsSettings | null) => {
+  }).then((res: any) => res.settings?.notifications ?? null).then((res: NotificationsSettings | null) => {
     if(!res) {
       settings.value = {  
         isProjectUpdatesNotificationsEnabled: true,
