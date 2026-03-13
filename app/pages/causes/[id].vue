@@ -152,14 +152,9 @@
            ${isExpanded ? '' : 'h-[200px]'}`"
         >
           <div
-            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-blockquote:prose-p:text-2xl prose-blockquote:prose-p:font-normal prose-blockquote:prose-p:last:text-lg prose-blockquote:prose-p:last:text-dark-gray prose-blockquote:prose-p:last:not-italic prose-blockquote:my-12 prose-p:font-light"
+            class="mb-8 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-blockquote:prose-p:text-2xl prose-blockquote:prose-p:font-normal prose-blockquote:prose-p:last:text-lg prose-blockquote:prose-p:last:text-dark-gray prose-blockquote:prose-p:last:not-italic prose-blockquote:my-12 prose-p:font-light"
             v-html="causeHtml"
           />
-
-          <!-- <ContentRenderer
-            class="mb-12 prose prose-a:text-dark-gray prose-a:font-light prose-headings:font-medium prose-li:text-dark-gray prose-ul:font-light prose-headings:text-3xl prose-headings:mb-2 prose-headings:mt-12 prose-blockquote:border-l-2 prose-blockquote:border-l-primary prose-blockquote:prose-p:text-2xl prose-blockquote:prose-p:font-normal prose-blockquote:prose-p:last:text-lg prose-blockquote:prose-p:last:text-dark-gray prose-blockquote:prose-p:last:not-italic prose-blockquote:my-12 prose-p:font-light"
-            :value="caus"
-          /> -->
 
           <div
             v-if="cause.importantNote && cause.importantNote.length > 0"
@@ -199,7 +194,7 @@
         <CauseDonateCard :cause="cause" :scrollToElement="scrollToElement" />
       </div>
     </div>
-    <div ref="bankInfo" class="py-16 w-full">
+    <div ref="bankInfo" class="py-8 w-full">
       <h2 class="font-medium">Direct transfers</h2>
       <p class="mt-2 font-normal text-dark-gray">
         When doing a direct transfer we need our donors to send us an email
