@@ -131,19 +131,23 @@
                       <p v-else class="font-light">
                         {{ donation.causeTitle }}
                       </p>
-                      <div
-                        v-if="donation.donationType === 'monthly'"
-                        class="inline-block relative group"
-                      >
-                        <Badge class="text-[10px] w-fit">
-                          <Icon name="lucide:repeat" class="w-2 h-2" />
-                        </Badge>
-                        <div
-                          class="hidden absolute left-1/2 z-50 px-2 py-1 mt-2 min-w-max text-xs text-white whitespace-nowrap bg-gray-900 rounded transition -translate-x-1/2 group-hover:block"
-                        >
-                          Recurring payment
-                        </div>
-                      </div>
+                      <TooltipProvider v-if="donation.donationType === 'monthly'">
+                        <TooltipRoot :delay-duration="0">
+                          <TooltipTrigger as-child>
+                            <Badge class="text-[10px] w-fit cursor-default">
+                              <Icon name="lucide:repeat" class="w-2 h-2" />
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipPortal>
+                            <TooltipContent
+                              class="px-2 py-1 text-xs text-white whitespace-nowrap bg-gray-900 rounded z-[100]"
+                              :side-offset="5"
+                            >
+                              Recurring payment
+                            </TooltipContent>
+                          </TooltipPortal>
+                        </TooltipRoot>
+                      </TooltipProvider>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -369,6 +373,13 @@
 
 <script setup lang="ts">
 import type { DateRange } from "reka-ui"
+import {
+  TooltipContent,
+  TooltipPortal,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+} from "reka-ui"
 import { getLocalTimeZone, today } from "@internationalized/date"
 import { computed, ref, watch } from "vue"
 import { Button } from "@/components/ui/button"
