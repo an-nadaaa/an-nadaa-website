@@ -107,6 +107,8 @@
                 <TableRow
                   v-for="donation in donations?.data"
                   :key="donation.id"
+                  class="transition-colors cursor-pointer hover:bg-muted/50"
+                  @click="openDonationDrawer(donation as DonationRow)"
                 >
                   <TableCell>
                     <div class="flex gap-2 items-center">
@@ -122,6 +124,7 @@
                         v-else-if="donation.cause"
                         :to="`/causes/${donation.cause?.documentId}`"
                         class="font-light hover:underline text-primary"
+                        @click.stop
                       >
                         {{ donation.cause?.title }}
                       </NuxtLink>
@@ -136,7 +139,7 @@
                           <Icon name="lucide:repeat" class="w-2 h-2" />
                         </Badge>
                         <div
-                          class="hidden absolute left-1/2 z-10 px-2 py-1 mt-2 min-w-max text-xs text-white whitespace-nowrap bg-gray-900 rounded transition -translate-x-1/2 group-hover:block"
+                          class="hidden absolute left-1/2 z-50 px-2 py-1 mt-2 min-w-max text-xs text-white whitespace-nowrap bg-gray-900 rounded transition -translate-x-1/2 group-hover:block"
                         >
                           Recurring payment
                         </div>
@@ -218,7 +221,7 @@
                       (donation.source as string).slice(1)
                     }}</span>
                   </TableCell>
-                  <TableCell>
+                  <TableCell @click.stop>
                     <DropdownMenu>
                       <DropdownMenuTrigger as-child>
                         <Button
