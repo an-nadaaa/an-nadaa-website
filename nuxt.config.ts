@@ -29,6 +29,21 @@ export default defineNuxtConfig({
       "/help-orphans": {
         redirect: "/causes/ghdapx0kf7cz9se7rhb7w60p",
       },
+      "/hoping-for-jannah": {
+        redirect: "/causes/qvnkizug6vk807gl5kb6hhl3",
+      },
+      "/school-admin": {
+        redirect: "/causes/rwj8vnjiq90mofu5m9brtu8b",
+      },
+      "/MRIMachine": {
+        redirect: "/causes/h2nog4orue75mjt98c0gwihn",
+      },
+      "/CTScanner": {
+        redirect: "/causes/ewywddaebekajz0d0v9mqlyx",
+      },
+      "/Ambulance": {
+        redirect: "/causes/xirbyfr2nhfdc9qlmha5w0c2",
+      },
     },
   },
   compatibilityDate: "2024-04-03",
