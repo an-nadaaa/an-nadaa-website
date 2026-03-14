@@ -90,10 +90,37 @@
             </p>
           </div>
           <div class="flex items-center gap-2">
-            <Checkbox id="zakat" v-model:checked="isZakat" />
-            <label for="zakat" class="text-sm font-light cursor-pointer text-dark-gray">
-              This is a Zakat donation
-            </label>
+            <template v-if="isZakatEligible">
+              <Checkbox id="zakat" v-model:checked="isZakat" />
+              <label for="zakat" class="text-sm font-light cursor-pointer text-dark-gray">
+                This is a Zakat donation
+              </label>
+            </template>
+            <TooltipProvider v-else>
+              <TooltipRoot :delay-duration="0">
+                <TooltipTrigger as-child>
+                  <span
+                    class="flex items-center gap-2 opacity-50 cursor-not-allowed"
+                  >
+                    <Checkbox id="zakat-disabled" disabled />
+                    <label
+                      for="zakat-disabled"
+                      class="text-sm font-light text-dark-gray cursor-not-allowed"
+                    >
+                      This is a Zakat donation
+                    </label>
+                  </span>
+                </TooltipTrigger>
+                <TooltipPortal>
+                  <TooltipContent
+                    class="px-2 py-1 text-xs text-white bg-gray-900 rounded z-[100] max-w-[240px]"
+                    :side-offset="5"
+                  >
+                    Not Zakat-eligible. This cause is supported through Sadaqah and general donations only.
+                  </TooltipContent>
+                </TooltipPortal>
+              </TooltipRoot>
+            </TooltipProvider>
           </div>
         </div>
         <Button
@@ -124,6 +151,13 @@ import {
   FormMessage,
 } from "~/components/ui/form"
 
+import {
+  TooltipContent,
+  TooltipPortal,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+} from "reka-ui"
 import StripeCardInput from "./StripeCardInput.vue"
 import type { StripeCardElement } from "@stripe/stripe-js"
 // import { useStripe } from "~/composables/useStripe"
@@ -135,6 +169,7 @@ type DonationDetails = {
   currencySelected: string
   donationFrequency: string
   isZakat?: boolean
+  isZakatCompatible?: boolean
 }
 const { toast } = useToast()
 const { user, loggedIn } = useUserSession()
@@ -149,6 +184,12 @@ const loading = defineModel("loading", {
   required: true,
 })
 const isZakat = ref(false)
+const isZakatEligible = computed(
+  () => donationDetails.value?.isZakatCompatible === true
+)
+watch(isZakatEligible, (eligible) => {
+  if (!eligible) isZakat.value = false
+})
 const stripe = await useStripe()
 const router = useRouter()
 const card = ref<StripeCardElement | null>(null)
