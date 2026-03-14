@@ -130,16 +130,16 @@
       >
         <CauseCard
           :cause="cause"
-          class="hover:cursor-pointer hover:shadow-xl  h-full"
+          class="h-full hover:cursor-pointer hover:shadow-xl"
         />
       </NuxtLink>
     </div>
     <div
       v-if="causes.length > 0"
-      class="flex gap-x-2 justify-between mt-4 w-full"
+      class="grid grid-cols-2 gap-x-2 mt-4 w-full  sm:flex sm:justify-between"
     >
       <Button
-        class="w-full sm:w-44"
+        class="col-span-1 sm:w-44"
         @click="handlePreviousPage"
         :disabled="previousDisabled"
         variant="outline"
@@ -148,7 +148,7 @@
       </Button>
 
       <Button
-        class="w-full sm:w-44"
+        class="col-span-1 sm:w-44"
         :disabled="nextDisabled"
         @click="handleNextPage"
         variant="outline"

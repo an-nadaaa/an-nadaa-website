@@ -45,16 +45,12 @@
             These are notifications that are related to your donations. Such as when your donation funds are processed, when your donation is cancelled, when your donation is paused, when your donation is resumed, etc.
           </p>
         </div>
-        <template v-if="isSettingsLoading">
-          <div class="flex gap-2 items-center">
-            <Skeleton class="w-11 h-6 rounded-full" />
-            <Skeleton class="w-10 h-4" />
-          </div>
-        </template>
-        <FormField v-else v-slot="{ value, handleChange }" name="isDonationNotificationsEnabled">
+
+        <FormField v-slot="{ value, handleChange }" name="isDonationNotificationsEnabled">
           <FormItem class="flex gap-2 items-center space-y-0">
             <FormControl>
               <Switch
+                :disabled="isSettingsLoading"
                 :model-value="value"
                 @update:model-value="handleChange"
               />

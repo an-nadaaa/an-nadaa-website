@@ -46,12 +46,10 @@
                 <FormField v-slot="{ componentField }" name="email">
                   <FormItem class="sm:col-span-1">
                     <FormControl>
-                      <Skeleton v-if="isPendingEmailLoading" class="w-full h-9" />
                       <Input
-                        v-else
                         type="email"
                         placeholder="Enter your email"
-                        :disabled="!!pendingEmailData?.pendingEmail && !isPendingEmailExpired"
+                        :disabled="!!pendingEmailData?.pendingEmail && !isPendingEmailExpired || isPendingEmailLoading"
                         v-bind="componentField"
                       />
                     </FormControl>
