@@ -171,7 +171,7 @@
         </DialogHeader>
         <DialogFooter class="gap-2 rounded-b-lg">
           <DialogClose as-child>
-            <Button variant="outline" :is-loading="isProcessing"> Cancel </Button>
+            <Button variant="outline" :disabled="isProcessing"> Cancel </Button>
           </DialogClose>
           <Button
             type="button"

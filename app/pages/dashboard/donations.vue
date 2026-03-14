@@ -99,6 +99,7 @@
                   <TableHead class="min-w-[150px]">Cause progress</TableHead>
                   <TableHead class="min-w-[120px]">Date</TableHead>
                   <TableHead class="min-w-[120px]">Payment Status</TableHead>
+                  <TableHead class="min-w-[120px]">Subscription Status</TableHead>
                   <TableHead class="min-w-[120px]">Payment method</TableHead>
                   <TableHead class="w-[50px]"></TableHead>
                 </TableRow>
@@ -226,6 +227,8 @@
                     >
                       {{ donation.cause?.isActive ? "Ongoing" : "Closed" }}
                     </Badge>
+                    <span v-else class="font-light text-gray-200">–</span>
+
                   </TableCell>
                   <TableCell>
                     <span class="font-light text-gray-500">{{
@@ -236,6 +239,32 @@
                     <Badge :variant="donation.donationStatus === 'success' ? 'payment-success' : donation.donationStatus === 'pending' ? 'payment-pending' : 'payment-failed'" class="px-2" showCircle>
                       {{  donation.donationStatus.charAt(0).toUpperCase() + donation.donationStatus.slice(1) }}
                     </Badge>
+                  </TableCell>
+                                    <TableCell>
+                    <template v-if="donation.donationType !== 'monthly'">
+                      <span class="font-light text-gray-200">–</span>
+                    </template>
+                    <template v-else-if="loadingSubscriptionStatuses">
+                      <Skeleton class="w-16 h-5" />
+                    </template>
+                    <template v-else>
+                      <Badge
+                        :variant="
+                          subscriptionStatuses[donation.sourceTransactionId] === 'active'
+                            ? 'payment-success'
+                            : subscriptionStatuses[donation.sourceTransactionId] === 'paused'
+                              ? 'payment-pending'
+                              : 'secondary'
+                        "
+                        class="px-2"
+                        showCircle
+                      >
+                        {{
+                          (subscriptionStatuses[donation.sourceTransactionId] ?? 'Cancelled').charAt(0).toUpperCase() +
+                          (subscriptionStatuses[donation.sourceTransactionId] ?? 'cancelled').slice(1)
+                        }}
+                      </Badge>
+                    </template>
                   </TableCell>
                   <TableCell>
                     <!-- Todo: Change this for other payment methods -->
@@ -559,6 +588,38 @@ const {
   }
 )
 
+const monthlySourceTransactionIds = computed(() => {
+  const list = donations.value?.data ?? []
+  return list
+    .filter(
+      (d: { donationType?: string; sourceTransactionId?: string }) =>
+        d.donationType === "monthly" && d.sourceTransactionId
+    )
+    .map((d: { sourceTransactionId?: string }) => d.sourceTransactionId as string)
+})
+
+const {
+  data: subscriptionStatusesData,
+  pending: loadingSubscriptionStatuses,
+  refresh: refreshSubscriptionStatuses,
+} = await useAsyncData<{ statuses: Record<string, "active" | "paused" | "cancelled"> }>(
+  () =>
+    `subscription-statuses-${[...monthlySourceTransactionIds.value].sort().join(",")}`,
+  async () => {
+    const ids = monthlySourceTransactionIds.value
+    if (ids.length === 0) return { statuses: {} }
+    return $fetch("/api/dashboard/subscription-statuses", {
+      method: "POST",
+      body: { sourceTransactionIds: ids },
+    })
+  },
+  { lazy: true, server: false }
+)
+
+const subscriptionStatuses = computed(
+  () => subscriptionStatusesData.value?.statuses ?? {}
+)
+
 const {
   data: chartDonationsData,
   refresh: refreshChartDonations,
@@ -801,6 +862,7 @@ function openDonationDrawer(donation: DonationRow) {
 async function onSubscriptionUpdated() {
   await refreshMonthlyDonations()
   await refreshDonations()
+  await refreshSubscriptionStatuses()
 }
 </script>
 
