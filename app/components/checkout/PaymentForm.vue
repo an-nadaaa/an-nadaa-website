@@ -1,7 +1,7 @@
 <template>
-  <Card class="mx-auto w-full">
+  <Card class="gap-y-3 mx-auto w-full">
     <CardHeader>
-      <CardTitle class="font-medium">Payment Details</CardTitle>
+      <CardTitle class="font-normal">Payment Details</CardTitle>
     </CardHeader>
     <CardContent>
       <form @submit.prevent="handleSubmit">
@@ -89,6 +89,12 @@
               {{ stripeErrorMessage }}
             </p>
           </div>
+          <div class="flex items-center gap-2">
+            <Checkbox id="zakat" v-model:checked="isZakat" />
+            <label for="zakat" class="text-sm font-light cursor-pointer text-dark-gray">
+              This is a Zakat donation
+            </label>
+          </div>
         </div>
         <Button
           type="submit"
@@ -128,6 +134,7 @@ type DonationDetails = {
   donateAmount: number
   currencySelected: string
   donationFrequency: string
+  isZakat?: boolean
 }
 const { toast } = useToast()
 const { user, loggedIn } = useUserSession()
@@ -141,6 +148,7 @@ const loading = defineModel("loading", {
   default: false,
   required: true,
 })
+const isZakat = ref(false)
 const stripe = await useStripe()
 const router = useRouter()
 const card = ref<StripeCardElement | null>(null)
@@ -241,6 +249,7 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
         currency: currencySelected,
         donationType: donationFrequency,
         causeId: causeSelected,
+        isZakat: isZakat.value === true,
       }),
     })
 

@@ -143,7 +143,26 @@
                               class="px-2 py-1 text-xs text-white whitespace-nowrap bg-gray-900 rounded z-[100]"
                               :side-offset="5"
                             >
-                              Recurring payment
+                              Monthly donation
+                            </TooltipContent>
+                          </TooltipPortal>
+                        </TooltipRoot>
+                      </TooltipProvider>
+                      <TooltipProvider v-if="donation.isZakat">
+                        <TooltipRoot :delay-duration="0">
+                          <TooltipTrigger as-child>
+                            <Badge
+                              class="text-[10px] w-fit cursor-default bg-green-600 hover:bg-green-600 text-white border-0"
+                            >
+                              <Icon name="lucide:hand-coins" class="w-2 h-2" />
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipPortal>
+                            <TooltipContent
+                              class="px-2 py-1 text-xs text-white whitespace-nowrap bg-gray-900 rounded z-[100]"
+                              :side-offset="5"
+                            >
+                              Zakat donation
                             </TooltipContent>
                           </TooltipPortal>
                         </TooltipRoot>

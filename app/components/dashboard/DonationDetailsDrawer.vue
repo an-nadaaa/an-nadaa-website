@@ -20,7 +20,7 @@
           <div class="overflow-y-auto flex-1 px-6 pb-6 space-y-6">
 
             <div class="space-y-1">
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Amount donated</p>
+              <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Amount donated</p>
               <p class="text-3xl font-normal">
                 {{ formatCurrency(selectedDonation.amount as number, (selectedDonation.currency as string).toUpperCase()) }}
               </p>
@@ -29,7 +29,7 @@
             <template v-if="selectedDonation.cause">
 
               <div class="space-y-1">
-                <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Cause</p>
+                <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Cause</p>
                 <template v-if="selectedDonation.cause">
                   <p class="mb-0 font-normal">{{ selectedDonation.cause.title }}</p>
                   <NuxtLink
@@ -73,7 +73,7 @@
               v-if="selectedDonation.donationType === 'monthly' && (subscriptionLoading || subscriptionForSelectedDonation)"
               class="space-y-1"
             >
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Monthly subscription</p>
+              <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Monthly subscription</p>
               <div class="p-3 space-y-3 rounded-lg border">
                 <template v-if="subscriptionLoading">
                   <Skeleton class="w-3/4 h-4" />
@@ -123,7 +123,7 @@
               </div>
             </div>
             <div v-else-if="selectedDonation.donationType === 'monthly' && !subscriptionLoading  && !subscriptionForSelectedDonation" class="space-y-2">
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Monthly subscription</p>
+              <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Monthly subscription</p>
               <p class="text-sm text-muted-foreground">
                 This monthly donation has been cancelled.
               </p>
@@ -131,7 +131,7 @@
 
             <!-- RECEIPT -->
             <div class="space-y-1">
-              <p class="text-xs font-medium tracking-wide text-gray-400 uppercase">Receipt</p>
+              <p class="text-xs font-medium tracking-wide uppercase text-muted-foreground">Receipt</p>
               <template v-if="selectedDonation.invoiceUrl">
                 <div
                   class="flex gap-3 items-center p-3 rounded-lg border"

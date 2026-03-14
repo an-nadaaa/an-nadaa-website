@@ -113,6 +113,7 @@ export type StripeTransactionMetadata = {
   userId?: string // This is the strapi user document id
   causeTitle: string
   causeThumbnailUrl: string
+  isZakat?: string // "true" | "false" for Stripe metadata
 }
 
 async function createMonthlyDonation(
@@ -186,6 +187,7 @@ export default defineEventHandler(async (event) => {
     donationType,
     causeId,
     currency,
+    isZakat,
   } = body
 
   if (userSession.user) {
@@ -315,6 +317,7 @@ export default defineEventHandler(async (event) => {
     userId: userSession?.user?.user?.documentId, // This is the strapi user int id
     causeTitle: cause?.title || "General Donation",
     causeThumbnailUrl: cause?.thumbnail?.formats?.thumbnail?.url,
+    isZakat: isZakat === true ? "true" : "false",
   }
 
   if (donationType === "monthly") {
