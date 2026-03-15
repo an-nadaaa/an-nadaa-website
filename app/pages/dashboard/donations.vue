@@ -182,7 +182,7 @@
                   </TableCell>
                   <TableCell>
                     <div
-                      v-if="donation.cause?.causeType === 'campaign'"
+                      v-if="donation.cause?.causeType === 'campaign' && donation.cause?.isActive"
                       class="flex gap-3 items-center"
                     >
                       <Progress
@@ -220,7 +220,7 @@
                       :variant="
                         donation.cause?.isActive
                           ? 'campaign-ongoing'
-                          : 'campaign-funded'
+                          : 'secondary'
                       "
                       class="px-2"
                       showCircle
@@ -257,7 +257,6 @@
                               : 'secondary'
                         "
                         class="px-2"
-                        showCircle
                       >
                         {{
                           (subscriptionStatuses[donation.sourceTransactionId] ?? 'Cancelled').charAt(0).toUpperCase() +
