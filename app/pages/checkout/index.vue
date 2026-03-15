@@ -35,36 +35,42 @@
         v-model:amount="donateAmount"
         v-model:donation-frequency="donationFrequency"
       />
-      <Card v-else class="pt-4">
-        <CardContent class="relative">
-          <Button
-            @click="isEditing = true"
-            class="absolute top-0 right-0 mr-4"
-            variant="outline"
-          >
-            <Icon name="lucide:pen" class="mr-2" />
-            Edit</Button
-          >
-          <h3 class="font-normal">Your donation</h3>
-          <img :src="logo" class="my-4 w-32" />
+      <div
+        v-else
+        class="transition-opacity duration-300"
+        :class="{ 'opacity-50 pointer-events-none': loading }"
+      >
+        <Card class="pt-4">
+          <CardContent class="relative">
+            <Button
+              @click="isEditing = true"
+              class="absolute top-0 right-0 mr-4"
+              variant="outline"
+            >
+              <Icon name="lucide:pen" class="mr-2" />
+              Edit</Button
+            >
+            <h3 class="font-normal">Your donation</h3>
+            <img :src="logo" class="my-4 w-32" />
 
-          <h4 class="font-medium">Donation</h4>
-          <p class="font-light text-dark-gray">
-            {{
-              causeSelected === "general"
-                ? "General Donation"
-                : causes.find((cause: any) => {
-                    return causeSelected === cause.id
-                  })?.name || "ERROR FINDING CAUSE"
-            }}
-          </p>
+            <h4 class="font-medium">Donation</h4>
+            <p class="font-light text-dark-gray">
+              {{
+                causeSelected === "general"
+                  ? "General Donation"
+                  : causes.find((cause: any) => {
+                      return causeSelected === cause.id
+                    })?.name || "ERROR FINDING CAUSE"
+              }}
+            </p>
 
-          <h4 class="mt-6 text-3xl font-normal">
-            {{ donateAmount }} {{ currencySelected.toUpperCase()
-            }}{{ isMonthly ? "/month" : "" }}
-          </h4>
-        </CardContent>
-      </Card>
+            <h4 class="mt-6 text-3xl font-normal">
+              {{ donateAmount }} {{ currencySelected.toUpperCase()
+              }}{{ isMonthly ? "/month" : "" }}
+            </h4>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   </div>
 </template>
