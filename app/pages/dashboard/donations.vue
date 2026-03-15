@@ -216,7 +216,7 @@
                       </p>
                     </div>
                     <Badge
-                      v-else-if="donation.cause"
+                      v-else-if="donation.cause || (donation.causeTitle && !donation.cause)"
                       :variant="
                         donation.cause?.isActive
                           ? 'campaign-ongoing'
