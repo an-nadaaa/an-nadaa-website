@@ -81,6 +81,23 @@
           >
             Sign in
           </Button>
+          <div
+            v-if="emailNotConfirmedEmail"
+            class="space-y-1 text-sm text-left text-red-600"
+          >
+            <p>
+              It looks like you haven't confirmed your email yet. Check your
+              email client for a confirmation email. Did not find it?
+            </p>
+            <button
+              type="button"
+              class="font-medium underline hover:opacity-80 disabled:opacity-50 hover:cursor-pointer"
+              :disabled="isResendLoading"
+              @click="onResendConfirmation"
+            >
+              {{ isResendLoading ? "Sending…" : "Resend the confirmation email." }}
+            </button>
+          </div>
           <!-- <Button class="gap-2 w-full" variant="white">
             <Icon name="logos:google-icon"></Icon> Sign in with Google
           </Button> -->
@@ -120,7 +137,10 @@ import * as z from "zod"
 
 const { fetch: refreshSession } = useUserSession()
 const { toast } = useToast()
+const { sendEmailConfirmation } = useStrapiAuth()
 const isLoading = ref(false)
+const emailNotConfirmedEmail = ref<string | null>(null)
+const isResendLoading = ref(false)
 const formSchema = toTypedSchema(
   z.object({
     email: z
@@ -137,6 +157,7 @@ const form = useForm({
 })
 
 const onSubmit = form.handleSubmit(async (values) => {
+  emailNotConfirmedEmail.value = null
   try {
     isLoading.value = true
 
@@ -151,15 +172,39 @@ const onSubmit = form.handleSubmit(async (values) => {
       navigateTo("/dashboard")
     })
   } catch (e: any) {
-    toast({
-      title: "Error logging in",
-      description:
-        e?.status === 401
-          ? "Wrong email or password"
-          : e?.message || "An unknown error occurred",
-      variant: "destructive",
-    })
+    if ( e.message.includes("403")) {
+      emailNotConfirmedEmail.value = values.email
+    } else {
+      toast({
+        title: "Error logging in",
+        description:
+          e?.status === 401
+            ? "Wrong email or password"
+            : e?.message || "An unknown error occurred",
+        variant: "destructive",
+      })
+    }
     isLoading.value = false
   }
 })
+
+async function onResendConfirmation() {
+  if (!emailNotConfirmedEmail.value) return
+  try {
+    isResendLoading.value = true
+    await sendEmailConfirmation({ email: emailNotConfirmedEmail.value })
+    await navigateTo({
+      path: "/check-email",
+      query: { email: emailNotConfirmedEmail.value },
+    })
+  } catch (e: any) {
+    toast({
+      title: "Could not resend email",
+      description: e?.message || "Please try again later.",
+      variant: "destructive",
+    })
+  } finally {
+    isResendLoading.value = false
+  }
+}
 </script>
