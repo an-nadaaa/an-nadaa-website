@@ -98,16 +98,21 @@ const loading = ref(false)
 
 const isMonthly = computed(() => donationFrequency.value === "monthly")
 const donationDetails = computed(() => {
+  const selectedCause = causes.value.find(
+    (c: any) => c.id === causeSelected.value
+  )
   const isZakatCompatible =
     causeSelected.value === "general"
       ? false
-      : (causes.value.find((c: any) => c.id === causeSelected.value)?.isZakatCompatible ?? false)
+      : (selectedCause?.isZakatCompatible ?? false)
   return {
     causeSelected: causeSelected.value,
     donateAmount: parseFloat(donateAmount.value),
     currencySelected: currencySelected.value,
     donationFrequency: donationFrequency.value,
     isZakatCompatible,
+    isZakatByDefault: selectedCause?.isZakatByDefault ?? false,
+    isZakatOnly: selectedCause?.isZakatOnly ?? false,
   }
 })
 
@@ -147,6 +152,8 @@ const strapiCauses = allCauses.map((cause: any) => ({
   id: cause.documentId,
   isPrivate: cause.isPrivate,
   isZakatCompatible: cause.isZakatCompatible ?? false,
+  isZakatByDefault: cause.isZakatByDefault ?? false,
+  isZakatOnly: cause.isZakatOnly ?? false,
 }))
 causes.value = [...strapiCauses].filter((cause) => {
   if (cause.id !== id) return cause.isPrivate === false

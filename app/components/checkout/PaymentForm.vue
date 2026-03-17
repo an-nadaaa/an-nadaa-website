@@ -89,8 +89,35 @@
               {{ stripeErrorMessage }}
             </p>
           </div>
-          <div class="flex items-center gap-2">
-            <template v-if="isZakatEligible">
+          <div class="flex gap-2 items-center">
+            <template v-if="isZakatOnlyCause">
+              <TooltipProvider>
+                <TooltipRoot :delay-duration="0">
+                  <TooltipTrigger as-child>
+                    <span
+                      class="flex gap-2 items-center opacity-50 cursor-not-allowed"
+                    >
+                      <Checkbox id="zakat-only" :checked="true" disabled />
+                      <label
+                        for="zakat-only"
+                        class="text-sm font-light cursor-not-allowed text-dark-gray"
+                      >
+                        This is a Zakat donation
+                      </label>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipPortal>
+                    <TooltipContent
+                      class="px-2 py-1 text-xs text-white bg-gray-900 rounded z-[100] max-w-[240px]"
+                      :side-offset="5"
+                    >
+                      This cause is only accepting Zakat donations.
+                    </TooltipContent>
+                  </TooltipPortal>
+                </TooltipRoot>
+              </TooltipProvider>
+            </template>
+            <template v-else-if="isZakatEligible">
               <Checkbox id="zakat" v-model:checked="isZakat" />
               <label for="zakat" class="text-sm font-light cursor-pointer text-dark-gray">
                 This is a Zakat donation
@@ -100,12 +127,12 @@
               <TooltipRoot :delay-duration="0">
                 <TooltipTrigger as-child>
                   <span
-                    class="flex items-center gap-2 opacity-50 cursor-not-allowed"
+                    class="flex gap-2 items-center opacity-50 cursor-not-allowed"
                   >
                     <Checkbox id="zakat-disabled" disabled />
                     <label
                       for="zakat-disabled"
-                      class="text-sm font-light text-dark-gray cursor-not-allowed"
+                      class="text-sm font-light cursor-not-allowed text-dark-gray"
                     >
                       This is a Zakat donation
                     </label>
@@ -170,6 +197,8 @@ type DonationDetails = {
   donationFrequency: string
   isZakat?: boolean
   isZakatCompatible?: boolean
+  isZakatByDefault?: boolean
+  isZakatOnly?: boolean
 }
 const { toast } = useToast()
 const { user, loggedIn } = useUserSession()
@@ -187,9 +216,30 @@ const isZakat = ref(false)
 const isZakatEligible = computed(
   () => donationDetails.value?.isZakatCompatible === true
 )
-watch(isZakatEligible, (eligible) => {
-  if (!eligible) isZakat.value = false
-})
+const isZakatOnlyCause = computed(
+  () => donationDetails.value?.isZakatOnly === true
+)
+watch(
+  () => ({
+    isZakatOnly: donationDetails.value?.isZakatOnly,
+    isZakatByDefault: donationDetails.value?.isZakatByDefault,
+    isZakatCompatible: donationDetails.value?.isZakatCompatible,
+  }),
+  (flags) => {
+    if (flags.isZakatOnly) {
+      isZakat.value = true
+      return
+    }
+    if (!flags.isZakatCompatible) {
+      isZakat.value = false
+      return
+    }
+    if (flags.isZakatByDefault) {
+      isZakat.value = true
+    }
+  },
+  { deep: true, immediate: true }
+)
 const stripe = await useStripe()
 const router = useRouter()
 const card = ref<StripeCardElement | null>(null)
@@ -290,7 +340,7 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
         currency: currencySelected,
         donationType: donationFrequency,
         causeId: causeSelected,
-        isZakat: isZakat.value === true,
+        isZakat: isZakatOnlyCause ? true : isZakat.value === true,
       }),
     })
 
