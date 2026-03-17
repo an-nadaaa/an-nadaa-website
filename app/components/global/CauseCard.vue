@@ -91,6 +91,13 @@
         </Badge>
 
         <p
+          v-if="isZakatCompatible"
+          class="px-2 py-1 text-xs text-green-600 bg-green-100 rounded-full min-w-max"
+        >
+          Zakat
+        </p>
+
+        <p
           v-for="(tag, index) in cause.tags"
           :key="index"
           :class="`px-2 py-1 text-xs text-${tag.color}-600  bg-${tag.color}-100 rounded-full min-w-max`"
@@ -117,6 +124,9 @@ const props = defineProps({
 })
 
 const isProject = props.cause.goalDetails[0].__component === "cause.project"
+const isZakatCompatible = computed(
+  () => (props.cause as { isZakatCompatible?: boolean }).isZakatCompatible === true
+)
 
 // type Cause = {
 //   title: string

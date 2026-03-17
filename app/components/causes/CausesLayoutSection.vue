@@ -4,7 +4,7 @@
   <div class="container py-6 sm:py-12">
     <!-- <h1>{{ categories }}</h1> -->
     <div
-      :class="`grid sm:grid-cols-5 gap-x-3 p-1 gap-y-3 transition-all sm:h-fit ${
+      :class="`grid sm:grid-cols-6 gap-x-3 p-1 gap-y-3 transition-all sm:h-fit ${
         isFilterExpanded ? ' h-fit pb-4' : 'h-0'
       } overflow-y-hidden overflow-x-visible `"
     >
@@ -85,6 +85,24 @@
           </SelectContent>
         </Select>
       </div>
+      <div class="">
+        <p class="select-label">Zakat</p>
+        <Select class="w-full" v-model="zakatSelected">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent class="">
+            <SelectGroup>
+              <SelectItem
+                v-for="(opt, index) in zakatOptions"
+                :key="index"
+                :value="opt"
+                >{{ opt }}</SelectItem
+              >
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
       <div>
         <p
           @click="handleResetFilter"
@@ -136,7 +154,7 @@
     </div>
     <div
       v-if="causes.length > 0"
-      class="grid grid-cols-2 gap-x-2 mt-4 w-full  sm:flex sm:justify-between"
+      class="grid grid-cols-2 gap-x-2 mt-4 w-full sm:flex sm:justify-between"
     >
       <Button
         class="col-span-1 sm:w-44"
@@ -190,6 +208,7 @@ const locations = await strapiFetch("/locations", "GET", {}).then(
   }
 )
 const causeType = ["All", "Campaign", "Project"]
+const zakatOptions = ["All", "Zakat compatible"]
 const states = ["All", "Ongoing", "Funded"]
 const currentPage = ref(1)
 const isFilterExpanded = ref(false)
@@ -199,6 +218,7 @@ const typeSelected = ref("All")
 const categorySelected = ref("All")
 const stateSelected = ref("All")
 const locationSelected = ref("All")
+const zakatSelected = ref("All")
 const pagination = ref<Record<string, any>>({})
 const previousDisabled = computed(() => currentPage.value === 1)
 const nextDisabled = computed(
@@ -218,6 +238,7 @@ function handleResetFilter() {
   stateSelected.value = "All"
   locationSelected.value = "All"
   typeSelected.value = "All"
+  zakatSelected.value = "All"
 }
 
 watch(typeRef, (value) => {
@@ -228,9 +249,12 @@ watch(typeRef, (value) => {
   }
 })
 
-watch([categorySelected, stateSelected, locationSelected, typeSelected], () => {
-  currentPage.value = 1
-})
+watch(
+  [categorySelected, stateSelected, locationSelected, typeSelected, zakatSelected],
+  () => {
+    currentPage.value = 1
+  }
+)
 
 watch(
   [
@@ -239,6 +263,7 @@ watch(
     locationSelected,
     currentPage,
     typeSelected,
+    zakatSelected,
   ],
   () => {
     causes.value = []
@@ -286,6 +311,9 @@ const causes = computedAsync(async () => {
                 $eq: locationSelected.value,
               },
       },
+      ...(zakatSelected.value === "Zakat compatible"
+        ? { isZakatCompatible: { $eq: true } }
+        : {}),
     },
     sort: ["isFeatured:desc", "createdAt:desc"],
     pagination: {

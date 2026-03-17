@@ -635,6 +635,7 @@ export interface ApiCauseCause extends Struct.CollectionTypeSchema {
         };
       }> &
       Schema.Attribute.DefaultTo<false>;
+    isZakatCompatible?: Schema.Attribute.Boolean;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::cause.cause'>;
     locations: Schema.Attribute.Relation<'oneToMany', 'api::location.location'>;
