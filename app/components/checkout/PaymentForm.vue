@@ -1,4 +1,7 @@
 <template>
+  {{ isZakatOnlyCause }}
+  {{ isZakatEligible }}
+  {{ isZakat }}
   <Card class="gap-y-3 mx-auto w-full">
     <CardHeader>
       <CardTitle class="font-normal">Payment Details</CardTitle>
@@ -226,12 +229,12 @@ watch(
     isZakatCompatible: donationDetails.value?.isZakatCompatible,
   }),
   (flags) => {
-    if (flags.isZakatOnly) {
-      isZakat.value = true
-      return
-    }
     if (!flags.isZakatCompatible) {
       isZakat.value = false
+      return
+    }
+    if (flags.isZakatOnly) {
+      isZakat.value = true
       return
     }
     if (flags.isZakatByDefault) {
@@ -340,7 +343,7 @@ const handleSubmit = form.handleSubmit(async (values: Record<string, any>) => {
         currency: currencySelected,
         donationType: donationFrequency,
         causeId: causeSelected,
-        isZakat: isZakatOnlyCause ? true : isZakat.value === true,
+        isZakat: isZakatOnlyCause.value ? true : isZakat.value === true,
       }),
     })
 
