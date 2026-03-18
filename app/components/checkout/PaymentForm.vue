@@ -1,7 +1,4 @@
 <template>
-  {{ isZakatOnlyCause }}
-  {{ isZakatEligible }}
-  {{ isZakat }}
   <Card class="gap-y-3 mx-auto w-full">
     <CardHeader>
       <CardTitle class="font-normal">Payment Details</CardTitle>
