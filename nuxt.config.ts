@@ -44,6 +44,9 @@ export default defineNuxtConfig({
       "/Ambulance": {
         redirect: "/causes/xirbyfr2nhfdc9qlmha5w0c2",
       },
+      "/LAM65": {
+        redirect: "/causes/y2tkj5lh8o01kny9pybolh4p",
+      },
     },
   },
   compatibilityDate: "2024-04-03",
