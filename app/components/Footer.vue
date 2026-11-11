@@ -57,10 +57,12 @@
           <img class="w-36 text-xs font-thin" :src="logo" />
           <p>
             contact@an-nadaa.com <br />
-            +234 806 781 4149 <br />
-            +234 703 873 1615 <br />
-            No. 57, Imam Road, Tudun Wada, <br />
-            Zaria Kaduna State, Nigeria
+            +234 813 901 7075 <br />
+            +234 816 664 2626 <br />
+            +234 913 132 2228 <br />
+            Plot No. 5 Road J, Zaria Bypass Layout, <br />
+            Opposite Rochas Foundation, <br />
+            Zaria, Kaduna State, Nigeria
           </p>
           <p>
             Unit B-17 StreetMall Jalan Gerbang <br />

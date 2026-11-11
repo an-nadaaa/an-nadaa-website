@@ -42,11 +42,13 @@
         <div>
           <h4>Nigeria</h4>
           <p class="font-light text-dark-gray">
-            Plot No 3 Road J <br />
-            Zaria Bye pass Layout Zaria, Kaduna State Nigeria <br />
+            Plot No. 5 Road J, Zaria Bypass Layout, <br />
+            Opposite Rochas Foundation, <br />
+            Zaria, Kaduna State, Nigeria <br />
             Phone number <br />
-            +234 706-244 4989 <br />
-            +234 701-074 8086 <br />
+            +234 813 901 7075 <br />
+            +234 816 664 2626 <br />
+            +234 913 132 2228 <br />
             Mon-Fri 8am to 5pm (GMT+1)
           </p>
         </div>
