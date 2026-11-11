@@ -17,6 +17,18 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   nitro: {
+    // Netlify's function bundler re-traces node_modules and drops @swc/helpers
+    // (imported via a wildcard subpath export), which 500s every SSR page.
+    // Inlining these into the server bundle removes the runtime lookup.
+    externals: {
+      inline: [
+        "@internationalized/date",
+        "@internationalized/number",
+        "@swc/helpers",
+        "reka-ui",
+        "radix-vue",
+      ],
+    },
     routeRules: {
       "/botswana": { redirect: "/causes/arxc351ma9727fevmv4qgomy" },
       "/build-a-mosque": { redirect: "/causes/arl51t0ph1mhp9j0zu746dqy" },
